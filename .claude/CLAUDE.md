@@ -19,7 +19,9 @@ description: Development guidelines and conventions for the @metreeca/skin packa
 > - `css-developer` carries the conventions every stylesheet here is written to, and **MUST** be activated before one
 >   is touched; this file carries only what is specific to the package
 > - Revising a token means revising it in **every** place listed under [Token Contract](#token-contract)
-> - The suite checks token **names**, never **values**: a wrong colour or size reaches production unnoticed
+> - The suite checks token **names** for every family, and **values** for the colours alone: `colors.test.ts` paints
+>   every colour role in both schemes under three brands and holds it to its contrast budget and to the gamut, so a
+>   wrong size reaches production unnoticed where a wrong colour fails the build
 > - Retuning an anchor means rechecking the contrast ratios under [Colours](#colours)
 
 # Overview
@@ -227,6 +229,14 @@ declared, when a rule reads a token no one declares, when a registration is miss
 is stated per colour scheme in a query or attribute rule, and when a derived token carries a default it cannot
 resolve. It says nothing about the value behind the name.
 
+`src/tokens/colors.test.ts` is where a colour value is held to its budget. It evaluates every colour token as the
+page would, in both schemes and under the shipped brand, a navy and a green, with the OKLab mixing and relative
+colour maths the browsers share, and fails when a role leaves the sRGB gamut, when a text role or a stroke drops
+below 4.5:1 on a surface it is set on, when a mark or the focus ring drops below 3:1, or when the raised surface
+lands on the stripe. It runs in Node with no browser, which is sound only because nothing leaves the gamut: the
+in-gamut check is what makes the other figures the figures every browser paints. A figure in a token comment is
+documentation of what the test asserts, never the guard.
+
 An `@property` registration states the type a token takes and the default it falls back on, under the constraints
 `css-developer` §Registrations sets out: only an absolute value takes a real type, and a derived token carries no
 default at all.
@@ -274,6 +284,19 @@ contract above sets out; `--skin--color-warn` alone carries one value for both:
 the keyboard stands, which reads the same whatever an app brands with, so it is **NEVER** derived from an accent. It
 is stated as a `light-dark()` pair alongside them and held to the ring budget of 3:1 against the page **and** against
 the stripe.
+
+> [!CAUTION]
+> **Every derivation stays inside the sRGB gamut**, for the shipped brand and for the navy and green brands the suite
+> runs. Browsers disagree on a colour outside it: Chrome and Firefox clip the channels, which shifts the hue, and
+> Safari reduces the chroma, which keeps it, so an out-of-gamut derivation is a different colour in each. A mix of two
+> paintable colours in OKLab stays paintable, which is why the states and the strokes are `color-mix()` towards the
+> text anchor; an `oklch(from …)` step that raises chroma or pushes lightness towards an end caps it with `min()`.
+> The figures in the comments and the suite's contrast checks are computed in Node from the same maths, and they
+> describe what ships only because nothing leaves the gamut.
+>
+> A second hazard the suite cannot see: Chrome marks the **hue** of a colour under about 0.02 chroma as powerless,
+> so a relative `oklch(from …)` reading `h` off a near-grey, such as a 12% tint, paints **red**. A derivation
+> raising the chroma of such a colour scales `a` and `b` in `oklab(from …)` instead, which carries no hue to lose.
 
 ## The meaning scale
 
@@ -371,9 +394,15 @@ toolbar.
 ### Tensions on the record
 
 - **Orange crowds the warm steps.** `--skin--color-strong` ships orange, which sits ΔE 6.9 from the `fail` red in
-  the light scheme (`#B74300` against `#C00`) and ΔE 8.0 from the `warn` amber in the dark one (`#F80` against
-  `#E6A92F`), so a strong control and a failure or a caution are confusable where colour alone tells them apart. A
-  strong control is therefore told by weight and border as well, which `look` already carries.
+  the light scheme (`#B74300` against `#C00`) and ΔE 13 from the `warn` yellow in the dark one (`#F80` against
+  `#F2C230`), so a strong control and a failure are confusable where colour alone tells them apart. A strong control
+  is therefore told by weight and border as well, which `look` already carries.
+- **A pressed control and a caution label are both pale orange on the dark page.** The states are the strong accent
+  carried towards the text anchor, and above a bright saturated orange there is little room: the dark pressed
+  colour sits ΔE 9.4 from the dark caution stroke, and the hover and pressed steps are ΔE 5.5 each where the light
+  ones are 11. A control fills its box with the state tints as well, so the state never rests on the text colour,
+  and a caution is told by its glyph and its tint. Stepping the lightness instead bought nothing: it left the gamut,
+  and the clipped result was the caution stroke itself.
 - **Blue collides with a blue brand.** An app branding in blue makes the `info` step and a strong control
   confusable. The info token is a cyan for this reason.
 - **A step is NEVER told in colour alone**, since `pass` and `fail` are the pair colour vision deficiency collapses
@@ -393,16 +422,18 @@ toolbar.
 > [!WARNING]
 >
 > `--skin--color-warn` is a **fill, never a stroke**, and it carries **one value in both colour schemes**. A
-> caution paints a filled badge with it and sets its message in the dark page anchor over it, at 10.1:1. Stroking it
-> on the page gives **1.73:1** and is a defect.
+> caution paints a filled badge with it and sets its message in the dark page anchor over it, at 12.5:1. Stroking it
+> on the page gives **1.68:1** and is a defect.
 >
 > This is forced by the colour space, **NOT** chosen. Red reaches full saturation at a middling lightness, so
 > `--skin--color-fail` is dark enough to read on white and loud at once. Yellow reaches full saturation only when
 > it is very light, so any yellow dark enough to stroke on white has already spent its chroma. Three rounds inside a
 > stroke budget proved it: `#850` at 4.5:1 read as mud, `#A40` escaped the mud only by moving to a burnt orange
 > sitting ΔE 2.0 from the failure red under simulated deuteranopia, and `#B67C00` at 3:1 was still muted at chroma
-> 0.132. As a fill it reaches **chroma 0.151** against the failure's 0.218, and separates from it by **ΔE 25.8 deutan
-> and 42.7 protan**.
+> 0.132. As a fill it reaches **chroma 0.158** against the failure's 0.218, and separates from it by **ΔE 29.8
+> deutan**, and from the pass green by **ΔE 17.0 protan**, the tightest pair in the scale. The yellow sits a dozen
+> degrees further from orange than the mustard it replaced, which managed 10.0 against the green and turned brown as
+> soon as a tint or a dark stroke dimmed it.
 >
 > Retuning it for a better stroke contrast walks straight back into the mud. A caution needing coloured text or a
 > mark takes the **second token**, `--skin--color-warn-stroke`, never a change to this one.
@@ -418,18 +449,29 @@ toolbar.
 > a sentence.
 
 Text painted in the colour of a step over its tint takes the step's **stroke role**, `--skin--color-info-stroke`,
-`--skin--color-pass-stroke`, `--skin--color-warn-stroke` or `--skin--color-fail-stroke`, and **NEVER** the anchor:
-the anchors are marks or a fill, and even the failure red drops below AA once a control deepens its tint. Each role is
-the anchor carried towards `--skin--color`, the caution further turning its hue 12° towards orange and asking its
-chroma back. Its share is pinned by the deepest status fill a control reaches, the tint with a further 24% of the
-anchor, where it still holds AA in both schemes:
+`--skin--color-pass-stroke`, `--skin--color-warn-stroke` or `--skin--color-fail-stroke`. A stroke holds AA on the
+page, the stripe and its own tint in both schemes. Over a tint a control deepens under the pointer, with a further 24%
+of the anchor, the label takes whichever of the stroke and `--skin--color-over` holds AA there: the info and pass
+strokes hold on their own, every stroke does on the dark page, and the light caution and failure strokes hand over to
+the dark page anchor, as a filled caution badge does. Holding every stroke to the deepened tint is what once made the
+caution an olive and the failure a maroon, and **neither is allowed back**: a warning is read by an amber and a
+failure by a red.
 
-| Role   | Share | Light page | Light stripe | Light pressed | Dark page | Dark stripe | Dark pressed |
-|--------|-------|------------|--------------|---------------|-----------|-------------|--------------|
-| `info` | 74%   | 7.05:1     | 6.28:1       | 4.85:1        | 11.1:1    | 10.4:1      | 5.91:1       |
-| `pass` | 74%   | 7.15:1     | 6.36:1       | 4.90:1        | 10.7:1    | 10.1:1      | 5.82:1       |
-| `warn` | 64%   | 6.30:1     | 5.61:1       | 4.83:1        | 11.2:1    | 10.5:1      | 6.09:1       |
-| `fail` | 86%   | 7.98:1     | 7.10:1       | 4.83:1        | 7.61:1    | 7.16:1      | 4.65:1       |
+| Role   | Light page | Light stripe | Light tint | Dark page | Dark stripe | Dark tint |
+|--------|------------|--------------|------------|-----------|-------------|-----------|
+| `info` | 7.05:1     | 6.28:1       | 6.19:1     | 7.07:1    | 6.66:1      | 6.29:1    |
+| `pass` | 7.15:1     | 6.36:1       | 6.27:1     | 7.21:1    | 6.78:1      | 6.38:1    |
+| `warn` | 5.28:1     | 4.70:1       | 4.80:1     | 13.1:1    | 12.4:1      | 10.9:1    |
+| `fail` | 6.70:1     | 5.97:1       | 5.64:1     | 7.58:1    | 7.13:1      | 6.70:1    |
+
+The info and pass strokes carry their anchors 74% towards the text. The failure stroke carries its anchor 94% on the
+light page, a shade under the red that shouts, and 86% on the dark one. The caution stroke is the yellow carried 60%
+towards the text and, on the light page, turned 34° towards orange at the chroma the gamut holds, since a dim yellow
+is an olive; on the dark page it keeps its yellow with half again the chroma.
+
+The dark `info` and `pass` anchors are pinned by this table rather than by a mark budget of their own: at L 0.60
+their strokes land within a tenth of the light figures, so a notice reads as loud in either scheme. Lighter dark
+anchors held text contrast twice over, and their strokes then lightened and shed chroma for nothing.
 
 A widget deepening a status fill under the pointer or the press keeps the label as it stands: it **NEVER** retints the
 label per state, deepens past the 24% the shares are pinned by, or restates a derivation inline.
@@ -458,12 +500,12 @@ Text roles hold WCAG AA contrast, 4.5:1 against the background they sit on, in *
 the focus ring holds 3:1. The exceptions a contrast check is allowed to pass over, each **by design**:
 
 - `--skin--border-color`, `--skin--color-disabled` and `--skin--color-placeholder`, below 3:1, carrying no meaning
-  on their own. The last two share one value, 1.76:1 in both schemes on the edit background: both stand for
+  on their own. The three share one value, 1.76:1 and 1.94:1 on the edit background: the last two stand for
   text the reader has not supplied, and a disabled control is told from an empty one by its **background**, never by
   the weight of its text. Reading either as a text role is the mistake to avoid
 - `--skin--color-info` and `--skin--color-pass`, marks at 3:1, since the hues cannot hold chroma at the lightness
   4.5:1 forces
-- `--skin--color-warn`, a fill, at 1.73:1 stroked
+- `--skin--color-warn`, a fill, at 1.68:1 stroked
 
 The stroke roles are the text roles standing in for all four.
 

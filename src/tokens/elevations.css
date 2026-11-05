@@ -66,7 +66,9 @@
 /*
  * Every value stands on the page anchors, so one derivation serves both schemes. Lightening the page lifts a surface
  * on a dark scheme and clamps to the page itself on a light scheme whose page is already white, which is why the
- * shadow is what carries the separation there.
+ * shadow is what carries the separation there. The first step clears the table stripe, which the dark page reaches
+ * at L 0.21: a raised card on a striped row would otherwise have no edge but its shadow. The second stays where the
+ * label and the focus ring still hold their budgets on it, at 4.66:1 and 3.33:1 in the dark scheme.
  *
  * The shadows are whole shorthand values rather than colours, so a rule states the lift in one declaration, and they
  * are tinted with the text anchor rather than with black, so a dark scheme casts a shadow that reads against its own
@@ -75,8 +77,8 @@
 
 :root {
 
-    --skin--background-color-raised: oklch(from var(--skin--background-color) calc(l + 0.03) c h);
-    --skin--background-color-overlay: oklch(from var(--skin--background-color) calc(l + 0.06) c h);
+    --skin--background-color-raised: oklch(from var(--skin--background-color) calc(min(1, l + 0.05)) c h);
+    --skin--background-color-overlay: oklch(from var(--skin--background-color) calc(min(1, l + 0.08)) c h);
     --skin--background-color-sunken: oklch(from var(--skin--background-color) calc(l - 0.03) c h);
     --skin--background-color-blanket: color-mix(in oklab, var(--skin--color) 50%, transparent);
 
@@ -84,6 +86,8 @@
      * A translucent ground a step darker than the page, so it reads against a light page that is already white as
      * much as against a dark one, while what it covers still shows through. It carries no text of its own: the
      * surfaces set on it do, and stand out from it in either scheme, being lighter than the page where it is darker.
+     * On a dark page the step runs past the floor and clamps to black, which is the ground such a page wants: any
+     * lightness the formula could keep there renders the same once laid over the page at this opacity.
      */
 
     --skin--background-color-glass: oklch(from var(--skin--background-color) calc(l - 0.3) c h / 0.75);

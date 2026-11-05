@@ -22,6 +22,10 @@
  *
  * @remarks
  *
+ * **Line** — `borderColor` draws an enclosing line in the colour of {@link colors `colorDisabled`}, since a line, like
+ * a disabled label, carries no meaning of its own. The two share one value, so an app retuning the disabled colour
+ * retunes every line along with it, and a contrast check passes over both of them.
+ *
  * **Radii** — `borderRadius025` to `borderRadius100` round a corner by a length, on the steps
  * {@link spacings the spacing ladder} carries and stated the same way, in `em`, so a box rounds by the same amount
  * whatever size it is given and a subtree given a size of its own rounds to match. A shape rather than a corner, a
@@ -34,7 +38,8 @@
  * states the mark in one declaration and an app retuning the anchors carries it along. `outline-offset` is not part of
  * that shorthand, so a rule setting either mark states the offset alongside it, and a mark left at the offset the
  * platform gives the control will not sit where the rule expects. They pair with the {@link colors `colorFocus`} and
- * {@link colors `colorFail`} roles, which a consumer reaches for where it paints the mark itself.
+ * {@link colors `colorFail`} roles, which a consumer reaches for where it paints the mark itself. The focus mark does
+ * not hold 3:1 against a fill in {@link colors `colorStrong`}, so a rule ringing such a control offsets it outside.
  *
  * **Strokes** — `strokeWidth` is a bare number in viewport user units, so a glyph keeps its weight at any size.
  *

@@ -32,17 +32,22 @@
  * saturation at a middling lightness, so it can be dark enough to read on white and saturated at the same time.
  * Yellow reaches full saturation only when it is very light, so any yellow dark enough to stroke on a white page has
  * already given up most of its chroma: every attempt to hold 4.5:1, and then 3:1, landed on an olive or a burnt
- * orange that read as muted or as a second failure colour. At its own lightness it carries chroma 0.147 against the
- * failure's 0.218, and separates from it by ΔE 25.2 under simulated deuteranopia and 42.0 under protanopia.
+ * orange that read as muted or as a second failure colour. At its own lightness it carries chroma 0.158 against the
+ * failure's 0.218, and separates from it by ΔE 29.8 under simulated deuteranopia; from the pass green it holds ΔE
+ * 17.0 under simulated protanopia, where the mustard it replaced, a dozen degrees nearer orange, managed 10.0. The
+ * hue is the one a caution is read by: a yellow dimmed towards either page turns brown, and the further it starts
+ * from orange the longer it stays a yellow on the way, in the tint on either page and in the stroke on the dark one.
  *
- * A caution therefore paints a filled badge and sets its message in the dark page anchor over it, at 10.1:1, exactly
+ * A caution therefore paints a filled badge and sets its message in the dark page anchor over it, at 12.5:1, exactly
  * as the heat scale has text take one page anchor or the other according to the step beneath it. Stroking this
- * colour on the page instead gives 1.73:1 and is a defect: a caution painting text or a mark takes the stroke role
+ * colour on the page instead gives 1.68:1 and is a defect: a caution painting text or a mark takes the stroke role
  * derived from it below. The failure holds 4.5:1 and serves as either text or mark. The information and pass colours
  * are marks held to 3:1, at 3.57:1 and 3.63:1 on the light page: cyan and green are chroma-starved at the lightness
- * 4.5:1 forces, so text over their tint takes the page text, or the stroke role derived from each below.
+ * 4.5:1 forces, so text over their tint takes the page text, or the stroke role derived from each below. Their dark
+ * values are pinned by the stroke table instead, where the stroke roles are derived, so a notice reads as loud on a
+ * dark page as on a light one rather than twice as loud, which lighter dark anchors made it.
  *
- * One value serves both colour schemes, as a series slot does: a hazard yellow that dimmed on the dark page would
+ * One value serves both colour schemes, as a series slot does: a warning yellow that dimmed on the dark page would
  * stop being one, and the dark page anchor sitting over it stays dark in either scheme.
  *
  * An app supplying its brand states a light-dark() pair too, and rechecks AA text contrast on page and stripe in both.
@@ -91,19 +96,19 @@
 @property --skin--color-info {
     syntax: "*";
     inherits: true;
-    initial-value: light-dark(#0095AA, #3CC);
+    initial-value: light-dark(#0095AA, #009393);
 }
 
 @property --skin--color-pass {
     syntax: "*";
     inherits: true;
-    initial-value: light-dark(#129C02, #5C5);
+    initial-value: light-dark(#129C02, #139B1E);
 }
 
 @property --skin--color-warn {
     syntax: "<color>";
     inherits: true;
-    initial-value: #E6A92F;
+    initial-value: #F2C230;
 }
 
 @property --skin--color-fail {
@@ -115,7 +120,7 @@
 @property --skin--color-focus {
     syntax: "*";
     inherits: true;
-    initial-value: light-dark(#7E8A95, #626C75);
+    initial-value: light-dark(#75818C, #6B757E);
 }
 
 
@@ -242,31 +247,35 @@
 }
 
 /*
- * A role painting text derives from the subtle accent in oklch rather than by a mix towards the page, which spends the
- * lightness it needs to hold AA contrast. Only the focus ring, which owes 3:1 rather than 4.5:1, can afford the mix,
- * and 70% is as light as it goes: the edit background is the tightest surface it holds, at 3.02:1, where a lighter mix
- * drops below the floor before it does on any other surface the ring is drawn against.
+ * A role painting text in an accent derives from it in oklch rather than by a mix towards the page, which spends the
+ * lightness it needs to hold AA contrast. A role whose share differs by scheme states a light-dark() pair of
+ * derivations rather than a rule per scheme, so a pinned subtree follows it with nothing restated.
  *
- * A role whose share differs by scheme states a light-dark() pair of derivations, following a pinned subtree too.
+ * A role mixing the text anchor towards the page takes eight more points of it in the dark scheme than in the light
+ * one, because the two ends behave nothing alike: white carries almost all the luminance in the range, so mixing away
+ * from black spends contrast slowly, while mixing away from #EEE towards #111 spends it fast. One share would be
+ * pinned by the dark scheme and leave the light one far darker than it needs to be. The offset is set by the label,
+ * the one such role held to a budget, and the disabled colour follows it with no budget of its own.
  */
 
 :root {
 
     /*
-     * The label takes a share per scheme, because one share cannot serve both. It mixes the text anchor towards the
-     * page in either scheme, but the two ends behave nothing alike: white carries almost all the luminance in the
-     * range, so mixing away from black in the light scheme spends contrast slowly, while mixing away from #EEE towards
-     * #111 in the dark one spends it fast. A single share is therefore pinned by whichever scheme runs out first, which
-     * is the dark one, and the light scheme inherits a label far darker than it needs to be. Stating each for itself
-     * lets the light label sit where it reads as a label rather than as the copy around it.
+     * Each label share is pinned by the tightest surface a label is set on: the pressed tint in the light scheme, at
+     * 5.53:1, and the overlay surface in the dark one, at 4.66:1, where the pressed tint holds 4.85:1.
      */
 
     --skin--color-label: light-dark(
-        color-mix(in oklab, var(--skin--color) 47%, var(--skin--background-color)),
-        color-mix(in oklab, var(--skin--color) 55%, var(--skin--background-color))
+        color-mix(in oklab, var(--skin--color) 52%, var(--skin--background-color)),
+        color-mix(in oklab, var(--skin--color) 60%, var(--skin--background-color))
     );
 
-    /* Text over a filled mark takes whichever page anchor is dark in the scheme at hand. */
+    /*
+     * Text over the caution fill takes whichever page anchor is dark in the scheme at hand, at 12.5:1. The failure is
+     * the one other step dark enough to carry text, and black over it holds only 3.57:1 in the light scheme, so a
+     * fill painted in it flips as the strong fill does, white at 5.89:1 in the light scheme and black at 6.60:1 in
+     * the dark one, where white would fall to 2.86:1 over the lighter red the dark anchor carries.
+     */
 
     --skin--color-over: light-dark(var(--skin--color), var(--skin--background-color));
 
@@ -284,64 +293,91 @@
     );
 
     /*
-     * Status text takes a stroke role: the status anchor carried towards the page text, which darkens it on a light
-     * page and lightens it on a dark one, so one value holds in both schemes. Each share is set by the deepest status
-     * fill a control reaches, the tint with a further 24% of the anchor laid over it, where every stroke still holds
-     * AA contrast: a widget deepening the fill under the pointer or the press keeps its label as it stands. The page
-     * and the stripe, lighter in the light scheme and darker in the dark one, hold more.
+     * Status text takes a stroke role, held to AA contrast on the page, the stripe and the tint of its own step in
+     * both schemes. A control deepening that tint under the pointer or the press, with a further 24% of the anchor
+     * laid over it, sets its label in whichever of the stroke and the dark page anchor holds there: the information
+     * and pass strokes hold on their own, as every stroke does on the dark page, where a stroke is light and a deep
+     * tint is dark; the light caution and failure strokes do not, and a label over their deepened fills takes the
+     * dark page anchor, as a filled caution badge does. Holding every stroke to the deepened tint is what once made
+     * the caution an olive and the failure a maroon, and neither reads as the meaning it carries.
      *
-     *              light: page  stripe  pressed   dark: page  stripe  pressed
-     *     info            7.05  6.28    4.85            11.1  10.4    5.91
-     *     pass            7.15  6.36    4.90            10.7  10.1    5.82
-     *     warn            6.30  5.61    4.83            11.2  10.5    6.09
-     *     fail            7.98  7.10    4.83            7.61  7.16    4.65
+     * The information and pass strokes carry their anchors towards the page text, which darkens them on a light page
+     * and lightens them on a dark one, so one share serves both schemes, and the dark anchors are pinned by this
+     * table rather than by a mark budget of their own: at L 0.60 their strokes land within a tenth of the light
+     * figures, so a notice reads as loud in either scheme. The failure stroke on the light page is the anchor carried
+     * a shade towards the text, a red that still reads as one where a step further turns it maroon; on the dark page
+     * it is carried further, since the lighter red the dark anchor is would shout on the tint. The caution stroke is the
+     * yellow carried towards the text and, on the light page, turned 34° towards orange with the chroma the gamut
+     * holds at that lightness: a dim yellow is an olive that carries no urgency, and a warning is read by its amber.
+     * On the dark page it keeps its yellow and takes half again the chroma the mix leaves. Under simulated
+     * deuteranopia every warm stroke at AA lightness sits within ΔE 5 of the failure red, the amber and the olive
+     * alike, so the hue is chosen for the readers who see it and the glyph and the wording carry the distinction for
+     * those who do not. The chroma boosts scale a and b in OKLab rather than c in OKLCh, since Chrome marks the hue of
+     * a colour under about 0.02 chroma as powerless and paints a relative oklch() from one red, which no evaluator
+     * outside a browser predicts, so the suite cannot catch it and the rule has to be kept by hand.
      *
-     * The mix costs the amber its chroma, so the caution further turns its hue towards the orange the eye still takes
-     * for a caution and asks back as much chroma as the gamut holds.
+     *              light: page  stripe  tint   dark: page  stripe  tint
+     *     info            7.05  6.28    6.19         7.07  6.66    6.29
+     *     pass            7.15  6.36    6.27         7.21  6.78    6.38
+     *     warn            5.28  4.70    4.80         13.1  12.4    10.9
+     *     fail            6.70  5.97    5.64         7.58  7.13    6.70
      */
 
     --skin--color-info-stroke: color-mix(in oklab, var(--skin--color-info) 74%, var(--skin--color));
     --skin--color-pass-stroke: color-mix(in oklab, var(--skin--color-pass) 74%, var(--skin--color));
-    --skin--color-warn-stroke:
-        oklch(from color-mix(in oklab, var(--skin--color-warn) 64%, var(--skin--color)) l calc(c * 1.8) calc(h - 12));
-    --skin--color-fail-stroke: color-mix(in oklab, var(--skin--color-fail) 86%, var(--skin--color));
+    --skin--color-warn-stroke: light-dark(
+        oklch(from color-mix(in oklab, var(--skin--color-warn) 60%, var(--skin--color)) calc(l + 0.04) min(calc(c * 1.4), 0.131) calc(h - 34)),
+        oklab(from color-mix(in oklab, var(--skin--color-warn) 60%, var(--skin--color)) l calc(a * 1.5) calc(b * 1.5))
+    );
+    --skin--color-fail-stroke: light-dark(
+        color-mix(in oklab, var(--skin--color-fail) 94%, var(--skin--color)),
+        color-mix(in oklab, var(--skin--color-fail) 86%, var(--skin--color))
+    );
 
     /*
      * A placeholder takes the disabled colour rather than a mix of its own. Both stand for text the reader has not
      * supplied and neither carries meaning, so a contrast check passes over both; what tells a disabled control from
      * an empty one is the background it sits on, never the weight of the text. Anything darker read as an entered
-     * value, which is the one thing a placeholder must not do. The dark scheme takes a larger share of the text, since
-     * the same share fades further on a dark page; both then hold 1.76:1 on the edit background.
+     * value, which is the one thing a placeholder must not do. The shares hold 1.76:1 and 1.94:1 on the edit
+     * background, the dark one eight points up as every mix towards the page is.
      */
 
     --skin--color-placeholder: var(--skin--color-disabled);
 
     /*
      * The enabled colour, marking a control that answers, takes the hue of the subtle accent at three times its chroma
-     * and a shade lighter, so it stands out from the text around it while following a retuned brand. It holds AA
-     * contrast at 8.84:1 on the page, 7.87:1 on the stripe and 8.35:1 on the edit background in the light scheme, and
-     * 8.87:1, 8.35:1 and 8.62:1 in the dark one, where the lighter shade only adds contrast.
+     * and a step towards the page, so it stands out from the text around it while following a retuned brand. The step
+     * is what keeps it off the links, which take the same hue at a lightness of their own: it sits ΔE 6.1 and 10.4
+     * from a link at rest in the light and the dark scheme, 13 and 18 from one under the pointer. It holds AA contrast
+     * at 5.99:1 on the page, 5.33:1 on the stripe and 5.66:1 on the edit background in the light scheme, and 5.89:1,
+     * 5.54:1 and 5.72:1 in the dark one, the stripe being the tightest surface it is set on in either scheme. The
+     * chroma is capped where the gamut ends at that lightness for a saturated brand, so every browser paints one colour.
      */
 
-    --skin--color-enabled: oklch(from var(--skin--color-subtle) calc(l + 0.03) calc(c * 3) h);
+    --skin--color-enabled: light-dark(
+        oklch(from var(--skin--color-subtle) calc(l + 0.12) min(calc(c * 3), 0.11) h),
+        oklch(from var(--skin--color-subtle) calc(l - 0.08) min(calc(c * 3), 0.11) h)
+    );
 
     --skin--color-disabled: light-dark(
         color-mix(in oklab, var(--skin--color) 20%, var(--skin--background-color)),
-        color-mix(in oklab, var(--skin--color) 25%, var(--skin--background-color))
+        color-mix(in oklab, var(--skin--color) 28%, var(--skin--background-color))
     );
 
     /*
      * A link takes the hue of the subtle accent at twice its chroma, capped so a saturated brand stays muted, and at a
      * lightness of its own: an app retuning the accent moves the hue alone, never the contrast. The pointer moves the
-     * link a step away from the page, deeper in the light scheme and lighter in the dark one; the deeper shade takes
-     * more chroma, so it still reads as a colour rather than as black. Measured over the shipped accent, the brand of
-     * an alternative brand and a navy one, the light hover varying by up to 0.6 and the other figures by a few hundredths:
+     * link 0.08 away from the page in lightness, deeper in the light scheme and lighter in the dark one, and up to
+     * three times the subtle chroma, so the step reads as a colour change rather than as a fade towards the page
+     * text. The hover cap is where the gamut ends at that lightness for the hues a brand is likely to take, so every
+     * browser paints one colour. Measured over the shipped accent, a navy brand and a green one, the figures below
+     * holding for the shipped accent and varying by a few tenths from one brand to the next:
      *
      *                    page   stripe  text
      *     light  rest    7.40   6.59    2.84
-     *            hover   10.4   9.26
+     *            hover   10.4   9.26    2.02
      *     dark   rest    8.54   8.04    1.91
-     *            hover   13.2   12.4
+     *            hover   11.3   10.6    1.45
      */
 
     --skin--color-link: light-dark(
@@ -350,34 +386,39 @@
     );
 
     --skin--color-link-hover: light-dark(
-        oklch(from var(--skin--color-subtle) 0.37 min(calc(c * 3), 0.16) h),
-        oklch(from var(--skin--color-subtle) 0.88 min(calc(c * 2), 0.1) h)
+        oklch(from var(--skin--color-subtle) 0.37 min(calc(c * 3), 0.08) h),
+        oklch(from var(--skin--color-subtle) 0.83 min(calc(c * 3), 0.08) h)
     );
 
     /*
-     * A pressed control moves away from the page, darker in the light scheme and lighter in the dark one: darkened on
-     * the dark page it sank towards the ground, and the shipped orange fell to 3.63:1, short of AA. The figures hold
-     * for the shipped orange, against the page and against the table stripe, rebrands shifting them a little:
+     * A control under the pointer or the press is the strong accent carried towards the page text, by a fifth and by
+     * two fifths: away from the page in either scheme, since the text anchor swaps sides with it, and inside the
+     * gamut, since a mix of two colours the page can paint stays paintable. Stepping the lightness instead left the
+     * gamut, and each browser then painted its own colour: Chrome and Firefox clip the channels, which in the dark
+     * scheme turned the pressed orange into the caution amber at ΔE 1.9, while Safari reduces the chroma.
      *
-     *                    page   stripe
-     *     light  hover   8.42   7.52
-     *            press   12.1   10.8
-     *     dark   hover   5.42   5.09
-     *            press   9.83   9.24
+     * The dark steps are smaller, ΔE 5.5 each against 11 in the light scheme, since a bright saturated accent has
+     * little room above it; a control fills its box with the state tints as well, so the state never rests on the
+     * text colour alone. The figures hold for the shipped orange, rebrands shifting them a little:
+     *
+     *                    page   stripe  own tint
+     *     light  hover   8.60   7.66    7.92
+     *            press   13.1   11.6    10.7
+     *     dark   hover   9.25   8.71    8.66
+     *            press   10.8   10.1    8.98
      */
 
-    --skin--color-hover: oklch(from var(--skin--color-strong) calc(l - 0.1) c h);
-
-    --skin--color-pressed: light-dark(
-        oklch(from var(--skin--color-strong) calc(l - 0.2) c h),
-        oklch(from var(--skin--color-strong) calc(l + 0.1) c h)
-    );
+    --skin--color-hover: color-mix(in oklab, var(--skin--color-strong) 80%, var(--skin--color));
+    --skin--color-pressed: color-mix(in oklab, var(--skin--color-strong) 60%, var(--skin--color));
     --skin--color-selected: var(--skin--color-strong);
 
     /*
      * The three states above answer to the strong accent, so a brand carries them along. The fourth, the focus mark,
      * is stated per scheme with the anchors instead: it holds a value of its own that a rebrand leaves standing, and
-     * holds 3.53:1 on the page and 3.14:1 on the stripe in the light scheme, 3.52:1 and 3.32:1 in the dark one.
+     * holds 3:1 on every surface it is drawn against, the tightest being the pressed tint at 3.37:1 in the light
+     * scheme and the overlay surface at 3.33:1 in the dark one, against 3.98:1 and 4.02:1 on the page. No grey holds
+     * against a strong fill,
+     * so a component drawing the ring around a filled control offsets it outside the fill, against the page.
      */
 
     --skin--background-color-edit: color-mix(in oklab, var(--skin--background-color) 98%, var(--skin--color));
@@ -386,7 +427,8 @@
     /*
      * A filled state tints the page with the strong accent rather than the text anchor, so the fill says which accent
      * the control answers to. The shares stay light enough for the accent itself to hold AA contrast on its own tint,
-     * 4.53:1 at the heaviest in the light scheme and 6.58:1 in the dark one, so a label needs no second colour.
+     * so a label needs no second colour: 4.65:1 at the heaviest in the light scheme and 6.80:1 in the dark one for the
+     * shipped orange, and 4.60:1 for a green brand two tenths lighter, which is what pins the pressed share.
      */
 
     --skin--background-color-hover:
@@ -394,27 +436,41 @@
     --skin--background-color-selected:
         color-mix(in oklab, var(--skin--color-strong) 10%, var(--skin--background-color));
     --skin--background-color-pressed:
-        color-mix(in oklab, var(--skin--color-strong) 14%, var(--skin--background-color));
+        color-mix(in oklab, var(--skin--color-strong) 12%, var(--skin--background-color));
 
     /*
      * A status tint takes the same share whichever outcome it carries, so four notices read as one family. The
-     * failure colour holds AA contrast on its own tint, at 4.95:1 in the light scheme and 5.78:1 in the dark one. The
-     * information and pass colours hold their 3:1 mark budget on theirs, at 3.13:1 and 3.18:1 in the light scheme,
-     * so a notice paints its mark in them and its text in the page text, which holds far more, or in a stroke role.
+     * failure colour holds AA contrast on its own tint, at 4.95:1 in the light scheme and 5.84:1 in the dark one. The
+     * information and pass colours hold their 3:1 mark budget on theirs, at 3.13:1 and 3.18:1 in the light scheme
+     * and 4.48:1 and 4.56:1 in the dark one, so a notice paints its mark in them and sets its text in the page text,
+     * which holds 18.4:1 and 14.4:1 on the tint, or in the stroke role derived from the same anchor.
+     *
+     * A light tint is the mix as it comes: a hair under white, it has no room for more chroma, and the yellow one is
+     * already at the ceiling. A dark tint is the same mix at two and a half times the chroma, which the gamut holds at
+     * that lightness for every step: the plain mix left a quarter of the anchor's chroma on the dark page, where any
+     * dim yellow reads as brown and any dim red as a grey, and the four notices read as four greys. The label and
+     * the focus ring hold on every tint in both schemes, at 4.68:1 and 3.35:1 on the tightest, the dark caution.
+     * The boost scales a and b rather than the OKLCh chroma, since Chrome drops the hue of a colour this grey.
      */
 
-    --skin--background-color-info:
-        color-mix(in oklab, var(--skin--color-info) 12%, var(--skin--background-color));
-    --skin--background-color-pass:
-        color-mix(in oklab, var(--skin--color-pass) 12%, var(--skin--background-color));
-    --skin--background-color-fail:
-        color-mix(in oklab, var(--skin--color-fail) 12%, var(--skin--background-color));
+    --skin--background-color-info: light-dark(
+        color-mix(in oklab, var(--skin--color-info) 12%, var(--skin--background-color)),
+        oklab(from color-mix(in oklab, var(--skin--color-info) 12%, var(--skin--background-color)) l calc(a * 2.5) calc(b * 2.5))
+    );
+    --skin--background-color-pass: light-dark(
+        color-mix(in oklab, var(--skin--color-pass) 12%, var(--skin--background-color)),
+        oklab(from color-mix(in oklab, var(--skin--color-pass) 12%, var(--skin--background-color)) l calc(a * 2.5) calc(b * 2.5))
+    );
+    --skin--background-color-fail: light-dark(
+        color-mix(in oklab, var(--skin--color-fail) 12%, var(--skin--background-color)),
+        oklab(from color-mix(in oklab, var(--skin--color-fail) 12%, var(--skin--background-color)) l calc(a * 2.5) calc(b * 2.5))
+    );
 
     /* The caution is one fill in both schemes, so its tint takes a lighter share on the dark page to stay a tint. */
 
     --skin--background-color-warn: light-dark(
         color-mix(in oklab, var(--skin--color-warn) 20%, var(--skin--background-color)),
-        color-mix(in oklab, var(--skin--color-warn) 12%, var(--skin--background-color))
+        oklab(from color-mix(in oklab, var(--skin--color-warn) 12%, var(--skin--background-color)) l calc(a * 2.5) calc(b * 2.5))
     );
 
 }

@@ -63,45 +63,63 @@
  *
  * **What a status colour may paint** — `colorFail` holds AA contrast on the page, the striped row and its own
  * tint, so it paints text or a mark. `colorInfo` and `colorPass` are **marks**, holding 3:1 rather than 4.5:1 in
- * the light colour scheme: they paint a glyph, a rule or a fill, and text over their tint takes `color`.
+ * the light colour scheme: they paint a glyph, a rule or a fill, and text over their tint takes `color`. In the dark
+ * colour scheme they are tuned to read as loud as in the light one, so a notice keeps its weight across schemes.
  * `colorWarn` is a **fill**: a caution paints a filled badge with it and sets its message in the dark page anchor
- * over it, at 10.1:1. Stroking it on the page gives 1.73:1 and is a defect.
+ * over it, at 12.5:1. Stroking it on the page gives 1.68:1 and is a defect, so caution text takes `colorWarnStroke`.
  *
  * **Status text** — `colorInfoStroke`, `colorPassStroke`, `colorWarnStroke` and `colorFailStroke` paint text in
  * the colour of a step. Each holds AA contrast in both colour schemes on the page, the striped row and its step's
- * tint, and on that tint deepened by a further 24% of the step, so a control deepening its fill under the pointer
- * or the press keeps its label as it stands.
+ * tint. A control deepening that tint under the pointer or the press, by a further 24% of the step, sets its label
+ * in whichever of the stroke and `colorOver` holds AA there: the info and pass strokes do on their own, every
+ * stroke does in the dark colour scheme, and the light caution and failure strokes hand over to `colorOver`.
  *
  * The asymmetry is forced by the colour space rather than chosen. Red reaches full saturation at a middling
  * lightness, so the failure colour is dark enough to read on white and loud at once; yellow reaches full saturation
  * only when it is very light, so a yellow dark enough to stroke on white has already spent its chroma. As a fill it
- * carries chroma 0.151 against the failure's 0.218, so the two shout equally, and it takes one value in both colour
- * schemes, as a {@link palettes series slot} does.
+ * carries chroma 0.158 against the failure's 0.218, so the two shout equally, and it takes one value in both colour
+ * schemes, as a {@link palettes series slot} does, since a warning yellow that dimmed on a dark page would stop being one.
  *
- * **Text** — `colorLabel` names a field, `colorPlaceholder` stands in for a value not yet given, and `colorEnabled`
- * tells a control that answers apart from `colorDisabled`, which tells one that does not.
- * Every text role holds AA contrast against the page and the striped row in both colour schemes, except
- * `colorDisabled` and `colorPlaceholder`, which share one value and carry no meaning on their own: both stand for
- * text the reader has not supplied, and a disabled control is told from an empty one by its background rather than
- * by the weight of its text.
+ * **Text** — `colorLabel` names a field and `colorPlaceholder` stands in for a value not yet given. `colorEnabled`
+ * marks a control that answers and `colorDisabled` one that does not. The enabled colour stays apart from the link
+ * colours and from the surrounding text, so a control that answers is never mistaken for a link or for plain copy.
+ *
+ * Every text role holds AA contrast against the page and the striped row in both colour schemes, and `colorLabel`
+ * holds it on the pressed fill of a control too, the deepest surface a label is set on. The exceptions are
+ * `colorDisabled` and `colorPlaceholder`, which share one value with {@link borders `borderColor`} and carry no
+ * meaning on their own. Both stand for text the reader has not supplied, and a disabled control is told from an
+ * empty one by its background, never by the weight of its text, so neither colour is ever read as a text role.
  *
  * **Links** — `colorLink` paints a link and `colorLinkHover` a link under the pointer, both in the hue of the subtle
  * accent at a lightness of their own, so a link follows a brand while holding AA contrast whatever the brand supplies.
  *
  * **States** — `colorHover` marks what the pointer is over, `colorPressed` what is being acted on, `colorSelected`
- * what an earlier choice left standing, and `colorFocus` what the keyboard has reached, the focus ring holding 3:1.
- * The first three answer to the strong accent, so they follow a brand; `colorFocus` carries a value of its own per
- * colour scheme, so that where the keyboard stands is told the same way whatever an app brands with.
- * Each of the first three pairs with a `backgroundColor*` role for a control filling its whole box rather than
- * colouring its text, and the two are never combined on the same element, which would state the emphasis twice. A
- * state is never told in colour alone.
+ * what an earlier choice left standing, and `colorFocus` what the keyboard has reached. A state is never told in
+ * colour alone: weight, shape or wording carries it too, for a reader who cannot tell the colours apart.
  *
- * **Filled steps** — `colorOver` is what text takes over a step painted as a fill rather than stroked, which
- * `colorWarn` always is. It resolves to whichever page anchor is the dark one, so it stays dark in both colour
- * schemes where `color` and `backgroundColor` each swap sides.
+ * The first three answer to the strong accent, so they follow a brand. `colorHover` and `colorPressed` step away
+ * from the page in either colour scheme, the press further than the hover, so the two read as rising emphasis. Each
+ * of the three pairs with a `backgroundColor*` role for a control filling its whole box rather than colouring its
+ * text, and the two are never combined on the same element, which would state the emphasis twice.
+ *
+ * No base rule paints `colorSelected` or the three state fills: they are reserved for the controls a component
+ * library builds on the design system, a tab, a menu item or a toggle filling its box, and the suite holds each to
+ * its budget on the surfaces such a control reaches.
+ *
+ * `colorFocus` carries a value of its own per colour scheme, so that where the keyboard stands is told the same way
+ * whatever an app brands with. It holds 3:1 on every surface a ring is drawn against, a pressed fill included, but
+ * not against a fill in `colorStrong`: a ring around such a control is offset outside the fill, against the page.
+ *
+ * **Filled caution** — `colorOver` is what text takes over a fill painted in `colorWarn`, the one step that is always
+ * a fill. It resolves to whichever page anchor is the dark one, so it stays dark in both colour schemes where
+ * `color` and `backgroundColor` each swap sides. It is not the text over any other step: a fill painted in
+ * `colorFail` flips as `colorStrongOver` does, white in the light colour scheme and black in the dark one.
  *
  * **Filled accent** — `colorStrongOver` is what text takes over a fill painted in `colorStrong`. It is white or
  * black, whichever contrasts more with the accent, so a label holds AA contrast whatever accent an app brands with.
+ *
+ * Neither over colour is read by a base rule, since plain markup paints no filled badge and no filled button: both
+ * are reserved for the component library, and the suite holds each to AA contrast on the fill it is named for.
  *
  * **Surfaces** — `backgroundColorEdit` marks a field that takes a value and `backgroundColorStripe` a table row
  * telling itself from its neighbour. A rule paints `background-color` with them rather than retuning

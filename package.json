@@ -61,6 +61,10 @@
     "@fontsource-variable/roboto-mono": "^5.3.0"
   },
   "devDependencies": {
+    "@csstools/color-helpers": "^6.1.2",
+    "@csstools/css-color-parser": "^4.2.7",
+    "@csstools/css-parser-algorithms": "^4.0.2",
+    "@csstools/css-tokenizer": "^4.0.2",
     "@metreeca/rack": "^0.6.1",
     "@types/node": "^22.20.4",
     "@web/dev-server": "^1.0.0",

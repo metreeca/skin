@@ -1,0 +1,387 @@
+/*
+ * Copyright © 2023-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { OKLCH_to_OKLab, OKLab_to_XYZ, XYZ_D65_to_sRGB } from "@csstools/color-helpers";
+import { color, ColorNotation } from "@csstools/css-color-parser";
+import { parseComponentValue } from "@csstools/css-parser-algorithms";
+import { tokenize } from "@csstools/css-tokenizer";
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { borders } from "./borders.js";
+import { colors } from "./colors.js";
+import { elevations } from "./elevations.js";
+
+
+/**
+ * A colour as the page paints it: sRGB channels in the unit range, or outside it where the stylesheet asked for a
+ * colour the page cannot paint, which the gamut test is there to catch before a browser has to decide what to show.
+ */
+type Paint = readonly [red: number, green: number, blue: number];
+
+type Scheme = "light" | "dark";
+
+/**
+ * The anchors an app states on `:root`, keyed by custom property, standing in for the shipped literals.
+ */
+type Brand = Readonly<Record<string, string>>;
+
+
+/**
+ * The budgets the roles are held to, as WCAG 2.2 states them: text at AA, a mark or a ring at the graphics minimum.
+ */
+const TEXT = 4.5;
+const MARK = 3;
+
+/**
+ * How far a channel may leave the unit range and still paint the same in every browser: a bit of eight.
+ */
+const TOLERANCE = 1 / 255;
+
+const brands: Readonly<Record<string, Brand>> = {
+
+	shipped: {},
+
+	navy: {
+		[colors.colorSubtle]: "light-dark(#1C275D, #9AB)",
+		[colors.colorStrong]: "light-dark(#06C, #4AF)"
+	},
+
+	green: {
+		[colors.colorSubtle]: "light-dark(#2F4F3F, #9BA)",
+		[colors.colorStrong]: "light-dark(#0A7A3C, #3C9)"
+	}
+
+};
+
+const schemes: ReadonlyArray<Scheme> = [ "light", "dark" ];
+
+
+const stylesheets = [ "colors", "borders", "elevations", "palettes" ]
+	.map(family => readFileSync(new URL(`./${ family }.css`, import.meta.url), "utf-8"));
+
+/**
+ * The value stated for each token, in the one place the contract allows: the registration for a literal, `:root`
+ * for a derivation, read from the token modules as they stand rather than from a build.
+ */
+const declared: ReadonlyMap<string, string> = new Map(stylesheets.flatMap<readonly [string, string]>(text => [
+
+	...Array.from(text.matchAll(/@property\s+(--skin--[\w-]+)\s*\{[^}]*initial-value:\s*([^;]+);/g),
+		([ , token = "", value = "" ]): readonly [string, string] => [ token, value.trim() ]
+	),
+
+	...Array.from(text.matchAll(/:root\s*\{([^}]*)}/g), ([ , rule = "" ]) => rule)
+		.flatMap(rule => Array.from(rule.matchAll(/(--skin--[\w-]+)\s*:([^;]*);/g),
+			([ , token = "", value = "" ]): readonly [string, string] => [ token, value.trim() ]
+		))
+
+]));
+
+
+/**
+ * Splits a function argument list at its top-level commas, leaving nested calls whole.
+ */
+function args(text: string): ReadonlyArray<string> {
+
+	const { parts, last } = [ ...text ].reduce<{ parts: ReadonlyArray<string>, last: string, depth: number }>(
+		({ parts, last, depth }, char) =>
+			char === "(" ? { parts, last: last + char, depth: depth + 1 }
+				: char === ")" ? { parts, last: last + char, depth: depth - 1 }
+					: char === "," && depth === 0 ? { parts: [ ...parts, last ], last: "", depth }
+						: { parts, last: last + char, depth },
+		{ parts: [], last: "", depth: 0 }
+	);
+
+	return [ ...parts, last ].map(part => part.trim());
+
+}
+
+/**
+ * Evaluates a token value in a colour scheme under a brand: every `var()` is replaced by the value of the token it
+ * names, and every `light-dark()` by the side the scheme picks, leaving an expression the page could paint.
+ */
+function evaluate(expression: string, scheme: Scheme, brand: Brand): string {
+
+	const substituted = expression.replace(/var\((--skin--[\w-]+)\)/g, (_, token: string) =>
+		evaluate(brand[token] ?? declared.get(token) ?? `missing(${ token })`, scheme, brand)
+	);
+
+	const start = substituted.indexOf("light-dark(");
+
+	if ( start < 0 ) {
+
+		return substituted;
+
+	} else {
+
+		const inner = start + "light-dark(".length;
+		const end = inner + closing(substituted.slice(inner));
+
+		const [ light = "", dark = "" ] = args(substituted.slice(inner, end));
+
+		return evaluate(`${ substituted.slice(0, start) }${ scheme === "light" ? light : dark }${ substituted.slice(end + 1) }`,
+			scheme, brand
+		);
+
+	}
+
+}
+
+/**
+ * The index of the parenthesis closing a call whose opening parenthesis sits just before the text.
+ */
+function closing(text: string): number {
+
+	const { index } = [ ...text ].reduce(({ index, depth }, char, at) =>
+			index >= 0 ? { index, depth }
+				: char === "(" ? { index, depth: depth + 1 }
+					: char === ")" && depth === 0 ? { index: at, depth }
+						: char === ")" ? { index, depth: depth - 1 }
+							: { index, depth },
+		{ index: -1, depth: 0 }
+	);
+
+	return index;
+
+}
+
+/**
+ * Paints a colour expression as sRGB, with the maths the browsers share for OKLab mixing and relative colours.
+ */
+function paint(expression: string): Paint {
+
+	const component = parseComponentValue(tokenize({ css: expression }));
+	const parsed = component && color(component);
+
+	if ( !parsed ) {
+
+		throw new Error(`unpaintable colour <${ expression }>`);
+
+	} else {
+
+		const [ x = 0, y = 0, z = 0 ] = parsed.channels.map(channel => Number.isNaN(channel) ? 0 : channel);
+
+		// the helpers take and return a mutable triple, which nothing here mutates
+
+		const channels: [number, number, number] = [ x, y, z ];
+
+		const xyz: [number, number, number] | undefined = parsed.colorNotation === ColorNotation.OKLab ? OKLab_to_XYZ(channels)
+			: parsed.colorNotation === ColorNotation.OKLCH ? OKLab_to_XYZ(OKLCH_to_OKLab(channels))
+				: parsed.colorNotation === ColorNotation.XYZ_D65 ? channels
+					: undefined;
+
+		const sRGB: Paint | undefined = parsed.colorNotation === ColorNotation.HEX || parsed.colorNotation === ColorNotation.RGB
+		|| parsed.colorNotation === ColorNotation.sRGB ? channels
+			: xyz ? XYZ_D65_to_sRGB(xyz)
+				: undefined;
+
+		if ( !sRGB ) {
+
+			throw new Error(`unexpected colour notation <${ parsed.colorNotation }> in <${ expression }>`);
+
+		} else {
+
+			return sRGB;
+
+		}
+
+	}
+
+}
+
+/**
+ * The WCAG 2.2 contrast ratio between two paints, each clipped to what the page shows.
+ */
+function contrast(foreground: Paint, background: Paint): number {
+
+	const luminance = ([ red, green, blue ]: Paint): number => [ red, green, blue ]
+		.map(channel => Math.min(1, Math.max(0, channel)))
+		.map(channel => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+		.reduce((sum, channel, index) => sum + channel * [ 0.2126, 0.7152, 0.0722 ][index], 0);
+
+	const lighter = Math.max(luminance(foreground), luminance(background));
+	const darker = Math.min(luminance(foreground), luminance(background));
+
+	return (lighter + 0.05) / (darker + 0.05);
+
+}
+
+
+describe.each(Object.entries(brands))("colours of the %s brand", (brand, anchors) => {
+
+	describe.each(schemes)("in the %s scheme", scheme => {
+
+		const swatch = (token: string): Paint => paint(evaluate(`var(${ token })`, scheme, anchors));
+
+		const deepened = (anchor: string, tint: string): Paint => paint(evaluate(
+			`color-mix(in oklab, var(${ anchor }) 24%, var(${ tint }))`, scheme, anchors
+		));
+
+		const over = (foreground: string, background: string): number => contrast(swatch(foreground), swatch(background));
+
+		const page = colors.backgroundColor;
+		const stripe = colors.backgroundColorStripe;
+		const edit = colors.backgroundColorEdit;
+		const overlay = elevations.backgroundColorOverlay;
+
+		const surfaces = [ page, stripe, edit, overlay ];
+
+		const fills = [
+			colors.backgroundColorHover,
+			colors.backgroundColorSelected,
+			colors.backgroundColorPressed
+		];
+
+		const tints = [
+			colors.backgroundColorInfo,
+			colors.backgroundColorPass,
+			colors.backgroundColorWarn,
+			colors.backgroundColorFail
+		];
+
+		const texts = [
+			colors.color,
+			colors.colorLabel,
+			colors.colorEnabled,
+			colors.colorLink,
+			colors.colorLinkHover,
+			colors.colorHover,
+			colors.colorPressed,
+			colors.colorSelected,
+			colors.colorFail,
+			colors.colorInfoStroke,
+			colors.colorPassStroke,
+			colors.colorWarnStroke,
+			colors.colorFailStroke
+		];
+
+		const strokes: ReadonlyArray<{ anchor: string, stroke: string, tint: string }> = [
+			{ anchor: colors.colorInfo, stroke: colors.colorInfoStroke, tint: colors.backgroundColorInfo },
+			{ anchor: colors.colorPass, stroke: colors.colorPassStroke, tint: colors.backgroundColorPass },
+			{ anchor: colors.colorWarn, stroke: colors.colorWarnStroke, tint: colors.backgroundColorWarn },
+			{ anchor: colors.colorFail, stroke: colors.colorFailStroke, tint: colors.backgroundColorFail }
+		];
+
+		/**
+		 * The pairings falling short of a budget, named for the failure list a test prints.
+		 */
+		const shortfalls = (
+			pairings: ReadonlyArray<{ foreground: string, background: string, ratio: number }>, budget: number
+		): ReadonlyArray<string> => pairings
+			.filter(({ ratio }) => ratio < budget)
+			.map(({ foreground, background, ratio }) => `${ foreground } on ${ background } at ${ ratio.toFixed(2) }:1`);
+
+		const pairs = (foregrounds: ReadonlyArray<string>, backgrounds: ReadonlyArray<string>, budget: number) =>
+			shortfalls(foregrounds.flatMap(foreground => backgrounds.map(background =>
+				({ foreground, background, ratio: over(foreground, background) })
+			)), budget);
+
+
+		it("paints every colour inside the sRGB gamut", async () => {
+
+			const tokens = [ ...Object.values(colors), borders.borderColor, ...Object.values(elevations) ]
+				.filter(token => /^--skin--(color|background-color|border-color)/.test(token));
+
+			expect(tokens
+				.map(token => ({ token, channels: swatch(token) }))
+				.filter(({ channels }) => channels.some(channel => channel < -TOLERANCE || channel > 1 + TOLERANCE))
+				.map(({ token, channels }) => `${ token } at ${ channels.map(channel => channel.toFixed(3)).join(" ") }`)
+			).toEqual([]);
+
+		});
+
+		it("holds every text role to AA on the page, the stripe, the edit field and the overlay", async () => {
+
+			expect(pairs(texts, surfaces, TEXT)).toEqual([]);
+
+		});
+
+		it("holds the text and the label to AA on every fill and tint", async () => {
+
+			expect(pairs([ colors.color, colors.colorLabel ], [ ...fills, ...tints ], TEXT)).toEqual([]);
+
+		});
+
+		it("holds each stroke to AA on its tint", async () => {
+
+			expect(shortfalls(strokes.map(({ stroke, tint }) =>
+				({ foreground: stroke, background: tint, ratio: over(stroke, tint) })
+			), TEXT)).toEqual([]);
+
+		});
+
+		it("holds the stroke or the dark page anchor to AA on each tint deepened by a further 24% of its anchor", async () => {
+
+			expect(shortfalls(strokes.map(({ anchor, stroke, tint }) => ({
+				foreground: `${ stroke } or ${ colors.colorOver }`,
+				background: `${ tint } deepened`,
+				ratio: Math.max(
+					contrast(swatch(stroke), deepened(anchor, tint)),
+					contrast(swatch(colors.colorOver), deepened(anchor, tint))
+				)
+			})), TEXT)).toEqual([]);
+
+		});
+
+		it("holds the strong accent and its states to AA on the fills a control paints", async () => {
+
+			expect([
+				...pairs([ colors.colorStrong ], fills, TEXT),
+				...pairs([ colors.colorHover ], [ colors.backgroundColorHover ], TEXT),
+				...pairs([ colors.colorPressed ], [ colors.backgroundColorPressed ], TEXT)
+			]).toEqual([]);
+
+		});
+
+		it("holds the over colours to AA on the fills they are named for", async () => {
+
+			expect([
+				...pairs([ colors.colorStrongOver ], [ colors.colorStrong ], TEXT),
+				...pairs([ colors.colorOver ], [ colors.colorWarn ], TEXT)
+			]).toEqual([]);
+
+		});
+
+		it("holds the information and pass marks to 3:1 on the page, the stripe and their tints", async () => {
+
+			expect([
+				...pairs([ colors.colorInfo ], [ page, stripe, colors.backgroundColorInfo ], MARK),
+				...pairs([ colors.colorPass ], [ page, stripe, colors.backgroundColorPass ], MARK)
+			]).toEqual([]);
+
+		});
+
+		it("holds the failure anchor to AA on the page, the stripe and its tint", async () => {
+
+			expect(pairs([ colors.colorFail ], [ page, stripe, colors.backgroundColorFail ], TEXT)).toEqual([]);
+
+		});
+
+		it("holds the focus ring to 3:1 on every surface and fill it is drawn against", async () => {
+
+			expect(pairs([ colors.colorFocus ], [ ...surfaces, ...fills ], MARK)).toEqual([]);
+
+		});
+
+		it("lifts the raised surface off the table stripe", async () => {
+
+			expect(swatch(elevations.backgroundColorRaised).map(channel => Math.round(channel * 255)))
+				.not.toEqual(swatch(stripe).map(channel => Math.round(channel * 255)));
+
+		});
+
+	});
+
+});

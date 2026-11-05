@@ -142,6 +142,16 @@ the anchors decide, and an app retuning them carries the rule along.
 Derive a new role from an anchor with `color-mix(in oklab, …)` for a mix towards the page, or `oklch(from … )` where the
 chroma has to survive. An anchor pair states an emphasis relative to its partner, never an appearance.
 
+A derivation **NEVER** leaves the sRGB gamut, for the shipped brand or for the alternative brands the suite runs:
+browsers disagree on what to paint outside it, Chrome and Firefox clipping the channels and Safari reducing the
+chroma, so the colour the comment describes is the colour no browser shows. A `color-mix()` of two paintable colours
+stays paintable; an `oklch(from …)` step that raises chroma or pushes lightness towards an end caps the channel with
+`min()` where the gamut ends at that lightness.
+
+A relative `oklch(from …)` **NEVER** reads the hue of a near-grey: Chrome marks the hue of a colour under about
+0.02 chroma as powerless and paints the result red, and no evaluator outside a browser predicts it. A derivation
+raising the chroma of a tint scales `a` and `b` in `oklab(from …)`, which has no hue to lose.
+
 Text roles hold 4.5:1 against the background **and** over the stripe, in **both** schemes; a focus ring holds 3:1.
 Retuning an anchor means recomputing every role derived from it, in both schemes, before the change is reported.
 

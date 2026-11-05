@@ -19,14 +19,15 @@
  * markdown-alert and its kind, opened by a markdown-alert-title paragraph. The classes are that published convention
  * rather than names of the design system, so any Markdown pipeline emitting them gets alerts on the meaning scale.
  *
- * An alert reads on the page background behind a bar in the stroke role of its step, its kind told by the title and
- * any glyph beside it: the colour stands alongside the wording, never alone. The bar takes the narrowest spacing as
- * its width, the scale holding no border width heavy enough to carry a mark that has to read at a glance.
+ * An alert sits on the tint of its step behind a bar in the stroke role of the same step, its kind told by the title
+ * and any glyph beside it: the colour stands alongside the wording, never alone. The tint is what makes a warning read
+ * as one at a glance, since the yellow a caution is known by cannot be text and lives in the fill. The bar takes the
+ * narrowest spacing as its width, the scale holding no border width heavy enough to carry a mark on its own.
  *
- * A note is the quietest kind, an aside rather than a meaning, so it takes the subtle accent and leaves the info step
- * to the important alert, whose purple GitHub colour the scale has no room for. The strong accent would be louder,
- * but its orange sits next to the caution stroke and would read as a warning. The subtle accent holds 10:1 on the
- * light page and 7.9:1 on the dark one, so it serves as the text of the title as well as the bar beside it.
+ * A note is the quietest kind, an aside rather than a meaning, so it takes the subtle accent and its first scale step
+ * and leaves the info step to the important alert, whose purple GitHub colour the scale has no room for. The strong
+ * accent would be louder, but its orange sits next to the caution stroke and would read as a warning. The subtle
+ * accent holds 10:1 on the light page and 7.9:1 on the dark one, so it serves as the title as well as the bar.
  */
 
 .markdown-alert {
@@ -35,27 +36,35 @@
     margin-bottom: var(--skin--spacing-100);
 
     border-left: var(--skin--spacing-025) var(--skin--border-style) var(--skin-alert);
+    border-radius: 0 var(--skin--border-radius-025) var(--skin--border-radius-025) 0;
 
-    /* The stroke roles hold AA contrast on the stripe in both schemes, as stated where they are declared. */
+    background-color: var(--skin-alert-tint);
+
+    /* Every stroke role holds AA contrast on its own tint in both schemes, as stated where they are declared. */
 
     &.markdown-alert-note {
         --skin-alert: var(--skin--color-subtle);
+        --skin-alert-tint: var(--skin--color-subtle-010);
     }
 
     &.markdown-alert-important {
         --skin-alert: var(--skin--color-info-stroke);
+        --skin-alert-tint: var(--skin--background-color-info);
     }
 
     &.markdown-alert-tip {
         --skin-alert: var(--skin--color-pass-stroke);
+        --skin-alert-tint: var(--skin--background-color-pass);
     }
 
     &.markdown-alert-warning {
         --skin-alert: var(--skin--color-warn-stroke);
+        --skin-alert-tint: var(--skin--background-color-warn);
     }
 
     &.markdown-alert-caution {
         --skin-alert: var(--skin--color-fail-stroke);
+        --skin-alert-tint: var(--skin--background-color-fail);
     }
 
     & > .markdown-alert-title {
