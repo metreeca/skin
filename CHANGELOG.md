@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/metreeca/skin/compare/v0.2.0...HEAD)
 
+### Added
+
+- `colorStrongOver` - text colour for a fill painted in the strong accent, taking white or black, whichever contrasts
+  more with the fill, so a label on it holds AA contrast whatever accent an app supplies, shipped orange included
+
 ## [0.2.0](https://github.com/metreeca/skin/compare/v0.1.0...v0.2.0) - 2026-11-05
 
 ### Added

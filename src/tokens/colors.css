@@ -171,6 +171,11 @@
     inherits: true;
 }
 
+@property --skin--color-strong-over {
+    syntax: "*";
+    inherits: true;
+}
+
 @property --skin--color-info-stroke {
     syntax: "*";
     inherits: true;
@@ -264,6 +269,19 @@
     /* Text over a filled mark takes whichever page anchor is dark in the scheme at hand. */
 
     --skin--color-over: light-dark(var(--skin--color), var(--skin--background-color));
+
+    /*
+     * Text over a strong fill takes white or black, whichever contrasts more with the fill, since a brand may supply
+     * an accent on either side of the crossover. The flip reads the y channel, the WCAG relative luminance, at
+     * 0.1791, where the two contrast equally, so it holds 4.58:1 at worst whatever the hue. The shipped orange takes
+     * white at 5.50:1 in the light scheme and black at 8.77:1 in the dark one. The factors scale the D65 white point.
+     */
+
+    --skin--color-strong-over: color(from var(--skin--color-strong) xyz-d65
+        calc(0.9505 * clamp(0, (0.1791 - y) * 1000, 1))
+        clamp(0, (0.1791 - y) * 1000, 1)
+        calc(1.0888 * clamp(0, (0.1791 - y) * 1000, 1))
+    );
 
     /*
      * Status text takes a stroke role: the status anchor carried towards the page text, which darkens it on a light

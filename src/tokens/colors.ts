@@ -100,6 +100,9 @@
  * `colorWarn` always is. It resolves to whichever page anchor is the dark one, so it stays dark in both colour
  * schemes where `color` and `backgroundColor` each swap sides.
  *
+ * **Filled accent** — `colorStrongOver` is what text takes over a fill painted in `colorStrong`. It is white or
+ * black, whichever contrasts more with the accent, so a label holds AA contrast whatever accent an app brands with.
+ *
  * **Surfaces** — `backgroundColorEdit` marks a field that takes a value and `backgroundColorStripe` a table row
  * telling itself from its neighbour. A rule paints `background-color` with them rather than retuning
  * `backgroundColor`, which every other colour here stands on. A thing lifted off the page takes an
@@ -148,6 +151,7 @@ export const colors = {
 	colorSelected: "--skin--color-selected",
 	colorFocus: "--skin--color-focus",
 	colorOver: "--skin--color-over",
+	colorStrongOver: "--skin--color-strong-over",
 
 	backgroundColorEdit: "--skin--background-color-edit",
 	backgroundColorStripe: "--skin--background-color-stripe",
