@@ -14,6 +14,10 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
     "customConditions": [
       "@metreeca/source"
     ]

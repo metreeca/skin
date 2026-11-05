@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+
+        <title>@metreeca/skin</title>
+
+        <meta name="description" content="Tokens an interface is made of, and the base rules applying them to markup.">
+        <meta name="copyright" content="&copy; 2026 Metreeca">
+
+        <link rel="icon" type="image/svg+xml" href="./icon.svg">
+
+        <script type="module" src="./src/index.ts"></script>
+
+    </head>
+
+    <body>
+
+        <header class="bar">
+
+            <a class="brand" href="#top">
+                <img class="mark" src="./icon.svg" alt="">
+                <span>@metreeca/<strong>skin</strong></span>
+            </a>
+
+            <fieldset class="scheme" aria-label="Colour scheme">
+                <label><input type="radio" name="scheme" value="auto" checked><span>Auto</span></label>
+                <label><input type="radio" name="scheme" value="light"><span>Light</span></label>
+                <label><input type="radio" name="scheme" value="dark"><span>Dark</span></label>
+            </fieldset>
+
+        </header>
+
+        <div class="shell">
+
+            <nav class="toc" aria-label="Sections">
+
+                <p>Foundations</p>
+
+                <a href="#colours">Colours</a>
+                <a href="#palettes">Palettes</a>
+                <a href="#typography">Typography</a>
+                <a href="#spacing">Spacing</a>
+                <a href="#shape">Shape</a>
+                <a href="#elevation">Elevation</a>
+                <a href="#motion">Motion</a>
+                <a href="#layers">Layers</a>
+                <a href="#context">Context</a>
+
+                <p>Markup</p>
+
+                <a href="#text">Text</a>
+                <a href="#lists">Lists</a>
+                <a href="#tables">Tables</a>
+                <a href="#forms">Forms</a>
+                <a href="#alerts">Alerts</a>
+
+                <p>Adoption</p>
+
+                <a href="#theming">Theming</a>
+
+            </nav>
+
+            <main id="top">
+
+                <section class="hero">
+
+                    <p class="eyebrow">Design system</p>
+
+                    <h1>Essential design tokens and styles</h1>
+
+                    <p class="lead">
+                        A typed token contract and the stylesheet giving it values. Every sample on this page is painted
+                        by the tokens themselves, so what you see is what an app gets by importing
+                        <code>@metreeca/skin/index.css</code> and nothing else.
+                    </p>
+
+                    <ul class="facts"></ul>
+
+                    <p class="hint">
+                        Click any token to copy its <code>var()</code> reference. Colour samples follow the scheme on
+                        show, except the anchors, split between the light scheme on the left and the dark one on the right.
+                    </p>
+
+                </section>
+
+                <!-- Foundations ----------------------------------------------------------------------------------->
+
+                <section id="colours" data-family="colors">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Colours</h2>
+                        <p class="lead">
+                            Eight anchors carry literal values; every other colour derives from them, so retuning an
+                            anchor carries the whole interface along.
+                        </p>
+                    </header>
+
+                    <h3>Anchors</h3>
+                    <p class="note">The page pair, the brand accents and the four steps of the meaning scale.</p>
+                    <div class="chips large" data-chips="anchors"></div>
+
+                    <h3>Meaning scale</h3>
+                    <p class="note">
+                        Every meaning a widget carries lands on one of four steps. A notice is marked by the step,
+                        tinted by its fill and titled in its stroke; its body keeps the page ink.
+                    </p>
+                    <div class="steps"></div>
+
+                    <h3>Text and marks</h3>
+                    <p class="note">
+                        Live contrast against the page and the table stripe, in the scheme on show. Text holds 4.5:1,
+                        marks and the focus ring 3:1; disabled and placeholder ink are deliberately below budget.
+                    </p>
+                    <div class="roles"></div>
+
+                    <h3>Fills</h3>
+                    <p class="note">Grounds for editing, striping and interaction states, and the tints of the meaning scale.</p>
+                    <div class="chips" data-chips="fills"></div>
+
+                </section>
+
+                <section id="palettes" data-family="palettes">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Palettes</h2>
+                        <p class="lead">
+                            Colours a chart, a coding or a map reads. They say where a value sits or which thing it
+                            belongs to, and never stand in for a role.
+                        </p>
+                    </header>
+
+                    <h3>Scales</h3>
+                    <p class="note">
+                        Ten steps each, numbered by the share of the anchor they carry. Gray, subtle and strong follow
+                        the anchors; heat codes bands by hue and always needs a legend in text.
+                    </p>
+                    <div class="ramps"></div>
+
+                    <h3>Series</h3>
+                    <p class="note">
+                        Nine slots telling one thing from another, ordered so neighbours stay apart under colour vision
+                        deficiency. On scatters and maps, where every pair is compared, only the first three hold.
+                    </p>
+                    <div class="series"></div>
+
+                    <h3>Areas</h3>
+                    <p class="note">
+                        Four classes filling shapes, as two light and dark pairs. A map keeps its boundaries drawn and
+                        names its classes in a legend; a fifth class is a second map.
+                    </p>
+                    <div class="areas"></div>
+
+                </section>
+
+                <section id="typography" data-family="typography">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Typography</h2>
+                        <p class="lead">
+                            The variable Roboto family, bundled with the stylesheet and fetched only once text set in a
+                            face is painted.
+                        </p>
+                    </header>
+
+                    <h3>Faces</h3>
+                    <div class="faces"></div>
+
+                    <h3>Sizes and weights</h3>
+                    <div class="rows" data-rows="type"></div>
+
+                </section>
+
+                <section id="spacing">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Spacing</h2>
+                        <p class="lead">
+                            Two ladders measured in <code>em</code>, so both follow the text they sit in: spacings set a
+                            thing apart from its neighbour, scalings size a thing against the text.
+                        </p>
+                    </header>
+
+                    <div class="pair">
+                        <div>
+                            <h3>Spacings</h3>
+                            <div class="rows" data-rows="spacings"></div>
+                        </div>
+                        <div>
+                            <h3>Scalings</h3>
+                            <div class="rows" data-rows="scalings"></div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section id="shape" data-family="borders">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Shape</h2>
+                        <p class="lead">The line, the radii, and the marks for focus and invalid input.</p>
+                    </header>
+
+                    <div class="chips" data-chips="shape"></div>
+
+                </section>
+
+                <section id="elevation" data-family="elevations">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Elevation</h2>
+                        <p class="lead">
+                            Surfaces lifted off the page or sunk into it, the shadows pairing with them, the glass
+                            gathering floating controls and the blanket dimming what a modal covers.
+                        </p>
+                    </header>
+
+                    <div class="stage"></div>
+
+                    <h3>Shadows</h3>
+                    <div class="chips" data-chips="shadows"></div>
+
+                </section>
+
+                <section id="motion" data-family="motions">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Motion</h2>
+                        <p class="lead">
+                            How long a change takes and the curve it follows. Durations collapse to zero for readers
+                            asking for reduced motion.
+                        </p>
+                    </header>
+
+                    <button type="button" class="play">Play</button>
+
+                    <div class="rows" data-rows="motions"></div>
+
+                </section>
+
+                <section id="layers" data-family="layers">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Layers</h2>
+                        <p class="lead">
+                            The stacking order two overlapping things are settled by, and how far a thing present but
+                            unavailable is faded.
+                        </p>
+                    </header>
+
+                    <div class="pair">
+                        <div>
+                            <h3>Stacking</h3>
+                            <div class="stack"></div>
+                        </div>
+                        <div>
+                            <h3>Opacities</h3>
+                            <div class="rows" data-rows="opacities"></div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section id="context">
+
+                    <header>
+                        <p class="eyebrow">Foundations</p>
+                        <h2>Context</h2>
+                        <p class="lead">
+                            Answers an area hands down to everything it holds, read by rules through style queries.
+                            Resize the window to watch the viewport flags switch.
+                        </p>
+                    </header>
+
+                    <div class="flags"></div>
+
+                </section>
+
+                <!-- Markup ---------------------------------------------------------------------------------------->
+
+                <section id="text">
+
+                    <header>
+                        <p class="eyebrow">Markup</p>
+                        <h2>Text</h2>
+                        <p class="lead">Plain document markup, styled by the base rules with no class attached.</p>
+                    </header>
+
+                    <div class="frame">
+
+                        <h1>Heading 1</h1>
+                        <h2>Heading 2</h2>
+                        <h3>Heading 3</h3>
+
+                        <p>
+                            Body text with <strong>strong</strong>, <em>emphasised</em>, <code>inline code</code>,
+                            <kbd>Ctrl</kbd> + <kbd>K</kbd>, <mark>marked</mark>, <small>small</small> and
+                            <a href="#text">linked</a> runs, set on the base line height so a paragraph reads
+                            comfortably at the measure the page allows.
+                        </p>
+
+                        <blockquote>
+                            <p>A quotation, set apart from the running text around it.</p>
+                        </blockquote>
+
+                        <pre><code><span class="hljs-comment">// Greets the reader, highlighted as highlight.js classes it.</span>
+<span class="hljs-keyword">const</span> greeting = <span class="hljs-string">"Hello, world!"</span>;
+<span class="hljs-keyword">const</span> times = <span class="hljs-number">3</span>;
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; times; i++) {
+    <span class="hljs-built_in">console</span>.log(greeting, <span class="hljs-literal">true</span>);
+}</code></pre>
+
+                        <hr>
+
+                    </div>
+
+                </section>
+
+                <section id="lists">
+
+                    <header>
+                        <p class="eyebrow">Markup</p>
+                        <h2>Lists</h2>
+                    </header>
+
+                    <div class="frame columns">
+
+                        <div>
+
+                            <h3>Unordered</h3>
+
+                            <ul>
+                                <li>An unordered item</li>
+                                <li>Another item
+                                    <ul>
+                                        <li>A nested item</li>
+                                        <li>Another nested item
+                                            <ul>
+                                                <li>A third level</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>A closing item</li>
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h3>Ordered</h3>
+
+                            <ol>
+                                <li>An ordered item</li>
+                                <li>Another item
+                                    <ol>
+                                        <li>A numbered sub-item</li>
+                                        <li>Another sub-item
+                                            <ol>
+                                                <li>A third level</li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>A closing item</li>
+                            </ol>
+
+                        </div>
+
+                        <div>
+
+                            <h3>Mixed</h3>
+
+                            <ol>
+                                <li>A numbered step
+                                    <ul>
+                                        <li>A bulleted note</li>
+                                        <li>Another note</li>
+                                    </ul>
+                                </li>
+                                <li>The next step</li>
+                            </ol>
+
+                            <ul>
+                                <li>A bulleted point
+                                    <ol>
+                                        <li>A numbered detail</li>
+                                        <li>Another detail</li>
+                                    </ol>
+                                </li>
+                                <li>The next point</li>
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h3>Definitions</h3>
+
+                            <dl>
+                                <dt>Term</dt>
+                                <dd>The definition of the term.</dd>
+                                <dt>Another term</dt>
+                                <dd>Its definition.</dd>
+                            </dl>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section id="tables">
+
+                    <header>
+                        <p class="eyebrow">Markup</p>
+                        <h2>Tables</h2>
+                    </header>
+
+                    <div class="frame">
+
+                        <h3>Plain</h3>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Alpha</td>
+                                    <td>First entry</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>Beta</td>
+                                    <td>Second entry</td>
+                                    <td>345</td>
+                                </tr>
+                                <tr>
+                                    <td>Gamma</td>
+                                    <td>Third entry</td>
+                                    <td>6,789</td>
+                                </tr>
+                                <tr>
+                                    <td>Delta</td>
+                                    <td>Fourth entry, with <code>inline code</code> and a <a href="#tables">link</a></td>
+                                    <td>10,112</td>
+                                </tr>
+                                <tr>
+                                    <td>Epsilon</td>
+                                    <td>Fifth entry</td>
+                                    <td>13,435</td>
+                                </tr>
+                                <tr>
+                                    <td>Zeta</td>
+                                    <td>Sixth entry</td>
+                                    <td>16,758</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Striped, with <code>data-striped</code></h3>
+
+                        <table data-striped>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Alpha</td>
+                                    <td>First entry</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>Beta</td>
+                                    <td>Second entry</td>
+                                    <td>345</td>
+                                </tr>
+                                <tr>
+                                    <td>Gamma</td>
+                                    <td>Third entry</td>
+                                    <td>6,789</td>
+                                </tr>
+                                <tr>
+                                    <td>Delta</td>
+                                    <td>Fourth entry, with <code>inline code</code> and a <a href="#tables">link</a></td>
+                                    <td>10,112</td>
+                                </tr>
+                                <tr>
+                                    <td>Epsilon</td>
+                                    <td>Fifth entry</td>
+                                    <td>13,435</td>
+                                </tr>
+                                <tr>
+                                    <td>Zeta</td>
+                                    <td>Sixth entry</td>
+                                    <td>16,758</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </section>
+
+                <section id="forms">
+
+                    <header>
+                        <p class="eyebrow">Markup</p>
+                        <h2>Forms</h2>
+                    </header>
+
+                    <form class="frame columns" onsubmit="return false">
+
+                        <fieldset>
+
+                            <legend>Fields</legend>
+
+                            <label>Text <input type="text" placeholder="Placeholder"></label>
+                            <label>Number <input type="number" value="42"></label>
+                            <label>Date <input type="date"></label>
+                            <label>Invalid <input type="email" value="not an email" required></label>
+                            <label>Disabled <input type="text" value="Disabled" disabled></label>
+
+                            <label>Choice
+                                <select>
+                                    <option>First</option>
+                                    <option>Second</option>
+                                </select>
+                            </label>
+
+                            <label>Notes <textarea rows="3"></textarea></label>
+
+                        </fieldset>
+
+                        <fieldset>
+
+                            <legend>Options</legend>
+
+                            <label class="inline"><input type="checkbox" checked> Checked</label>
+                            <label class="inline"><input type="checkbox"> Unchecked</label>
+                            <label class="inline"><input type="radio" name="radio" checked> First</label>
+                            <label class="inline"><input type="radio" name="radio"> Second</label>
+
+                            <div class="actions">
+                                <button type="submit">Submit</button>
+                                <button type="reset" disabled>Disabled</button>
+                            </div>
+
+                        </fieldset>
+
+                    </form>
+
+                </section>
+
+                <section id="alerts">
+
+                    <header>
+                        <p class="eyebrow">Markup</p>
+                        <h2>Alerts</h2>
+                        <p class="lead">
+                            GitHub alerts, as Markdown renders <code>&gt; [!NOTE]</code> and its siblings: notes on the
+                            subtle accent, every other kind on a step of the meaning scale.
+                        </p>
+                    </header>
+
+                    <div class="frame">
+
+                        <div class="markdown-alert markdown-alert-note">
+                            <p class="markdown-alert-title">Note</p>
+                            <p>Useful information a reader should know, even when skimming, marked by the subtle accent.</p>
+                        </div>
+
+                        <div class="markdown-alert markdown-alert-important">
+                            <p class="markdown-alert-title">Important</p>
+                            <p>Key information a reader needs to succeed.</p>
+                        </div>
+
+                        <div class="markdown-alert markdown-alert-tip">
+                            <p class="markdown-alert-title">Tip</p>
+                            <p>Advice for doing things better or more easily.</p>
+                        </div>
+
+                        <div class="markdown-alert markdown-alert-warning">
+                            <p class="markdown-alert-title">Warning</p>
+                            <p>Urgent information that needs immediate attention to avoid problems.</p>
+                        </div>
+
+                        <div class="markdown-alert markdown-alert-caution">
+                            <p class="markdown-alert-title">Caution</p>
+                            <p>Advice about the risks or negative outcomes of certain actions.</p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- Adoption -------------------------------------------------------------------------------------->
+
+                <section id="theming">
+
+                    <header>
+                        <p class="eyebrow">Adoption</p>
+                        <h2>Theming</h2>
+                        <p class="lead">
+                            An app adopts a brand by restating the accent anchors once on <code>:root</code>, as an
+                            ordinary unlayered rule; the override follows both schemes and every pinned subtree.
+                        </p>
+                    </header>
+
+                    <div class="tuner">
+
+                        <form class="controls" onsubmit="return false">
+
+                            <label>Subtle, light <input type="color" data-anchor="colorSubtle" data-side="light"></label>
+                            <label>Subtle, dark <input type="color" data-anchor="colorSubtle" data-side="dark"></label>
+                            <label>Strong, light <input type="color" data-anchor="colorStrong" data-side="light"></label>
+                            <label>Strong, dark <input type="color" data-anchor="colorStrong" data-side="dark"></label>
+
+                            <button type="reset">Reset to Metreeca</button>
+
+                        </form>
+
+                        <pre><code class="override"></code></pre>
+
+                    </div>
+
+                    <h3>Pinned subtrees</h3>
+                    <p class="note">A <code>data-theme</code> attribute pins one scheme for everything below it.</p>
+
+                    <div class="islands">
+
+                        <article data-theme="light">
+                            <h3>Light</h3>
+                            <p>Pinned to the light scheme, with a <a href="#theming">link</a> and a field.</p>
+                            <input type="text" placeholder="Placeholder">
+                            <button type="button">Button</button>
+                        </article>
+
+                        <article data-theme="dark">
+                            <h3>Dark</h3>
+                            <p>Pinned to the dark scheme, with a <a href="#theming">link</a> and a field.</p>
+                            <input type="text" placeholder="Placeholder">
+                            <button type="button">Button</button>
+                        </article>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+
+        <output class="toast" role="status" aria-live="polite"></output>
+
+    </body>
+
+</html>

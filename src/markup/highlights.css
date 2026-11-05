@@ -1,0 +1,38 @@
+/*
+ * Copyright © 2023-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Highlighted code, as highlight.js and the rehype and remark plugins built on it class its tokens. Kinds of tokens
+ * are told apart by the stroke roles, which hold AA contrast on the stripe the code block sits on: the colour only
+ * eases reading, the code saying the same thing without it to a reader who cannot tell the hues apart.
+ */
+
+.hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal {
+    color: var(--skin--color-info-stroke);
+}
+
+.hljs-string, .hljs-regexp {
+    color: var(--skin--color-pass-stroke);
+}
+
+.hljs-number, .hljs-symbol, .hljs-attr, .hljs-attribute {
+    color: var(--skin--color-warn-stroke);
+}
+
+.hljs-comment, .hljs-meta {
+    font-style: italic;
+    color: var(--skin--color-label);
+}

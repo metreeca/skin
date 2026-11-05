@@ -1,0 +1,85 @@
+/*
+ * Copyright © 2023-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * GitHub alerts, as GitHub renders them and as remark-github-blockquote-alert reproduces them: a block classed
+ * markdown-alert and its kind, opened by a markdown-alert-title paragraph. The classes are that published convention
+ * rather than names of the design system, so any Markdown pipeline emitting them gets alerts on the meaning scale.
+ *
+ * An alert reads on the page background behind a bar in the stroke role of its step, its kind told by the title and
+ * any glyph beside it: the colour stands alongside the wording, never alone. The bar takes the narrowest spacing as
+ * its width, the scale holding no border width heavy enough to carry a mark that has to read at a glance.
+ *
+ * A note is the quietest kind, an aside rather than a meaning, so it takes the subtle accent and leaves the info step
+ * to the important alert, whose purple GitHub colour the scale has no room for. The strong accent would be louder,
+ * but its orange sits next to the caution stroke and would read as a warning. The subtle accent holds 10:1 on the
+ * light page and 7.9:1 on the dark one, so it serves as the text of the title as well as the bar beside it.
+ */
+
+.markdown-alert {
+
+    padding: var(--skin--spacing-050) var(--skin--spacing-100);
+    margin-bottom: var(--skin--spacing-100);
+
+    border-left: var(--skin--spacing-025) var(--skin--border-style) var(--skin-alert);
+
+    /* The stroke roles hold AA contrast on the stripe in both schemes, as stated where they are declared. */
+
+    &.markdown-alert-note {
+        --skin-alert: var(--skin--color-subtle);
+    }
+
+    &.markdown-alert-important {
+        --skin-alert: var(--skin--color-info-stroke);
+    }
+
+    &.markdown-alert-tip {
+        --skin-alert: var(--skin--color-pass-stroke);
+    }
+
+    &.markdown-alert-warning {
+        --skin-alert: var(--skin--color-warn-stroke);
+    }
+
+    &.markdown-alert-caution {
+        --skin-alert: var(--skin--color-fail-stroke);
+    }
+
+    & > .markdown-alert-title {
+
+        display: flex;
+        align-items: center;
+        column-gap: var(--skin--spacing-050);
+
+        margin-bottom: var(--skin--spacing-050);
+
+        font-weight: var(--skin--font-weight-strong);
+
+        color: var(--skin-alert);
+
+        & > svg {
+            width: var(--skin--scaling-100);
+            height: var(--skin--scaling-100);
+            fill: currentColor;
+        }
+
+    }
+
+    & > p:last-child {
+        margin-bottom: 0;
+    }
+
+}
