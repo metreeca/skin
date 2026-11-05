@@ -1,0 +1,61 @@
+{
+  "name": "@metreeca/skin",
+  "version": "0.1.0",
+  "description": "Essential design tokens and styles.",
+  "keywords": [
+    "typescript",
+    "css",
+    "design-system",
+    "tokens",
+    "ui"
+  ],
+  "homepage": "https://metreeca.github.io/skin/",
+  "bugs": {
+    "url": "https://github.com/metreeca/skin/issues",
+    "email": "info@metreeca.com"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Metreeca",
+    "email": "info@metreeca.com",
+    "url": "https://www.metreeca.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metreeca/skin.git"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@metreeca/source": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "clean": "ush rm dist docs node_modules",
+    "prime": "npm ci",
+    "setup": "npm ci && ush ln",
+    "build": "ush rm dist docs && tsc -p tsconfig.build.json && npx typedoc",
+    "check": "npx vitest --typecheck --passWithNoTests run",
+    "proof": "npx typedoc && (npx typedoc --watch & npx wds --root-dir docs --watch --open)"
+  },
+  "devDependencies": {
+    "@metreeca/rack": "^0.6.0",
+    "@web/dev-server": "^1.0.0",
+    "typedoc": "^0.28.20",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "allowScripts": {
+    "fsevents": true
+  }
+}
