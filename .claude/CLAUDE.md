@@ -318,7 +318,7 @@ browser paints. An app supplying its own brand rechecks its own figures: the sui
 hypothetical brands. A figure in a token comment is documentation of what the test asserts, never the guard.
 
 An `@property` registration states the type a token takes and the default it falls back on, under the constraints
-`css-developer` §Registrations sets out: only an absolute value takes a real type, and a derived token carries no
+`css-developer:rules` §Registrations sets out: only an absolute value takes a real type, and a derived token carries no
 default at all.
 
 # Token Lifecycle
@@ -536,7 +536,7 @@ tightest surface reaches 4.5:1: the tint on the light page, the overlay on the d
 Every other colour derives from them through `color-mix(in oklab, …)` or `oklch(from …)`, so an app retuning the
 anchors carries the whole interface along.
 
-The accent pair is named for the emphasis it carries rather than for how it looks, as `css-developer` §Colours requires.
+The accent pair is named for the emphasis it carries rather than for how it looks, as `css-developer:colours` requires.
 `subtle` and `strong` are relative to each other, which any brand honours by supplying a quieter value and a louder one,
 and neither name survives being read as an absolute.
 
@@ -550,7 +550,7 @@ and neither name survives being read as an absolute.
 `--skin--color-fail` is an anchor rather than a derivation of an accent on purpose: deriving it carried the hue an
 app brands with into the role marking a failure, so a blue-branded interface rejected a value in blue.
 
-The striped table row is where the custom property cycle `css-developer` warns of would bite: it paints
+The striped table row is where the custom property cycle `css-developer:rules` warns of would bite: it paints
 `background-color` instead of retuning `--skin--background-color`, which every other colour here stands on.
 
 Text roles hold WCAG AA contrast, 4.5:1 against the background they sit on, in **both** schemes and over the stripe;
