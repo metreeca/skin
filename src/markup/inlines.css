@@ -44,18 +44,24 @@ a, a:visited {
 
 }
 
-em {
+/* Emphasis, a cited title, a term being defined and a variable are set in italics, the stress the text face carries. */
+
+em, i, cite, dfn, var {
     font-style: italic;
 }
 
-strong {
+strong, b {
     font-weight: var(--skin--font-weight-strong);
 }
 
-code {
+/* Code, keys and the output of a program are set in the mono face. */
 
+code, kbd, samp {
     font-family: var(--skin--font-family-mono);
     font-size: 87.5%; /* Optical nudge: the mono face shares the heights of the text face, its glyphs 29% wider. */
+}
+
+code {
 
     /*
      * A code span names one thing, so it is read as one word rather than folded at a hyphen or a space. The mono face
@@ -72,6 +78,39 @@ code {
         white-space: nowrap;
     }
 
+}
+
+/*
+ * A key is drawn as the cap it is pressed on: outlined in the decorative line, the bottom edge doubled as the side a
+ * cap shows below its face, and padded and rounded as a code span is, so a chord reads as keys rather than as code.
+ */
+
+kbd {
+    padding: var(--skin--spacing-010) var(--skin--spacing-025);
+    border-style: var(--skin--border-style);
+    border-bottom-width: calc(2 * var(--skin--border-width));
+    border-radius: var(--skin--border-radius-025);
+    white-space: nowrap;
+}
+
+/* A passage marked for reference, as a search hit is, lies on the tint a selected item takes. */
+
+mark {
+    background-color: var(--skin--background-color-selected);
+}
+
+/* A subscript and a superscript are set smaller and take no height of their own, so the line spacing stays even. */
+
+sub, sup {
+    font-size: smaller;
+    line-height: 0;
+}
+
+/* An abbreviation carrying its expansion keeps the dotted underline the platform draws, and offers it as help. */
+
+abbr[title] {
+    text-underline-offset: 0.15em;
+    cursor: help;
 }
 
 small {

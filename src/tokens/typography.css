@@ -63,9 +63,9 @@
 }
 
 /*
- * The heading size is relative and sizes every level. The first level scales up from it, while the levels below take
- * it as it stands and leave the hierarchy to the face, the weight and the space around a heading, so a deep outline
- * stays readable in a column. An app resizing this token resizes every heading together.
+ * The heading size is relative and sizes every level. The first two levels scale up from it by small ratios, while the
+ * levels below take it as it stands or step down to the small size, leaving the rest of the hierarchy to the weight,
+ * the colour and the space around a heading. An app resizing this token resizes every heading together.
  */
 
 @property --skin--font-size-heading {

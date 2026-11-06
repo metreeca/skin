@@ -74,3 +74,77 @@ hr {
     }
 
 }
+
+/*
+ * A picture, a video or an embedded frame never stands wider than the column it sits in. A picture or a video sized
+ * by both a width and a height keeps its proportions when scaled down, its height following the width; one sized by
+ * its height alone keeps that height, as a logo or an icon set to the line it stands in expects.
+ */
+
+img, video, iframe {
+    max-width: 100%;
+}
+
+:is(img, video)[width] {
+    height: auto;
+}
+
+/* A figure is set apart from the text as a block, its caption below it in the quieter size and colour of a label. */
+
+figure {
+    margin-bottom: var(--skin--spacing-100);
+}
+
+figcaption {
+    margin-top: var(--skin--spacing-050);
+    font-size: var(--skin--font-size-small);
+    color: var(--skin--color-label);
+}
+
+/*
+ * A disclosure is set apart from the text as a block. Its summary is the control opening it, so it offers the pointer
+ * and owes the focus mark the reset takes away, and stands off what it discloses once open.
+ */
+
+details {
+
+    margin-bottom: var(--skin--spacing-100);
+
+    &[open] > summary {
+        margin-bottom: var(--skin--spacing-050);
+    }
+
+}
+
+summary {
+
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: var(--skin--outline-focus);
+        outline-offset: var(--skin--border-width);
+    }
+
+}
+
+/*
+ * A dialog is an overlay surface, lifted off the page with the shadow that pairs with it, outlined and rounded as a
+ * card is, and padded from its content. The reset takes the margin a modal dialog is centred by, so it is restored,
+ * and the page behind a modal is dimmed with the blanket, as it is behind an image enlarged out of the text.
+ */
+
+dialog {
+
+    margin: auto;
+    padding: var(--skin--spacing-150);
+    border-style: var(--skin--border-style);
+    border-radius: var(--skin--border-radius-075);
+
+    background-color: var(--skin--background-color-overlay);
+    box-shadow: var(--skin--box-shadow-overlay);
+
+    &::backdrop {
+        background-color: var(--skin--background-color-blanket);
+    }
+
+}

@@ -40,10 +40,157 @@ button, select {
 
 }
 
+/* A value, typed, picked or worked out, reads in the text colour, whatever colour the label around it takes. */
+
+input, textarea, select, output {
+    color: var(--skin--color);
+}
+
 /* A field's edge is what identifies it as one, so it takes the line held to the control boundary budget. */
 
 input, textarea, select {
+
     border-color: var(--skin--border-color-field);
+
+    /* A field that takes no input recedes as a disabled button does, its edge falling back to a decorative line. */
+
+    &:disabled {
+        color: var(--skin--color-disabled);
+        border-color: var(--skin--border-color);
+    }
+
+    /*
+     * A field that only shows its value drops the edge inviting a value to be typed, falling back to the decorative
+     * line as a disabled field does, but keeps its value in the text colour and its focus mark, so it reads as content
+     * still within reach rather than as a control set aside. The attribute is matched rather than `:read-only`, which
+     * also holds for every box, slider, swatch and file picker that takes no typing in the first place.
+     */
+
+    &[readonly] {
+        border-color: var(--skin--border-color);
+    }
+
+    /*
+     * A value is judged once the reader has had a say on it, so a required field left empty on arrival is not yet
+     * marked as failed. A field the app itself rejects, as a server does a value its rules refuse, says so through
+     * aria-invalid, which assistive technology announces as well, and is marked the same way from the moment it is
+     * set. The mark is drawn over the field's own border, so the failure reads as the edge of the field.
+     */
+
+    &:user-invalid, &[aria-invalid="true"] {
+        color: var(--skin--color-fail);
+        outline: var(--skin--outline-invalid);
+        outline-offset: calc(-1 * var(--skin--border-width));
+    }
+
+    /*
+     * Both marks are outlines, and a field carries both states at once as soon as an invalid value is being typed
+     * into it, so the focus mark is written after the invalid one and takes the single outline on offer for as long
+     * as the field holds the keyboard. What the value is worth goes on being said in colour, which the focus mark
+     * leaves standing, and a menu holding a choice the app rejected follows the same order as a typed field does.
+     */
+
+    &:focus-visible {
+        outline: var(--skin--outline-focus);
+        outline-offset: calc(-2 * var(--skin--border-width));
+    }
+
+}
+
+/* A box ticked, a slider and a bar are painted in the colour of a control that answers, as part of the form. */
+
+input, progress {
+    accent-color: var(--skin--color-enabled);
+}
+
+/*
+ * A bar keeps the look the platform draws it with, which Blink drops for a flat green one as soon as the bar is
+ * given a ground or a border of its own. The reset hands it both, so the bar takes back what the platform states.
+ */
+
+progress {
+    border: revert;
+    border-radius: revert;
+    background-color: revert;
+}
+
+/*
+ * A gauge is drawn flat, outlined in the decorative line as the platform outlines a progress bar, with its value in
+ * the colour of the form, in place of the bevelled green the platform paints it with. A value the author placed
+ * outside the optimum range takes the caution step of the meaning scale, and one at the far end the failure step.
+ *
+ * The bar and the room around it are rounded to whole pixels, the room downwards so it stays a little under a quarter
+ * of the text, and the bar keeps one offset from the outline wherever the meter falls on the pixel grid.
+ *
+ * The parts are reached through the pseudo-elements each engine exposes, there being no standard way to style them,
+ * and each is a rule of its own, since a selector naming a pseudo-element an engine does not know is dropped whole.
+ */
+
+meter {
+
+    /*
+     * The bar is held clear of the outline by the same room on every side, and both are rounded at the ends: the bar
+     * by half its height, the outline by that and the room around it, so the two curves run parallel. The height is
+     * stated for the bar, with the room and the outline added around it, as the measure the reader sees filling up.
+     */
+
+    appearance: none;
+    box-sizing: content-box;
+
+    block-size: round(var(--skin--scaling-050), 1px);
+    padding: round(down, var(--skin--spacing-025), 1px);
+    border-style: var(--skin--border-style);
+    border-radius: calc(
+        round(var(--skin--scaling-050), 1px) / 2
+        + round(down, var(--skin--spacing-025), 1px)
+        + var(--skin--border-width)
+    );
+
+    background-color: transparent;
+
+    &::-webkit-meter-bar {
+        /* Blink centres the bar rather than stretching it to the meter, so the bar states its own height. */
+
+        block-size: round(var(--skin--scaling-050), 1px);
+        border-style: none;
+        background: none;
+    }
+
+    &::-webkit-meter-optimum-value {
+        block-size: 100%;
+        border-radius: calc(round(var(--skin--scaling-050), 1px) / 2);
+        background: none;
+        background-color: var(--skin--color-enabled);
+    }
+
+    &::-webkit-meter-suboptimum-value {
+        block-size: 100%;
+        border-radius: calc(round(var(--skin--scaling-050), 1px) / 2);
+        background: none;
+        background-color: var(--skin--color-warn);
+    }
+
+    &::-webkit-meter-even-less-good-value {
+        block-size: 100%;
+        border-radius: calc(round(var(--skin--scaling-050), 1px) / 2);
+        background: none;
+        background-color: var(--skin--color-fail);
+    }
+
+    &::-moz-meter-bar {
+        border-radius: calc(round(var(--skin--scaling-050), 1px) / 2);
+        background: none;
+        background-color: var(--skin--color-enabled);
+    }
+
+    &:-moz-meter-sub-optimum::-moz-meter-bar {
+        background-color: var(--skin--color-warn);
+    }
+
+    &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+        background-color: var(--skin--color-fail);
+    }
+
 }
 
 input, textarea {
@@ -51,37 +198,103 @@ input, textarea {
     border-style: var(--skin--border-style);
     border-radius: var(--skin--border-radius-025);
 
-    /* A field taking typed text keeps its value clear of the border; boxes ticked or picked keep their own size. */
+    /* A field taking typed text keeps its value clear of the border. A box, a slider, a swatch and a picker do not. */
 
-    &:not([type=checkbox], [type=radio], [type=range], [type=color]) {
+    &:not([type=checkbox], [type=radio], [type=range], [type=color], [type=file]) {
         padding: var(--skin--spacing-025) var(--skin--spacing-050);
     }
 
-    &:invalid {
-        color: var(--skin--color-fail);
-        outline: var(--skin--outline-invalid);
-        outline-offset: 0;
-    }
-
     /*
-     * Both marks are outlines, and a field carries both states at once as soon as an invalid value is being typed
-     * into it, so the focus mark is written after the invalid one and takes the single outline on offer for as long
-     * as the field holds the keyboard. What the value is worth goes on being said in colour, which the focus mark
-     * leaves standing.
+     * A box ticked or picked is sized against the text it labels rather than at the size the platform fixes. Too
+     * small to be marked from within, it is marked from without, either mark closing over the tick as a ring.
      */
 
-    &:focus {
+    &:is([type=checkbox], [type=radio]) {
 
-        outline: var(--skin--outline-focus);
-        outline-offset: calc(-2 * var(--skin--border-width));
+        inline-size: var(--skin--scaling-100);
+        block-size: var(--skin--scaling-100);
 
-        /* A box too small to be marked from within is marked from without, an inset ring closing over a tick. */
-
-        &[type=checkbox],
-        &[type=radio] {
+        &:is(:user-invalid, [aria-invalid="true"], :focus-visible) {
             outline-offset: var(--skin--border-width);
         }
 
+    }
+
+    /*
+     * The button clearing a search field is drawn as the lucide cross, in the colour of the value it clears, in place
+     * of the tinted glyph the platform paints. It is cropped to its stroke and centred on the value, as the arrow of a
+     * menu is, the stroke stated in the glyph since a mask cannot read a custom property.
+     */
+
+    &::-webkit-search-cancel-button {
+
+        appearance: none;
+
+        inline-size: calc(var(--skin--scaling-100) * 14 / 24); /* The stroke spans 14 of the 24 grid units. */
+        block-size: calc(var(--skin--scaling-100) * 14 / 24);
+        margin-inline-start: var(--skin--spacing-050);
+
+        background-color: currentColor;
+        forced-color-adjust: none;
+
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='5 5 14 14' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E") no-repeat;
+
+        cursor: pointer;
+
+    }
+
+    /* A file field is its button and the name it picked, so it carries no box of its own around the two. */
+
+    &[type=file] {
+        border-style: none;
+    }
+
+    /*
+     * A colour well holds its swatch clear of the edge by the same room on every side, in place of the uneven room
+     * the platform leaves. The well keeps the corners of a field and a button, and the swatch half of them, an optical
+     * choice below the scale that reads as the same curve set inside. The room and the swatch corners are rounded to
+     * whole pixels, and the swatch has no edge of its own, the edge of the well being the one a reader takes in.
+     */
+
+    &[type=color] {
+
+        padding: round(var(--skin--spacing-025), 1px);
+
+        &::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        &::-webkit-color-swatch {
+            border-style: none;
+            border-radius: round(var(--skin--border-radius-025) / 2, 1px);
+        }
+
+        &::-moz-color-swatch {
+            border-style: none;
+            border-radius: round(var(--skin--border-radius-025) / 2, 1px);
+        }
+
+    }
+
+}
+
+/* The button a file field opens its picker with is boxed and spaced as any other button. */
+
+::file-selector-button {
+
+    margin-inline-end: var(--skin--spacing-050);
+    padding: var(--skin--spacing-025) var(--skin--spacing-050);
+    border-style: var(--skin--border-style);
+    border-width: var(--skin--border-width);
+    border-color: var(--skin--border-color);
+    border-radius: var(--skin--border-radius-025);
+
+    background-color: transparent;
+
+    cursor: pointer;
+
+    &:hover {
+        color: var(--skin--color-hover);
     }
 
 }
@@ -91,7 +304,7 @@ button {
     display: flex;
     flex-direction: row;
     align-items: center;
-    grid-column-gap: var(--skin--spacing-050);
+    column-gap: var(--skin--spacing-050);
 
     background-color: transparent;
 
@@ -121,9 +334,9 @@ button {
 /*
  * A menu draws its arrow as a part of its own content, so the padding a rule states on the menu closes in on the
  * arrow from the end, as it does on the label from the start. The arrow keeps a room of its own clear of the label,
- * in place of the gap the platform sets, and still stands at the end of a menu stretched past its label. The platform list keeps its native look, the picker not being opted in. A browser
- * without the base appearance keeps the native control whole, the arrow then taking whatever room the platform
- * reserves for it.
+ * in place of the gap the platform sets, and still stands at the end of a menu stretched past its label. The
+ * platform list keeps its native look, the picker not being opted in. A browser without the base appearance keeps
+ * the native control whole, the arrow then taking whatever room the platform reserves for it.
  */
 
 select {
@@ -172,4 +385,16 @@ select {
 
 *::placeholder {
     color: var(--skin--color-placeholder);
+}
+
+/* A group of fields stretches no wider than the column it stands in, however wide the controls it gathers. */
+
+fieldset {
+    min-inline-size: 0;
+}
+
+/* The caption of a group is set in the strong weight, so it reads as the heading of the fields it gathers. */
+
+legend {
+    font-weight: var(--skin--font-weight-strong);
 }

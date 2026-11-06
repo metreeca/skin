@@ -28,10 +28,20 @@
     font-style: inherit;
     font-size: inherit;
     font-weight: inherit;
+    line-height: inherit;
     color: inherit;
     background-color: inherit;
 }
 
 [hidden] {
     display: none;
+}
+
+/*
+ * The part a date or time field draws its values in is cleared of its padding as every element is, so the field
+ * stands one line high inside its own padding and border like any other field, in the engines exposing the part.
+ */
+
+::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
 }

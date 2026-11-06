@@ -44,10 +44,10 @@
  * so the layout that fitted at 768 pixels no longer does; a `px` query cannot see that and hands them the wide
  * layout with the text crammed into it, while these move them down the ladder to the simpler one.
  *
- * Inside a media query `rem` resolves against the browser's initial font size, never against the root font size the
- * page sets, so neither {@link typography `fontSize`} nor an app overriding it moves these thresholds: only the
- * reader's own browser setting does. Browser zoom scales the CSS pixel and so moves a `px` query and a `rem` query
- * alike, and is not a case either unit handles better.
+ * A `rem` is the reader's own browser setting wherever it is read: the page takes {@link typography `fontSize`} on
+ * `body` and leaves the root alone, so a width a rule states in `rem` measures exactly what these thresholds measure.
+ * Neither `fontSize` nor an app overriding it moves them: only the reader's own browser setting does. Browser zoom
+ * scales the CSS pixel and so moves a `px` query and a `rem` query alike, and is not a case either unit handles better.
  *
  * **How a rule reads one** — through a style query, which matches on the value a custom property holds on an
  * enclosing element. The tokens are assigned on the root element and inherit, so every element is inside a matching

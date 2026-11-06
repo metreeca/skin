@@ -305,6 +305,9 @@
                         <h1>Heading 1</h1>
                         <h2>Heading 2</h2>
                         <h3>Heading 3</h3>
+                        <h4>Heading 4</h4>
+                        <h5>Heading 5</h5>
+                        <h6>Heading 6</h6>
 
                         <p>
                             Body text with <strong>strong</strong>, <em>emphasised</em>, <code>inline code</code>,
@@ -312,6 +315,37 @@
                             <a href="#text">linked</a> runs, set on the base line height so a paragraph reads
                             comfortably at the measure the page allows.
                         </p>
+
+                        <p>
+                            Further runs: <b>bold</b>, <i>italic</i>, a <cite>Cited Title</cite>, a
+                            <dfn>defined term</dfn>, the variable <var>n</var>, sample output <samp>Done.</samp>,
+                            an <abbr title="abbreviation">abbr.</abbr>, H<sub>2</sub>O and E = mc<sup>2</sup>,
+                            <del>deleted</del> and <ins>inserted</ins> text, and <q>an inline quotation</q>.
+                        </p>
+
+                        <figure>
+                            <img src="./icon.svg" alt="The Metreeca mark" width="96" height="96">
+                            <figcaption>A figure, captioned below in the quieter size of a label.</figcaption>
+                        </figure>
+
+                        <details>
+                            <summary>A disclosure</summary>
+                            <p>Content revealed once the summary is opened.</p>
+                        </details>
+
+                        <p>
+                            <button type="button" onclick="this.parentElement.nextElementSibling.showModal()">
+                                Open a dialog
+                            </button>
+                        </p>
+
+                        <dialog>
+                            <form method="dialog">
+                                <h3>A dialog</h3>
+                                <p>An overlay surface over the dimmed page.</p>
+                                <button>Close</button>
+                            </form>
+                        </dialog>
 
                         <blockquote>
                             <p>A quotation, set apart from the running text around it.</p>
@@ -434,9 +468,8 @@
 
                     <div class="frame">
 
-                        <h3>Plain</h3>
-
                         <table>
+                            <caption>Plain, with a caption</caption>
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -542,17 +575,51 @@
                             <label>Text <input type="text" placeholder="Placeholder"></label>
                             <label>Number <input type="number" value="42"></label>
                             <label>Date <input type="date"></label>
-                            <label>Invalid <input type="email" value="not an email" required></label>
+                            <label>Search <input type="search" value="Query"></label>
+                            <label>Invalid once edited <input type="email" value="not an email" required></label>
+                            <label>Rejected by the app <input type="text" value="Taken" aria-invalid="true"></label>
+                            <label>Read-only <input type="text" value="Read-only" readonly></label>
                             <label>Disabled <input type="text" value="Disabled" disabled></label>
 
                             <label>Choice
                                 <select>
-                                    <option>First</option>
-                                    <option>Second</option>
+                                    <optgroup label="Group">
+                                        <option>First</option>
+                                        <option>Second</option>
+                                    </optgroup>
+                                    <option>Third</option>
                                 </select>
                             </label>
 
-                            <label>Notes <textarea rows="3"></textarea></label>
+                            <label>Choice rejected by the app
+                                <select aria-invalid="true">
+                                    <option>First</option>
+                                </select>
+                            </label>
+
+                            <label>Disabled choice
+                                <select disabled>
+                                    <option>First</option>
+                                </select>
+                            </label>
+
+                            <label>Notes <textarea rows="3" placeholder="Placeholder"></textarea></label>
+                            <label>Disabled notes <textarea rows="2" disabled>Disabled</textarea></label>
+
+                        </fieldset>
+
+                        <fieldset>
+
+                            <legend>Measures</legend>
+
+                            <label>Range <input type="range" value="60"></label>
+                            <label>Colour <input type="color" value="#28669e"></label>
+                            <label>File <input type="file"></label>
+                            <label>Progress <progress value="0.6"></progress></label>
+                            <label>Meter <meter value="0.4"></meter></label>
+                            <label>Meter off the optimum <meter value="0.5" low="0.3" high="0.7" optimum="0.9"></meter></label>
+                            <label>Meter far from the optimum <meter value="0.2" low="0.3" high="0.7" optimum="0.9"></meter></label>
+                            <label>Output <output>42</output></label>
 
                         </fieldset>
 

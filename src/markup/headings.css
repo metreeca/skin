@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
     clear: both;
     font-weight: var(--skin--font-weight-strong);
     font-family: var(--skin--font-family-heading);
@@ -38,12 +38,28 @@ h1 {
 
 }
 
+/*
+ * Each level below the first is told from the next by one cue at a time, so a deep outline stays readable in a column
+ * without the sizes running away: the second stands an eighth over the heading size, the third and fourth take it as
+ * it stands, the fourth in the quieter colour of a label, and the last two are set smaller still in that colour.
+ */
+
 h2 {
     margin-bottom: var(--skin--spacing-075);
+    font-size: calc(var(--skin--font-size-heading) * 1.125); /* A ratio on the heading size, below the em steps. */
+}
+
+h3, h4 {
+    margin-bottom: var(--skin--spacing-050);
     font-size: var(--skin--font-size-heading);
 }
 
-h3 {
+h4 {
+    color: var(--skin--color-label);
+}
+
+h5, h6 {
     margin-bottom: var(--skin--spacing-050);
-    font-size: var(--skin--font-size-heading);
+    font-size: var(--skin--font-size-small);
+    color: var(--skin--color-label);
 }

@@ -54,6 +54,14 @@ td {
 
 }
 
+/* A caption titles the table above it, set at the start in the strong weight as a header cell is. */
+
+caption {
+    padding-bottom: var(--skin--spacing-050);
+    text-align: start;
+    font-weight: var(--skin--font-weight-strong);
+}
+
 /*
  * A table opts into stripes with a data-striped attribute, as an island opts into a scheme with data-theme. Its body
  * rows then alternate with the stripe from the second on, so the first row sits on the page under the header rule.

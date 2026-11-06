@@ -16,9 +16,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `colorFlag`, `colorFlagStroke`, `backgroundColorFlag` - a fifth step of the meaning scale, between `pass` and
   `warn`, singling a thing out for attention although nothing has gone wrong; a violet holding AA on the page, the
   stripe and its own tint in both schemes, which the important Markdown alert now takes in place of the note blue
+- Form markup - disabled fields recede in the disabled colour, read-only fields keep their value in the text colour
+  behind the decorative line in place of the field edge, checkboxes and radios take the size of the text, the
+  enabled colour marks a ticked box, a slider and a progress bar, a file field's button is boxed as a button is, a
+  fieldset stays inside its column and a legend is set in the strong weight, as the heading of its group; a meter
+  is drawn flat in the enabled colour, taking the caution and failure steps for a value off or far from the optimum,
+  its bar held clear of the outline by even room; a colour well holds its swatch by even room on every side as well;
+  the button clearing a search field is drawn as a cross in the colour of the value, in place of the platform glyph
+- Text markup - `h4` to `h6` are styled as headings, `b` is bold and `i`, `cite`, `dfn` and `var` italic, `kbd` is
+  drawn as a key cap and `samp` set in the mono face, `mark` lies on the selected tint, `sub` and `sup` are set
+  smaller without opening the line, and an `abbr` carrying a title offers it as help
+- Block markup - images, videos and frames never overflow their column, a `figure` takes a caption in the label size
+  and colour, a `details` summary offers the pointer and the focus mark, a `dialog` is an overlay surface centred
+  over the blanket, and a table `caption` titles its table at the start in the strong weight
 
 ### Fixed
 
+- Form fields - a date field, a menu and a text field stood at different heights, since a control kept the line height
+  the platform gives it and a date field the padding of its parts; every control now inherits the page line height
+- `progress` - painted as a flat green bar in Blink, the reset handing it a ground and a border of its own
+- Invalid field - the failure mark doubled the edge of the field, drawn beside its border rather than over it
 - `colorPlaceholder` - shared the disabled colour, at 1.76:1 on the edit background, though WCAG holds placeholder
   text to AA; now a mix of its own at 4.7:1 or more on the page, the striped row and the edit background, still
   well short of an entered value, which takes the full text anchor, so the two are never mistaken for each other
@@ -73,6 +90,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Headings - `h2` stands an eighth over the heading size, so it is told from `h3` at a glance, and `h4` takes the
+  label colour at the heading size while `h5` and `h6` are set in the small size and the label colour
 - `Flag` - the type naming the viewport tokens is renamed `Breakpoint`, so `flag` names the meaning scale step alone
 - `colorInfo`, `colorInfoStroke`, `backgroundColorInfo` - renamed `colorNote`, `colorNoteStroke` and
   `backgroundColorNote`, with the custom properties `--skin--color-note`, `--skin--color-note-stroke` and
@@ -103,6 +122,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   in place of a yellow fill beside a separate burnt-orange stroke, which looked brown; it holds AA on the page and
   the stripe, at 4.87:1 and 4.53:1, and falls to 4.16:1 on its tint, where caution text is not set; text over a
   caution fill takes the page background, white over the light gold and dark over the dark one
+- `fontSize` - the page takes the base size on `body`, leaving the root at the size the reader set, so the token
+  resolves to one length at every depth and a `rem` means the reader's setting in a rule as it does in a media query;
+  a measure stated in `rem` to follow the base text size is restated in `em` or as a token
+- Form fields - an invalid value is marked once the reader has edited it, through `:user-invalid`, so a required
+  field left empty on arrival no longer shows as failed, and the focus ring of a field follows `:focus-visible`; a
+  field an app rejects itself is marked at once through `aria-invalid="true"`, which assistive technology announces;
+  a select is marked as an input and a text area are, where an invalid choice was left unmarked before
+- Form values - an input, a text area, a select or an output reads in the text colour whatever colour its label takes
 
 ## [0.2.0](https://github.com/metreeca/skin/compare/v0.1.0...v0.2.0) - 2026-11-05
 

@@ -28,12 +28,16 @@
  * **Sizes** — `fontSize` follows the reader's setting and grows slightly on a desktop-sized window, while
  * `fontSizeSmall` and `fontSizeLarge` follow whatever they sit in, keeping their ratio inside a subtree sized apart.
  *
+ * The page sets the base size on `body` and leaves the root at the reader's setting, so `fontSize` resolves to the same
+ * length at every depth and a `rem` always means the reader's setting. A measure meant to follow the base text size is
+ * therefore stated in `em` or through a token, never in `rem`, which ignores the window and any app override.
+ *
  * **Headings** — `fontSizeHeading` sizes every heading level, so an app resizing it resizes all headings together. The
- * first level scales up from it, while the levels below take it as it stands, since their hierarchy is carried by the
- * face, the weight and the space around a heading rather than by a ladder of sizes, which keeps a deep outline
- * readable in a column.
+ * first two levels stand above it, the next two take it as it stands and the last two drop to the small size. Weight,
+ * colour and spacing carry the rest of the hierarchy, which keeps a deep outline readable in a column.
+ *
  * `letterSpacingHeading` ships neutral and lets the brand face decide, so an app supplying a condensed or a wide face
- * corrects the tracking without restating the rule.
+ * corrects the heading tracking through this token alone, without restating the rule for every heading level.
  *
  * **Weights** — `fontWeight` is text at rest and `fontWeightStrong` anything marked out from it, from a link or a term
  * to a heading, a label, a tab or a table header, so emphasis reads the same wherever it occurs in the interface.

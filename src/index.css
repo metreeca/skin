@@ -63,7 +63,6 @@
         background-color: var(--skin--background-color);
 
         font-family: var(--skin--font-family);
-        font-size: var(--skin--font-size);
         font-weight: var(--skin--font-weight);
         line-height: var(--skin--line-height);
 
@@ -72,6 +71,15 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
 
+    }
+
+    /*
+     * The root keeps the size the reader set, so a rem means that setting wherever it is read, as it does in a media
+     * query. The base size stated against it then resolves to one length at every depth, and the page takes it here.
+     */
+
+    body {
+        font-size: var(--skin--font-size);
     }
 
     /*

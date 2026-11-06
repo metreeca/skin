@@ -23,6 +23,14 @@
 body {
 
     --lab-bar: 3.5rem; /* The height of the top bar, which the sticky rail and the section anchors clear. */
+    --lab-measure: 84rem; /* The page measure, capped so cards stay legible on wide screens. */
+    --lab-gutter: var(--skin--spacing-100); /* The air between the page measure and the edge of the window. */
+    --lab-mark: var(--skin--scaling-200); /* The width of the brand mark, which the rail is indented by. */
+
+    /*
+     * The bar holds what it carries to the page measure, as the shell does, so the brand stands over the rail and the
+     * scheme switch over the end of the content, however wide the window grows past the measure.
+     */
 
     & > .bar {
 
@@ -36,7 +44,7 @@ body {
         gap: var(--skin--spacing-100);
 
         block-size: var(--lab-bar);
-        padding-inline: var(--skin--spacing-100);
+        padding-inline: max(var(--lab-gutter), (100% - var(--lab-measure)) / 2 + var(--lab-gutter));
 
         border-bottom-style: var(--skin--border-style);
         background-color: var(--skin--background-color);
@@ -49,9 +57,9 @@ body {
         grid-template-columns: minmax(0, 1fr);
         gap: var(--skin--spacing-150);
 
-        max-inline-size: 84rem; /* The page measure, capped so cards stay legible on wide screens. */
+        max-inline-size: var(--lab-measure);
         margin-inline: auto;
-        padding: var(--skin--spacing-100);
+        padding: var(--skin--spacing-100) var(--lab-gutter);
 
     }
 
@@ -67,7 +75,6 @@ body {
     gap: var(--skin--spacing-050);
 
     font-family: var(--skin--font-family-heading);
-    font-size: var(--skin--font-size-large);
     font-weight: var(--skin--font-weight-strong);
     color: var(--skin--color-subtle);
 
@@ -81,8 +88,17 @@ body {
         color: var(--skin--color-strong);
     }
 
+    /*
+     * The name alone is set large, so the mark and the room after it are measured in the size of the page, which is
+     * the size the rail is indented in: the rail lines up under the name rather than under the mark.
+     */
+
     & > .mark {
-        block-size: var(--skin--scaling-150);
+        inline-size: var(--lab-mark);
+    }
+
+    & > span {
+        font-size: var(--skin--font-size-large);
     }
 
 }
@@ -171,10 +187,15 @@ body {
 
 @container style(--skin--viewport-large: on) {
 
-    body > .shell {
-        grid-template-columns: 12rem minmax(0, 1fr); /* The rail width, holding the longest section name. */
-        gap: var(--skin--spacing-250);
-        padding-inline: var(--skin--spacing-200);
+    body {
+
+        --lab-gutter: var(--skin--spacing-200);
+
+        & > .shell {
+            grid-template-columns: 12rem minmax(0, 1fr); /* The rail width, holding the longest section name. */
+            gap: var(--skin--spacing-250);
+        }
+
     }
 
     .toc {
@@ -185,7 +206,7 @@ body {
 
         flex-direction: column;
         overflow: visible;
-        padding: 0;
+        padding: 0 0 0 calc(var(--lab-mark) + var(--skin--spacing-025)); /* Under the brand name, nudged inside it. */
         border-bottom-style: none;
 
         & > p {
@@ -1125,7 +1146,6 @@ main > section {
 
         & > legend {
             margin-bottom: var(--skin--spacing-075);
-            font-weight: var(--skin--font-weight-strong);
         }
 
         & > label:not(.inline) {
@@ -1134,9 +1154,8 @@ main > section {
             font-size: var(--skin--font-size-small);
             color: var(--skin--color-label);
 
-            & > :is(input, select, textarea) {
+            & > :is(input, select, textarea, output) {
                 font-size: var(--skin--font-size);
-                color: var(--skin--color);
             }
         }
 
