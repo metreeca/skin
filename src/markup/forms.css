@@ -40,6 +40,12 @@ button, select {
 
 }
 
+/* A field's edge is what identifies it as one, so it takes the line held to the control boundary budget. */
+
+input, textarea, select {
+    border-color: var(--skin--border-color-field);
+}
+
 input, textarea {
 
     border-style: var(--skin--border-style);

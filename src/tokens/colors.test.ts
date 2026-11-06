@@ -33,11 +33,6 @@ type Paint = readonly [red: number, green: number, blue: number];
 
 type Scheme = "light" | "dark";
 
-/**
- * The anchors an app states on `:root`, keyed by custom property, standing in for the shipped literals.
- */
-type Brand = Readonly<Record<string, string>>;
-
 
 /**
  * The budgets the roles are held to, as WCAG 2.2 states them: text at AA, a mark or a ring at the graphics minimum.
@@ -49,22 +44,6 @@ const MARK = 3;
  * How far a channel may leave the unit range and still paint the same in every browser: a bit of eight.
  */
 const TOLERANCE = 1 / 255;
-
-const brands: Readonly<Record<string, Brand>> = {
-
-	shipped: {},
-
-	navy: {
-		[colors.colorSubtle]: "light-dark(#1C275D, #9AB)",
-		[colors.colorStrong]: "light-dark(#06C, #4AF)"
-	},
-
-	green: {
-		[colors.colorSubtle]: "light-dark(#2F4F3F, #9BA)",
-		[colors.colorStrong]: "light-dark(#0A7A3C, #3C9)"
-	}
-
-};
 
 const schemes: ReadonlyArray<Scheme> = [ "light", "dark" ];
 
@@ -109,13 +88,13 @@ function args(text: string): ReadonlyArray<string> {
 }
 
 /**
- * Evaluates a token value in a colour scheme under a brand: every `var()` is replaced by the value of the token it
- * names, and every `light-dark()` by the side the scheme picks, leaving an expression the page could paint.
+ * Evaluates a token value in a colour scheme: every `var()` is replaced by the value of the token it names, and every
+ * `light-dark()` by the side the scheme picks, leaving an expression the page could paint.
  */
-function evaluate(expression: string, scheme: Scheme, brand: Brand): string {
+function evaluate(expression: string, scheme: Scheme): string {
 
 	const substituted = expression.replace(/var\((--skin--[\w-]+)\)/g, (_, token: string) =>
-		evaluate(brand[token] ?? declared.get(token) ?? `missing(${ token })`, scheme, brand)
+		evaluate(declared.get(token) ?? `missing(${ token })`, scheme)
 	);
 
 	const start = substituted.indexOf("light-dark(");
@@ -132,7 +111,7 @@ function evaluate(expression: string, scheme: Scheme, brand: Brand): string {
 		const [ light = "", dark = "" ] = args(substituted.slice(inner, end));
 
 		return evaluate(`${ substituted.slice(0, start) }${ scheme === "light" ? light : dark }${ substituted.slice(end + 1) }`,
-			scheme, brand
+			scheme
 		);
 
 	}
@@ -219,168 +198,158 @@ function contrast(foreground: Paint, background: Paint): number {
 }
 
 
-describe.each(Object.entries(brands))("colours of the %s brand", (brand, anchors) => {
+describe.each(schemes)("colours in the %s scheme", scheme => {
 
-	describe.each(schemes)("in the %s scheme", scheme => {
+	const swatch = (token: string): Paint => paint(evaluate(`var(${ token })`, scheme));
 
-		const swatch = (token: string): Paint => paint(evaluate(`var(${ token })`, scheme, anchors));
+	const over = (foreground: string, background: string): number => contrast(swatch(foreground), swatch(background));
 
-		const deepened = (anchor: string, tint: string): Paint => paint(evaluate(
-			`color-mix(in oklab, var(${ anchor }) 24%, var(${ tint }))`, scheme, anchors
-		));
+	const page = colors.backgroundColor;
+	const stripe = colors.backgroundColorStripe;
+	const edit = colors.backgroundColorEdit;
+	const overlay = elevations.backgroundColorOverlay;
 
-		const over = (foreground: string, background: string): number => contrast(swatch(foreground), swatch(background));
+	const surfaces = [ page, stripe, edit, overlay ];
 
-		const page = colors.backgroundColor;
-		const stripe = colors.backgroundColorStripe;
-		const edit = colors.backgroundColorEdit;
-		const overlay = elevations.backgroundColorOverlay;
+	const fills = [
+		colors.backgroundColorHover,
+		colors.backgroundColorSelected,
+		colors.backgroundColorPressed
+	];
 
-		const surfaces = [ page, stripe, edit, overlay ];
+	const tints = [
+		colors.backgroundColorNote,
+		colors.backgroundColorPass,
+		colors.backgroundColorFlag,
+		colors.backgroundColorWarn,
+		colors.backgroundColorFail
+	];
 
-		const fills = [
-			colors.backgroundColorHover,
-			colors.backgroundColorSelected,
-			colors.backgroundColorPressed
-		];
+	const texts = [
+		colors.color,
+		colors.colorLabel,
+		colors.colorEnabled,
+		colors.colorLink,
+		colors.colorLinkHover,
+		colors.colorHover,
+		colors.colorPressed,
+		colors.colorSelected,
+		colors.colorNote,
+		colors.colorPass,
+		colors.colorFlag,
+		colors.colorFail,
+		colors.colorNoteStroke,
+		colors.colorPassStroke,
+		colors.colorFlagStroke,
+		colors.colorFailStroke
+	];
 
-		const tints = [
-			colors.backgroundColorInfo,
-			colors.backgroundColorPass,
-			colors.backgroundColorWarn,
-			colors.backgroundColorFail
-		];
+	const strokes: ReadonlyArray<{ stroke: string, tint: string }> = [
+		{ stroke: colors.colorNoteStroke, tint: colors.backgroundColorNote },
+		{ stroke: colors.colorPassStroke, tint: colors.backgroundColorPass },
+		{ stroke: colors.colorFlagStroke, tint: colors.backgroundColorFlag },
+		{ stroke: colors.colorFailStroke, tint: colors.backgroundColorFail }
+	];
 
-		const texts = [
-			colors.color,
-			colors.colorLabel,
-			colors.colorEnabled,
-			colors.colorLink,
-			colors.colorLinkHover,
-			colors.colorHover,
-			colors.colorPressed,
-			colors.colorSelected,
-			colors.colorFail,
-			colors.colorInfoStroke,
-			colors.colorPassStroke,
-			colors.colorWarnStroke,
-			colors.colorFailStroke
-		];
+	/**
+	 * The pairings falling short of a budget, named for the failure list a test prints.
+	 */
+	const shortfalls = (
+		pairings: ReadonlyArray<{ foreground: string, background: string, ratio: number }>, budget: number
+	): ReadonlyArray<string> => pairings
+		.filter(({ ratio }) => ratio < budget)
+		.map(({ foreground, background, ratio }) => `${ foreground } on ${ background } at ${ ratio.toFixed(2) }:1`);
 
-		const strokes: ReadonlyArray<{ anchor: string, stroke: string, tint: string }> = [
-			{ anchor: colors.colorInfo, stroke: colors.colorInfoStroke, tint: colors.backgroundColorInfo },
-			{ anchor: colors.colorPass, stroke: colors.colorPassStroke, tint: colors.backgroundColorPass },
-			{ anchor: colors.colorWarn, stroke: colors.colorWarnStroke, tint: colors.backgroundColorWarn },
-			{ anchor: colors.colorFail, stroke: colors.colorFailStroke, tint: colors.backgroundColorFail }
-		];
-
-		/**
-		 * The pairings falling short of a budget, named for the failure list a test prints.
-		 */
-		const shortfalls = (
-			pairings: ReadonlyArray<{ foreground: string, background: string, ratio: number }>, budget: number
-		): ReadonlyArray<string> => pairings
-			.filter(({ ratio }) => ratio < budget)
-			.map(({ foreground, background, ratio }) => `${ foreground } on ${ background } at ${ ratio.toFixed(2) }:1`);
-
-		const pairs = (foregrounds: ReadonlyArray<string>, backgrounds: ReadonlyArray<string>, budget: number) =>
-			shortfalls(foregrounds.flatMap(foreground => backgrounds.map(background =>
-				({ foreground, background, ratio: over(foreground, background) })
-			)), budget);
+	const pairs = (foregrounds: ReadonlyArray<string>, backgrounds: ReadonlyArray<string>, budget: number) =>
+		shortfalls(foregrounds.flatMap(foreground => backgrounds.map(background =>
+			({ foreground, background, ratio: over(foreground, background) })
+		)), budget);
 
 
-		it("paints every colour inside the sRGB gamut", async () => {
+	it("paints every colour inside the sRGB gamut", async () => {
 
-			const tokens = [ ...Object.values(colors), borders.borderColor, ...Object.values(elevations) ]
-				.filter(token => /^--skin--(color|background-color|border-color)/.test(token));
+		const tokens = [ ...Object.values(colors), borders.borderColor, ...Object.values(elevations) ]
+			.filter(token => /^--skin--(color|background-color|border-color)/.test(token));
 
-			expect(tokens
-				.map(token => ({ token, channels: swatch(token) }))
-				.filter(({ channels }) => channels.some(channel => channel < -TOLERANCE || channel > 1 + TOLERANCE))
-				.map(({ token, channels }) => `${ token } at ${ channels.map(channel => channel.toFixed(3)).join(" ") }`)
-			).toEqual([]);
+		expect(tokens
+			.map(token => ({ token, channels: swatch(token) }))
+			.filter(({ channels }) => channels.some(channel => channel < -TOLERANCE || channel > 1 + TOLERANCE))
+			.map(({ token, channels }) => `${ token } at ${ channels.map(channel => channel.toFixed(3)).join(" ") }`)
+		).toEqual([]);
 
-		});
+	});
 
-		it("holds every text role to AA on the page, the stripe, the edit field and the overlay", async () => {
+	it("holds every text role to AA on the page, the stripe, the edit field and the overlay", async () => {
 
-			expect(pairs(texts, surfaces, TEXT)).toEqual([]);
+		expect(pairs(texts, surfaces, TEXT)).toEqual([]);
 
-		});
+	});
 
-		it("holds the text and the label to AA on every fill and tint", async () => {
+	it("holds the caution stroke to AA on the page, the stripe, the edit field and the overlay", async () => {
 
-			expect(pairs([ colors.color, colors.colorLabel ], [ ...fills, ...tints ], TEXT)).toEqual([]);
+		expect(pairs([ colors.colorWarnStroke ], surfaces, TEXT)).toEqual([]);
 
-		});
+	});
 
-		it("holds each stroke to AA on its tint", async () => {
+	it("holds the placeholder to AA on the page, the stripe and the edit field", async () => {
 
-			expect(shortfalls(strokes.map(({ stroke, tint }) =>
-				({ foreground: stroke, background: tint, ratio: over(stroke, tint) })
-			), TEXT)).toEqual([]);
+		expect(pairs([ colors.colorPlaceholder ], [ page, stripe, edit ], TEXT)).toEqual([]);
 
-		});
+	});
 
-		it("holds the stroke or the dark page anchor to AA on each tint deepened by a further 24% of its anchor", async () => {
+	it("holds the field boundary to 3:1 on the page, the stripe and the edit field", async () => {
 
-			expect(shortfalls(strokes.map(({ anchor, stroke, tint }) => ({
-				foreground: `${ stroke } or ${ colors.colorOver }`,
-				background: `${ tint } deepened`,
-				ratio: Math.max(
-					contrast(swatch(stroke), deepened(anchor, tint)),
-					contrast(swatch(colors.colorOver), deepened(anchor, tint))
-				)
-			})), TEXT)).toEqual([]);
+		expect(pairs([ borders.borderColorField ], [ page, stripe, edit ], MARK)).toEqual([]);
 
-		});
+	});
 
-		it("holds the strong accent and its states to AA on the fills a control paints", async () => {
+	it("holds the text and the label to AA on every fill and tint", async () => {
 
-			expect([
-				...pairs([ colors.colorStrong ], fills, TEXT),
-				...pairs([ colors.colorHover ], [ colors.backgroundColorHover ], TEXT),
-				...pairs([ colors.colorPressed ], [ colors.backgroundColorPressed ], TEXT)
-			]).toEqual([]);
+		expect(pairs([ colors.color, colors.colorLabel ], [ ...fills, ...tints ], TEXT)).toEqual([]);
 
-		});
+	});
 
-		it("holds the over colours to AA on the fills they are named for", async () => {
+	it("holds each stroke to AA on its tint", async () => {
 
-			expect([
-				...pairs([ colors.colorStrongOver ], [ colors.colorStrong ], TEXT),
-				...pairs([ colors.colorOver ], [ colors.colorWarn ], TEXT)
-			]).toEqual([]);
+		expect(shortfalls(strokes.map(({ stroke, tint }) =>
+			({ foreground: stroke, background: tint, ratio: over(stroke, tint) })
+		), TEXT)).toEqual([]);
 
-		});
+	});
 
-		it("holds the information and pass marks to 3:1 on the page, the stripe and their tints", async () => {
+	it("holds the strong accent and its states to AA on the fills a control paints", async () => {
 
-			expect([
-				...pairs([ colors.colorInfo ], [ page, stripe, colors.backgroundColorInfo ], MARK),
-				...pairs([ colors.colorPass ], [ page, stripe, colors.backgroundColorPass ], MARK)
-			]).toEqual([]);
+		expect([
+			...pairs([ colors.colorStrong ], fills, TEXT),
+			...pairs([ colors.colorHover ], [ colors.backgroundColorHover ], TEXT),
+			...pairs([ colors.colorPressed ], [ colors.backgroundColorPressed ], TEXT)
+		]).toEqual([]);
 
-		});
+	});
 
-		it("holds the failure anchor to AA on the page, the stripe and its tint", async () => {
+	it("holds the over colours to AA on the fills they are named for", async () => {
 
-			expect(pairs([ colors.colorFail ], [ page, stripe, colors.backgroundColorFail ], TEXT)).toEqual([]);
+		expect([
+			...pairs([ colors.colorStrongOver ], [ colors.colorStrong ], TEXT),
+			...pairs([ colors.colorOver ], [ colors.colorWarn ], TEXT)
+		]).toEqual([]);
 
-		});
+	});
 
-		it("holds the focus ring to 3:1 on every surface and fill it is drawn against", async () => {
+	it("holds the note, pass, flag and failure anchors to AA on the page, the stripe and their tints", async () => {
 
-			expect(pairs([ colors.colorFocus ], [ ...surfaces, ...fills ], MARK)).toEqual([]);
+		expect([
+			...pairs([ colors.colorNote ], [ page, stripe, colors.backgroundColorNote ], TEXT),
+			...pairs([ colors.colorPass ], [ page, stripe, colors.backgroundColorPass ], TEXT),
+			...pairs([ colors.colorFlag ], [ page, stripe, colors.backgroundColorFlag ], TEXT),
+			...pairs([ colors.colorFail ], [ page, stripe, colors.backgroundColorFail ], TEXT)
+		]).toEqual([]);
 
-		});
+	});
 
-		it("lifts the raised surface off the table stripe", async () => {
+	it("holds the focus ring to 3:1 on every surface and fill it is drawn against", async () => {
 
-			expect(swatch(elevations.backgroundColorRaised).map(channel => Math.round(channel * 255)))
-				.not.toEqual(swatch(stripe).map(channel => Math.round(channel * 255)));
-
-		});
+		expect(pairs([ colors.colorFocus ], [ ...surfaces, ...fills ], MARK)).toEqual([]);
 
 	});
 

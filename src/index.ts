@@ -220,8 +220,7 @@ export type Token = keyof typeof skin
  *   a colour offers colours, a surface fill the palette colours as well, classing an area by its colour, and a text
  *   size the type and scaling ladders and not the spacing one, though all are lengths.
  *   An alias stands for whatever the token it names carries, so `colorStrong: "colorSubtle"` assigns a reference to
- *   that token rather than the text of its name. A token belonging to no ladder, a flag or a keyword, has no alias
- *   at all.
+ *   that token rather than the text of its name. A token on no ladder, a switch or a keyword, has no alias at all.
  * - `Literal<K>` — the CSS values `K` takes written out, of the shape it is defined over: a colour where a colour
  *   goes, a length carrying a unit unless it is zero, a keyword token held to the words it names. A number is taken
  *   where the value is a scalar, sparing the caller a conversion, and a function wherever a value is computed, since
@@ -254,7 +253,7 @@ export type {
 	Easing,
 	Shadow,
 	Family,
-	Flag,
+	Breakpoint,
 	Padding,
 	Rounding,
 	Lifting

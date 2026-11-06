@@ -245,7 +245,7 @@ describe("css", () => {
 		// @ts-expect-error no such visual register
 		css({ look: "loud" });
 
-		// @ts-expect-error a flag is on or off
+		// @ts-expect-error a switch is on or off
 		css({ viewportMedium: "yes" });
 
 		// @ts-expect-error no such line style
@@ -292,7 +292,7 @@ describe("css.tint", () => {
 
 		expectTypeOf(css.tint(skin.colorHeat030, 20)).toExtend<Value<"backgroundColor">>();
 		expectTypeOf(css.tint(skin.colorStrong, 20)).toExtend<Value<"backgroundColor">>();
-		expectTypeOf(css.tint(skin.backgroundColorInfo, 20)).toExtend<Value<"backgroundColor">>();
+		expectTypeOf(css.tint(skin.backgroundColorNote, 20)).toExtend<Value<"backgroundColor">>();
 
 	});
 

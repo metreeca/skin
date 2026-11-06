@@ -21,7 +21,7 @@
  */
 
 .hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal {
-    color: var(--skin--color-info-stroke);
+    color: var(--skin--color-note-stroke);
 }
 
 .hljs-string, .hljs-regexp {

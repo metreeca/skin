@@ -34,8 +34,8 @@
  * | `viewportLarge`  | `64rem` | a laptop, where navigation becomes a rail            |
  * | `viewportXlarge` | `90rem` | a desktop, where the measure is capped not stretched |
  *
- * **Floors, not bands** — every width is a lower bound, so a wide viewport leaves the narrower flags on and a rule
- * reads them as a ladder. A rule needing a band states the wider flag as `off` alongside the narrower one as `on`,
+ * **Floors, not bands** — every width is a lower bound, so a wide viewport leaves the narrower switches on and a rule
+ * reads them as a ladder. A rule needing a band states the wider switch as `off` alongside the narrower one as `on`,
  * rather than reaching for a `max-width` query, where two rules can both match at the boundary or neither can.
  *
  * **Why `rem`** — each width asks whether the content fits, not how big the glass is, and content is measured in
@@ -64,7 +64,7 @@
  * **Both branches** — each token defaults to `off` and turns `on` from its width up, so a rule matches either value.
  *
  * **Reusable, not retunable** — the width stays in the stylesheet's own media query, so overriding one of these
- * tokens forces the flag without moving the threshold. What they remove is the width repeated across every component,
+ * tokens forces the switch without moving the threshold. What they remove is the width repeated across every component,
  * not the need to revise it in one place. An app wanting thresholds of its own writes its own media queries.
  *
  * **Outside the cascade** — code needing the same answer reads the token as it reads any other, through

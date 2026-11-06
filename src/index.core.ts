@@ -33,7 +33,7 @@ import type { Token } from "./index.js";
  * it is assigned rather than every name the design system carries, or every name of the same broad sort: a text size
  * offers the type and scaling ladders, both of which are measured against the text, and not the spacing one, though
  * all three are lengths, because a size set from a gap is not a thing anyone means. A token belonging to no ladder, a
- * flag or a keyword, resolves to nothing and is left to the literal alone. A box token, shaping the element it is
+ * switch or a keyword, resolves to nothing and is left to the literal alone. A box token, shaping the element it is
  * assigned to, resolves to the ladder it is set from without being a step on it. A surface also takes a palette
  * colour, tinting an area by the class it belongs to, and the text the area holds then needs a `color` of its own,
  * holding contrast over that fill rather than over the page, which the fill replaces for everything inside it.
@@ -84,7 +84,7 @@ export type Literal<K extends Token> =
 								K extends Easing ? Curve :
 									K extends "borderStyle" ? Line :
 										K extends "look" ? Look :
-											K extends Flag ? Switch :
+											K extends Breakpoint ? Switch :
 												K extends Family | Shadow | Lifting ? Open :
 													never
 
@@ -181,7 +181,7 @@ export type Family = Extract<Token, `fontFamily${string}`>
 /**
  * The tokens telling which breakpoints the viewport has passed.
  */
-export type Flag = Extract<Token, `viewport${string}`>
+export type Breakpoint = Extract<Token, `viewport${string}`>
 
 /**
  * The token padding the element it is assigned to, set from a {@link Spacing spacing step}.
@@ -259,7 +259,7 @@ type Line = "none" | "hidden" | "solid" | "dashed" | "dotted" | "double" | "groo
 type Look = "subtle" | "normal" | "strong"
 
 /**
- * The answer a breakpoint flag carries.
+ * The answer a breakpoint switch carries.
  */
 type Switch = "on" | "off"
 

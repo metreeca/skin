@@ -24,7 +24,9 @@
  *
  * **Line** — `borderColor` draws an enclosing line in the colour of {@link colors `colorDisabled`}, since a line, like
  * a disabled label, carries no meaning of its own. The two share one value, so an app retuning the disabled colour
- * retunes every line along with it, and a contrast check passes over both of them.
+ * retunes every line along with it, and a contrast check passes over both of them. `borderColorField` draws the
+ * edge of a field, the line that tells it apart from the page, so it holds the 3:1 a control boundary takes on the
+ * page, the striped row and the edit background for the shipped page and text anchors.
  *
  * **Radii** — `borderRadius025` to `borderRadius100` round a corner by a length, on the steps
  * {@link spacings the spacing ladder} carries and stated the same way, in `em`, so a box rounds by the same amount
@@ -56,6 +58,7 @@ export const borders = {
 
 	borderStyle: "--skin--border-style",
 	borderColor: "--skin--border-color",
+	borderColorField: "--skin--border-color-field",
 	borderWidth: "--skin--border-width",
 
 	borderRadius025: "--skin--border-radius-025",

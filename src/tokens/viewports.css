@@ -20,8 +20,8 @@
  * a style query rather than repeating its width.
  *
  * The widths below are the only place the design system states them at all: 30rem for a phone held upright, 48rem for
- * a tablet or a split window, 64rem for a laptop and 90rem for a desktop. A rule elsewhere reads the flag, never the
- * width.
+ * a tablet or a split window, 64rem for a laptop and 90rem for a desktop. A rule elsewhere reads the switch for the
+ * breakpoint it cares about, never the width behind it, so the threshold can move without touching that rule.
  */
 
 @property --skin--viewport-small {
@@ -49,9 +49,9 @@
 }
 
 /*
- * Every query is a floor, so a wider viewport leaves the narrower flags on and a rule reads them as a ladder rather
- * than as a band. Each is assigned on the root element and inherits, so every element sits inside a container a style
- * query can match without declaring one.
+ * Every query is a floor, so a wider viewport leaves the narrower switches on and a rule reads them as a ladder rather
+ * than as a band. Each is assigned on the root element and inherits, so every element sits inside a container that a
+ * style query can match, and no rule anywhere has to declare a container of its own to branch on a breakpoint.
  *
  * The widths are stated in rem because each one asks whether the content fits, not how big the glass is, and content
  * is measured in text: a comfortable line runs 65 to 75 characters, which is a multiple of the font size rather than

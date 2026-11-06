@@ -17,7 +17,7 @@
 /*
  * The specimen layout, left unlayered so it wins over the base rules, and drawing every colour and measure from the
  * design system tokens. The few literals left are layout measures of this page alone, each commented where it sits.
- * Breakpoints are read from the viewport flags through style queries, as any app built on the design system would.
+ * Breakpoints are read from the viewport switches through style queries, as any app built on the design system would.
  */
 
 body {
@@ -403,18 +403,6 @@ main > section {
         aspect-ratio: 5 / 2;
         border-bottom-style: var(--skin--border-style);
         background-color: var(--skin--background-color-stripe);
-
-        &.split {
-
-            grid-template-columns: 1fr 1fr;
-            place-items: stretch;
-            gap: var(--skin--border-width);
-
-            & > span {
-                background-color: var(--lab-sample);
-            }
-
-        }
 
         &.swatch {
             background-color: var(--lab-sample);
@@ -1029,15 +1017,15 @@ main > section {
 
 /* Context. */
 
-.flags {
+.switches {
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); /* The narrowest flag card. */
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); /* The narrowest switch card. */
     gap: var(--skin--spacing-100);
 
 }
 
-.flag {
+.switch {
 
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -1090,23 +1078,23 @@ main > section {
 }
 
 @container style(--skin--viewport-small: on) {
-    .flag[data-token="viewportSmall"] > .led { background-color: var(--skin--color-pass); }
-    .flag[data-token="viewportSmall"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
+    .switch[data-token="viewportSmall"] > .led { background-color: var(--skin--color-pass); }
+    .switch[data-token="viewportSmall"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
 }
 
 @container style(--skin--viewport-medium: on) {
-    .flag[data-token="viewportMedium"] > .led { background-color: var(--skin--color-pass); }
-    .flag[data-token="viewportMedium"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
+    .switch[data-token="viewportMedium"] > .led { background-color: var(--skin--color-pass); }
+    .switch[data-token="viewportMedium"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
 }
 
 @container style(--skin--viewport-large: on) {
-    .flag[data-token="viewportLarge"] > .led { background-color: var(--skin--color-pass); }
-    .flag[data-token="viewportLarge"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
+    .switch[data-token="viewportLarge"] > .led { background-color: var(--skin--color-pass); }
+    .switch[data-token="viewportLarge"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
 }
 
 @container style(--skin--viewport-xlarge: on) {
-    .flag[data-token="viewportXlarge"] > .led { background-color: var(--skin--color-pass); }
-    .flag[data-token="viewportXlarge"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
+    .switch[data-token="viewportXlarge"] > .led { background-color: var(--skin--color-pass); }
+    .switch[data-token="viewportXlarge"] > .name::after { content: " on"; color: var(--skin--color-pass-stroke); }
 }
 
 

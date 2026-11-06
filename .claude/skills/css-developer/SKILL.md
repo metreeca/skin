@@ -91,7 +91,7 @@ A rule stands apart only where nesting cannot place it:
 Declarations come **before** any nested rule: a declaration after one was broken in shipping browsers until late 2024.
 
 A markup module selects elements, and a class only where a published convention fixes it, as the `hljs-*` tokens of
-highlight.js and the `markdown-alert*` blocks of GitHub do. It **NEVER** invents a class of its own.
+highlight.js and the `markdown-alert*` blocks of Markdown alerts do. It **NEVER** invents a class of its own.
 
 ## Comments
 
@@ -142,17 +142,19 @@ the anchors decide, and an app retuning them carries the rule along.
 Derive a new role from an anchor with `color-mix(in oklab, …)` for a mix towards the page, or `oklch(from … )` where the
 chroma has to survive. An anchor pair states an emphasis relative to its partner, never an appearance.
 
-A derivation **NEVER** leaves the sRGB gamut, for the shipped brand or for the alternative brands the suite runs:
-browsers disagree on what to paint outside it, Chrome and Firefox clipping the channels and Safari reducing the
-chroma, so the colour the comment describes is the colour no browser shows. A `color-mix()` of two paintable colours
-stays paintable; an `oklch(from …)` step that raises chroma or pushes lightness towards an end caps the channel with
-`min()` where the gamut ends at that lightness.
+A derivation **NEVER** leaves the sRGB gamut for the shipped brand: browsers disagree on what to paint outside it,
+Chrome and Firefox clipping the channels and Safari reducing the chroma, so the colour the comment describes is the
+colour no browser shows. A `color-mix()` of two paintable colours stays paintable; an `oklch(from …)` step that raises
+chroma or pushes lightness towards an end caps the channel with `min()` where the gamut ends at that lightness.
 
 A relative `oklch(from …)` **NEVER** reads the hue of a near-grey: Chrome marks the hue of a colour under about
 0.02 chroma as powerless and paints the result red, and no evaluator outside a browser predicts it. A derivation
 raising the chroma of a tint scales `a` and `b` in `oklab(from …)`, which has no hue to lose.
 
-Text roles hold 4.5:1 against the background **and** over the stripe, in **both** schemes; a focus ring holds 3:1.
+Text roles hold 4.5:1 against the background **and** over the stripe, in **both** schemes; a mark, a control
+boundary and a focus ring hold 3:1. These WCAG minimums, and the gamut, are the **only** constraints on a colour: a
+derivation aims at the minimum on its tightest surface rather than past it, and **NEVER** answers to cross-scheme
+symmetry, ΔE separation between roles or a state no token names.
 Retuning an anchor means recomputing every role derived from it, in both schemes, before the change is reported.
 
 ## Registrations

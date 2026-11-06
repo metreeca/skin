@@ -85,7 +85,7 @@
 
                     <p class="hint">
                         Click any token to copy its <code>var()</code> reference. Colour samples follow the scheme on
-                        show, except the anchors, split between the light scheme on the left and the dark one on the right.
+                        show.
                     </p>
 
                 </section>
@@ -98,19 +98,19 @@
                         <p class="eyebrow">Foundations</p>
                         <h2>Colours</h2>
                         <p class="lead">
-                            Eight anchors carry literal values; every other colour derives from them, so retuning an
-                            anchor carries the whole interface along.
+                            A handful of anchors carry literal values; every other colour derives from them, so
+                            retuning an anchor carries the whole interface along.
                         </p>
                     </header>
 
                     <h3>Anchors</h3>
-                    <p class="note">The page pair, the brand accents and the four steps of the meaning scale.</p>
+                    <p class="note">The page pair, the brand accents and the focus mark.</p>
                     <div class="chips large" data-chips="anchors"></div>
 
                     <h3>Meaning scale</h3>
                     <p class="note">
-                        Every meaning a widget carries lands on one of four steps. A notice is marked by the step,
-                        tinted by its fill and titled in its stroke; its body keeps the page ink.
+                        Every meaning a widget carries lands on one of five steps, each with its own anchor, stroke and
+                        tint. A notice is marked by the step and titled in its stroke; its body keeps the page ink.
                     </p>
                     <div class="steps"></div>
 
@@ -122,7 +122,7 @@
                     <div class="roles"></div>
 
                     <h3>Fills</h3>
-                    <p class="note">Grounds for editing, striping and interaction states, and the tints of the meaning scale.</p>
+                    <p class="note">Grounds for editing, striping and interaction states.</p>
                     <div class="chips" data-chips="fills"></div>
 
                 </section>
@@ -282,11 +282,11 @@
                         <h2>Context</h2>
                         <p class="lead">
                             Answers an area hands down to everything it holds, read by rules through style queries.
-                            Resize the window to watch the viewport flags switch.
+                            Resize the window to watch the viewport switches flip.
                         </p>
                     </header>
 
-                    <div class="flags"></div>
+                    <div class="switches"></div>
 
                 </section>
 
@@ -582,8 +582,8 @@
                         <p class="eyebrow">Markup</p>
                         <h2>Alerts</h2>
                         <p class="lead">
-                            GitHub alerts, as Markdown renders <code>&gt; [!NOTE]</code> and its siblings: notes on the
-                            subtle accent, every other kind on a step of the meaning scale.
+                            Markdown alerts, as rendered from <code>&gt; [!NOTE]</code> and its siblings, each kind on a step of the
+                            meaning scale.
                         </p>
                     </header>
 
@@ -591,27 +591,27 @@
 
                         <div class="markdown-alert markdown-alert-note">
                             <p class="markdown-alert-title">Note</p>
-                            <p>Useful information a reader should know, even when skimming, marked by the subtle accent.</p>
-                        </div>
-
-                        <div class="markdown-alert markdown-alert-important">
-                            <p class="markdown-alert-title">Important</p>
-                            <p>Key information a reader needs to succeed.</p>
+                            <p>Useful information that users should know, even when skimming content.</p>
                         </div>
 
                         <div class="markdown-alert markdown-alert-tip">
                             <p class="markdown-alert-title">Tip</p>
-                            <p>Advice for doing things better or more easily.</p>
+                            <p>Helpful advice for doing things better or more easily.</p>
+                        </div>
+
+                        <div class="markdown-alert markdown-alert-important">
+                            <p class="markdown-alert-title">Important</p>
+                            <p>Key information users need to know to achieve their goal.</p>
                         </div>
 
                         <div class="markdown-alert markdown-alert-warning">
                             <p class="markdown-alert-title">Warning</p>
-                            <p>Urgent information that needs immediate attention to avoid problems.</p>
+                            <p>Urgent info that needs immediate user attention to avoid problems.</p>
                         </div>
 
                         <div class="markdown-alert markdown-alert-caution">
                             <p class="markdown-alert-title">Caution</p>
-                            <p>Advice about the risks or negative outcomes of certain actions.</p>
+                            <p>Advises about risks or negative outcomes of certain actions.</p>
                         </div>
 
                     </div>

@@ -15,19 +15,16 @@
  */
 
 /*
- * GitHub alerts, as GitHub renders them and as remark-github-blockquote-alert reproduces them: a block classed
- * markdown-alert and its kind, opened by a markdown-alert-title paragraph. The classes are that published convention
- * rather than names of the design system, so any Markdown pipeline emitting them gets alerts on the meaning scale.
+ * Markdown alerts, as a renderer supporting the > [!NOTE] syntax emits them: a block classed markdown-alert and its
+ * kind, opened by a markdown-alert-title paragraph. The classes are that published convention rather than names of
+ * the design system, so any Markdown pipeline emitting them gets alerts on the meaning scale.
  *
- * An alert sits on the tint of its step behind a bar in the stroke role of the same step, its kind told by the title
- * and any glyph beside it: the colour stands alongside the wording, never alone. The tint is what makes a warning read
- * as one at a glance, since the yellow a caution is known by cannot be text and lives in the fill. The bar takes the
- * narrowest spacing as its width, the scale holding no border width heavy enough to carry a mark on its own.
+ * An alert sits on the page behind a bar in the stroke role of its step, which paints its title and any glyph beside
+ * it as well, while the body keeps the page text: the colour stands alongside the wording, never alone. The bar takes
+ * the narrowest spacing as its width, the scale holding no border width heavy enough to carry a mark on its own.
  *
- * A note is the quietest kind, an aside rather than a meaning, so it takes the subtle accent and its first scale step
- * and leaves the info step to the important alert, whose purple GitHub colour the scale has no room for. The strong
- * accent would be louder, but its orange sits next to the caution stroke and would read as a warning. The subtle
- * accent holds 10:1 on the light page and 7.9:1 on the dark one, so it serves as the title as well as the bar.
+ * A note states useful information without passing a verdict, which is what the note step says, and the important
+ * alert singles out what a reader must not miss, which is what the flag step says.
  */
 
 .markdown-alert {
@@ -36,35 +33,27 @@
     margin-bottom: var(--skin--spacing-100);
 
     border-left: var(--skin--spacing-025) var(--skin--border-style) var(--skin-alert);
-    border-radius: 0 var(--skin--border-radius-025) var(--skin--border-radius-025) 0;
 
-    background-color: var(--skin-alert-tint);
-
-    /* Every stroke role holds AA contrast on its own tint in both schemes, as stated where they are declared. */
+    /* Every stroke role holds AA contrast on the page in both schemes, as stated where they are declared. */
 
     &.markdown-alert-note {
-        --skin-alert: var(--skin--color-subtle);
-        --skin-alert-tint: var(--skin--color-subtle-010);
+        --skin-alert: var(--skin--color-note-stroke);
     }
 
     &.markdown-alert-important {
-        --skin-alert: var(--skin--color-info-stroke);
-        --skin-alert-tint: var(--skin--background-color-info);
+        --skin-alert: var(--skin--color-flag-stroke);
     }
 
     &.markdown-alert-tip {
         --skin-alert: var(--skin--color-pass-stroke);
-        --skin-alert-tint: var(--skin--background-color-pass);
     }
 
     &.markdown-alert-warning {
         --skin-alert: var(--skin--color-warn-stroke);
-        --skin-alert-tint: var(--skin--background-color-warn);
     }
 
     &.markdown-alert-caution {
         --skin-alert: var(--skin--color-fail-stroke);
-        --skin-alert-tint: var(--skin--background-color-fail);
     }
 
     & > .markdown-alert-title {

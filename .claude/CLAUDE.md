@@ -3,6 +3,22 @@ title: Project Guidelines
 description: Development guidelines and conventions for the @metreeca/skin package.
 ---
 
+# References
+
+- [WCAG 2.2](https://www.w3.org/TR/WCAG22/) - the contrast budget every colour is held to:
+  [1.4.3 Contrast (Minimum)](https://www.w3.org/TR/WCAG22/#contrast-minimum) for text,
+  [1.4.11 Non-text Contrast](https://www.w3.org/TR/WCAG22/#non-text-contrast) for marks, control boundaries and
+  focus rings, [1.4.1 Use of Color](https://www.w3.org/TR/WCAG22/#use-of-color) for meaning carried in colour
+- [CSS Cascade 5](https://drafts.csswg.org/css-cascade-5/) - cascade layers and what an unlayered rule outranks
+- [CSS Properties and Values API](https://drafts.csswg.org/css-properties-values-api/) - `@property` registrations
+- [CSS Color 4](https://drafts.csswg.org/css-color-4/) - OKLab, OKLCh and the sRGB gamut
+- [CSS Color 5](https://drafts.csswg.org/css-color-5/) - `color-mix()`, relative colour syntax and `light-dark()`
+- [CSS Conditional 5](https://drafts.csswg.org/css-conditional-5/) - container style queries the viewport switches
+  are read through
+- [Tableau 10](https://www.tableau.com/blog/colors-upgrade-tableau-10-56782) and
+  [ColorBrewer Paired](https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4) - the sources of the series slots
+  and the area classes
+
 > [!CAUTION]
 >
 > - **ONLY** modify code when explicitly requested or clearly required.
@@ -20,8 +36,8 @@ description: Development guidelines and conventions for the @metreeca/skin packa
 >   is touched; this file carries only what is specific to the package
 > - Revising a token means revising it in **every** place listed under [Token Contract](#token-contract)
 > - The suite checks token **names** for every family, and **values** for the colours alone: `colors.test.ts` paints
->   every colour role in both schemes under three brands and holds it to its contrast budget and to the gamut, so a
->   wrong size reaches production unnoticed where a wrong colour fails the build
+>   every colour role in both schemes under the shipped brand and holds it to its contrast budget and to the gamut,
+>   so a wrong size reaches production unnoticed where a wrong colour fails the build
 > - Retuning an anchor means rechecking the contrast ratios under [Colours](#colours)
 
 # Overview
@@ -72,7 +88,7 @@ only place either side of the family is revised:
   line height and the heading tracking
 - `spacings` — the ladder a thing is set apart from its neighbour on
 - `scalings` — the ladder a thing measured against the text is sized on
-- `colors` — the eight colour anchors, each registered as a `light-dark()` pair where it varies by scheme, and the
+- `colors` — the nine colour anchors, each registered as a `light-dark()` pair where it varies by scheme, and the
   text, status, state and surface roles derived from them
 - `borders` — the line, the radii, the focus ring, the invalid outline and the vector stroke width
 - `elevations` — the surfaces a thing lifted off the page is painted on, the shadows pairing with them, the
@@ -83,7 +99,7 @@ only place either side of the family is revised:
 - `motions` — the durations a change takes and the curves it accelerates on, the durations collapsing under
   `prefers-reduced-motion`
 - `opacities` — how far a thing present but not available is faded
-- `viewports` — which breakpoints the viewport has passed, one flag each, `off` registered and `on` set from its width
+- `viewports` — which breakpoints the viewport has passed, one switch each, `off` registered and `on` set from its width
   upwards
 
 A breakpoint cannot be a width token: CSS does not accept a custom property in a media feature, so
@@ -104,7 +120,7 @@ once and hands the answers on as tokens, and a rule branches on one through a st
 The tokens are assigned on `:root` and inherit, so every element sits inside a container a style query matches and no
 rule declares one of its own. Each is registered with `off`, so the narrow case is a value a rule matches rather than
 the absence of one. What this buys is **reuse, not retuning**: the width still lives in `viewports.css`, and
-overriding a flag forces it without moving the threshold.
+overriding a switch forces it without moving the threshold.
 
 The standard set, and the **only** widths a rule breaks at, here or in a component built on the design system:
 
@@ -116,8 +132,8 @@ The standard set, and the **only** widths a rule breaks at, here or in a compone
 | `viewportXlarge` | `90rem` | a desktop, where the measure is capped rather than stretched |
 
 Every width is a **floor**, so the narrow layout is what a rule states unconditionally and each breakpoint only adds
-to it, leaving the narrower flags on. A `max-width` query is **NEVER** mixed in: at the boundary two rules then both
-match, or neither does. A band is expressed by pairing the wider flag as `off` with the narrower one as `on`.
+to it, leaving the narrower switches on. A `max-width` query is **NEVER** mixed in: at the boundary two rules then both
+match, or neither does. A band is expressed by pairing the wider switch as `off` with the narrower one as `on`.
 
 Code needing the same answer reads the token through `getComputedStyle` as it reads any other, which is a
 point-in-time read; a component reacting to a threshold being crossed watches the element rather than polling. There
@@ -136,7 +152,7 @@ them out of the reference.
   `forms.css`, `alerts.css` — one group of elements each
 - `highlights.css` and `alerts.css` are the two modules selecting classes, and only classes a published convention
   fixes rather than names of the design system: the `hljs-*` tokens of highlight.js and the `markdown-alert*` blocks
-  GitHub renders alerts as
+  Markdown renders alerts as
 
 # Layering
 
@@ -230,12 +246,12 @@ is stated per colour scheme in a query or attribute rule, and when a derived tok
 resolve. It says nothing about the value behind the name.
 
 `src/tokens/colors.test.ts` is where a colour value is held to its budget. It evaluates every colour token as the
-page would, in both schemes and under the shipped brand, a navy and a green, with the OKLab mixing and relative
-colour maths the browsers share, and fails when a role leaves the sRGB gamut, when a text role or a stroke drops
-below 4.5:1 on a surface it is set on, when a mark or the focus ring drops below 3:1, or when the raised surface
-lands on the stripe. It runs in Node with no browser, which is sound only because nothing leaves the gamut: the
-in-gamut check is what makes the other figures the figures every browser paints. A figure in a token comment is
-documentation of what the test asserts, never the guard.
+page would, in both schemes and under the shipped brand, with the OKLab mixing and relative colour maths the
+browsers share, and fails when a role leaves the sRGB gamut, when a text role or a stroke drops below 4.5:1 on a
+surface it is set on, or when a mark or the focus ring drops below 3:1. It runs in Node with no browser, which is
+sound only because nothing leaves the gamut: the in-gamut check is what makes the other figures the figures every
+browser paints. An app supplying its own brand rechecks its own figures: the suite holds no derivation to
+hypothetical brands. A figure in a token comment is documentation of what the test asserts, never the guard.
 
 An `@property` registration states the type a token takes and the default it falls back on, under the constraints
 `css-developer` §Registrations sets out: only an absolute value takes a real type, and a derived token carries no
@@ -270,15 +286,23 @@ registered and defined. Only the changelog records that it is on its way out.
 
 # Colours
 
-Eight anchors carry literals in `colors.css`. Seven state a value per colour scheme, as the `light-dark()` pair the
-contract above sets out; `--skin--color-warn` alone carries one value for both:
+> [!CAUTION]
+> **WCAG is the budget, not a floor to clear by a margin.** A colour is held to the WCAG 2.2 minimum for what it
+> paints, 4.5:1 for text and 3:1 for a mark, a control boundary or a focus ring, on the surfaces it is actually
+> painted on, and to the sRGB gamut below. **Nothing else constrains it**: no matching of loudness across schemes, no
+> ΔE or colour vision deficiency separation between roles, no state a token does not name, no aesthetic veto on a
+> hue. A derivation landing well above its tightest surface spends chroma no reader needs, and a meaning colour
+> cannot carry on its own goes to the glyph and the wording, as WCAG 1.4.1 requires.
+
+Nine anchors carry literals in `colors.css`, each stating a value per colour scheme, as the `light-dark()` pair the
+contract above sets out:
 
 - `--skin--color` and `--skin--background-color`
 - `--skin--color-subtle`, which an interface carries at rest, and `--skin--color-strong`, which marks a thing out;
   both ship the Metreeca brand, a slate and an orange, and an app supplies its own by overriding them; the light
   orange is darkened from the brand book's `#D60`, at 3.51:1 on white, to `#B74300`, which holds AA on its own tints
-- `--skin--color-info`, `--skin--color-pass`, `--skin--color-warn` and `--skin--color-fail`, the four steps of the
-  meaning scale below
+- `--skin--color-note`, `--skin--color-pass`, `--skin--color-flag`, `--skin--color-warn` and `--skin--color-fail`,
+  the five steps of the meaning scale below
 
 `--skin--color-focus` carries a literal per scheme alongside them without being an anchor: the focus mark says where
 the keyboard stands, which reads the same whatever an app brands with, so it is **NEVER** derived from an accent. It
@@ -286,13 +310,13 @@ is stated as a `light-dark()` pair alongside them and held to the ring budget of
 the stripe.
 
 > [!CAUTION]
-> **Every derivation stays inside the sRGB gamut**, for the shipped brand and for the navy and green brands the suite
-> runs. Browsers disagree on a colour outside it: Chrome and Firefox clip the channels, which shifts the hue, and
-> Safari reduces the chroma, which keeps it, so an out-of-gamut derivation is a different colour in each. A mix of two
-> paintable colours in OKLab stays paintable, which is why the states and the strokes are `color-mix()` towards the
-> text anchor; an `oklch(from …)` step that raises chroma or pushes lightness towards an end caps it with `min()`.
-> The figures in the comments and the suite's contrast checks are computed in Node from the same maths, and they
-> describe what ships only because nothing leaves the gamut.
+> **Every derivation stays inside the sRGB gamut** for the shipped brand. Browsers disagree on a colour outside it:
+> Chrome and Firefox clip the channels, which shifts the hue, and Safari reduces the chroma, which keeps it, so an
+> out-of-gamut derivation is a different colour in each. A mix of two paintable colours in OKLab stays paintable,
+> which is why the states and the strokes are `color-mix()` towards the text anchor; an `oklch(from …)` step that
+> raises chroma or pushes lightness towards an end caps it with `min()`. The figures in the comments and the suite's
+> contrast checks are computed in Node from the same maths, and they describe what ships only because nothing leaves
+> the gamut.
 >
 > A second hazard the suite cannot see: Chrome marks the **hue** of a colour under about 0.02 chroma as powerless,
 > so a relative `oklch(from …)` reading `h` off a near-grey, such as a 12% tint, paints **red**. A derivation
@@ -300,45 +324,51 @@ the stripe.
 
 ## The meaning scale
 
-Every meaning a widget carries lands on these four steps, and **NO** widget invents a fifth colour: a meaning the
+Every meaning a widget carries lands on these five steps, and **NO** widget invents a sixth colour: a meaning the
 scale does not carry is stated in words.
 
-| Step   | Says                   |
-|--------|------------------------|
-| `info` | stated or provisional  |
-| `pass` | completed as intended  |
-| `warn` | completed with caveats |
-| `fail` | failed to complete     |
+| Step   | Says                       |
+|--------|----------------------------|
+| `note` | stated or provisional      |
+| `pass` | completed as intended      |
+| `flag` | singled out for attention  |
+| `warn` | completed with caveats     |
+| `fail` | failed to complete         |
 
-`info` is **NOT** a milder `pass`: it is the absence of a verdict, so the scale is one unjudged step ahead of a
-three-step ramp. Three kinds of meaning share it, chosen by what the widget **is**, so no widget carries two:
+`note` is **NOT** a milder `pass`: it is the absence of a verdict, so the scale is one unjudged step ahead of a
+four-step ramp. `flag` is **NOT** a milder `warn`: it says a thing deserves attention, never that anything has gone
+wrong. Three kinds of meaning share it, chosen by what the widget **is**, so no widget carries two:
 `level` on content, `mode` on controls, `status` on reported things:
 
-| Attribute | `normal`            | `info`    | `pass`      | `warn`    | `fail`                |
-|-----------|---------------------|-----------|-------------|-----------|-----------------------|
-| `level`   | an ordinary passage | `info`    | `highlight` | `warning` | `critical`            |
-| `mode`    | an ordinary control | `safe`    | `commit`    | `alert`   | `danger`              |
-| `status`  | nothing to report   | `pending` | `success`   | `warning` | `failure` or `defect` |
+| Attribute | `normal`            | `note`    | `pass`     | `flag`    | `warn`     | `fail`                |
+|-----------|---------------------|-----------|------------|-----------|------------|-----------------------|
+| `level`   | an ordinary passage | `neutral` | `positive` | `notable` | `negative` | `critical`            |
+| `mode`    | an ordinary control | `safe`    | `commit`   | `publish` | `alert`    | `danger`              |
+| `status`  | nothing to report   | `pending` | `success`  | `paused`  | `warning`  | `failure` or `defect` |
+
+Each attribute reads as one list: a `level` completes "a ___ note", `positive` and `negative` mirrored around
+`neutral`; a `mode` names what the control does, `publish` taking the result out where `commit` keeps it; a `status`
+names where an operation stands, `paused` stopped with nothing wrong where `pending` is still under way.
 
 **`normal` is the default of all three, and it is NOT a step**: it carries no colour coding at all, leaving the
 ordinary page colours. A widget that states nothing is `normal`, and a `level="normal"` passage is **NOT** a blue
-`info` admonition. Only the four marked values reach the scale.
+`note` admonition. Only the marked values reach the scale.
 
-Four steps is the ceiling, because colour carries no more: one absence of hue and three hues told apart at a glance.
-A meaning the scale does not carry is stated in **words**, never in a fifth colour.
+Five steps is the ceiling, because colour carries no more: one absence of hue and four hues told apart at a glance.
+A meaning the scale does not carry is stated in **words**, never in a sixth colour.
 
 A widget maps its remaining values onto the steps and states that mapping where its consumers read it, or two widgets
 put the same meaning on different steps and the learned scale breaks:
 
 ```
-note         level   info → info    highlight → pass    warning → warn    critical → fail
-button       mode    safe → info    commit → pass       alert → warn      danger → fail
-toast        status  pending → info success → pass      warning → warn    failure → fail    defect → fail
-GitHub alert kind    important → info                   tip → pass        warning → warn    caution → fail
+note         level   neutral → note    positive → pass    notable → flag     negative → warn    critical → fail
+button       mode    safe → note       commit → pass      publish → flag     alert → warn       danger → fail
+toast        status  pending → note    success → pass     paused → flag      warning → warn     failure → fail    defect → fail
+alert        kind    note → note       tip → pass         important → flag   warning → warn     caution → fail
 ```
 
-A GitHub `note` is an aside rather than a meaning, so it stays off the scale and takes the subtle accent, leaving
-`info` to `important`, whose purple GitHub colour would be a fifth colour; the strong orange would read as a caution.
+A `note` alert states useful information without a verdict, which is the `note` step; an `important` alert singles out what a
+reader must not miss, which is `flag`.
 
 ### Which attribute a widget takes
 
@@ -393,88 +423,51 @@ toolbar.
 
 ### Tensions on the record
 
-- **Orange crowds the warm steps.** `--skin--color-strong` ships orange, which sits ΔE 6.9 from the `fail` red in
-  the light scheme (`#B74300` against `#C00`) and ΔE 13 from the `warn` yellow in the dark one (`#F80` against
-  `#F2C230`), so a strong control and a failure are confusable where colour alone tells them apart. A strong control
-  is therefore told by weight and border as well, which `look` already carries.
-- **A pressed control and a caution label are both pale orange on the dark page.** The states are the strong accent
-  carried towards the text anchor, and above a bright saturated orange there is little room: the dark pressed
-  colour sits ΔE 9.4 from the dark caution stroke, and the hover and pressed steps are ΔE 5.5 each where the light
-  ones are 11. A control fills its box with the state tints as well, so the state never rests on the text colour,
-  and a caution is told by its glyph and its tint. Stepping the lightness instead bought nothing: it left the gamut,
-  and the clipped result was the caution stroke itself.
-- **Blue collides with a blue brand.** An app branding in blue makes the `info` step and a strong control
-  confusable. The info token is a cyan for this reason.
+- **The dark hover and pressed steps are half the light ones.** The states are the strong accent carried towards the
+  text anchor, and above a bright saturated orange there is little room: the steps are ΔE 5.5 each where the light
+  ones are 11. A control fills its box with the state tints as well, so the state never rests on the text colour.
+  Stepping the lightness instead bought nothing: it left the gamut, and the clipped result was a caution amber.
 - **A step is NEVER told in colour alone**, since `pass` and `fail` are the pair colour vision deficiency collapses
   most readily; the icon and the wording carry the same meaning.
 - **`mode="commit"` and `look="strong"` co-occur on nearly every Save button.** They stay distinct, but the pairing
   has to stay the exception or green-plus-prominence becomes the default and means nothing.
-- **`pending` and `info` share the `info` step.** A pending that must read as *moving* rather than merely unjudged
+- **`pending` and `neutral` share the `note` step.** A pending that must read as *moving* rather than merely unjudged
   adds the loading opacity and the motion tokens on top of the hue, not instead of it.
 - **A failure can be told by either attribute.** A note takes `level="critical"` for a failure shown in place of
   the content, and a toast takes `status="failure"` for one floated over the screen. Both land on `fail`. Only
   `status` carries `pending`, since an authored admonition is never pending.
 - **`failure` and `defect` share the `fail` step.** A fault of the interface itself is a failure all the same to the
-  reader, so the two are told apart by glyph and wording, never by a fifth colour the scale cannot carry.
-- **`highlight` is the thinnest cell.** A passage reporting that something *went* well is really reporting a
-  `status`, so it earns its place only for a passage singled out as worth having.
+  reader, so the two are told apart by glyph and wording, never by a sixth colour the scale cannot carry.
+- **`positive` is the thinnest cell.** A passage reporting that something *went* well is really reporting a
+  `status`, so it earns its place for advice and for a passage the reader is better off for having read.
+- **`paused` and `pending` both mean unfinished.** `pending` is still moving and takes no verdict; `paused` has stopped
+  and waits on the reader, which is what lifts it onto `flag`.
 
 > [!WARNING]
 >
-> `--skin--color-warn` is a **fill, never a stroke**, and it carries **one value in both colour schemes**. A
-> caution paints a filled badge with it and sets its message in the dark page anchor over it, at 12.5:1. Stroking it
-> on the page gives **1.68:1** and is a defect.
+> `--skin--color-warn` is a dark gold on the light page and a gold on the dark one. A caution paints a filled badge
+> with it and sets its message in `--skin--color-over`, at 4.87:1 and 5.48:1.
 >
-> This is forced by the colour space, **NOT** chosen. Red reaches full saturation at a middling lightness, so
-> `--skin--color-fail` is dark enough to read on white and loud at once. Yellow reaches full saturation only when
-> it is very light, so any yellow dark enough to stroke on white has already spent its chroma. Three rounds inside a
-> stroke budget proved it: `#850` at 4.5:1 read as mud, `#A40` escaped the mud only by moving to a burnt orange
-> sitting ΔE 2.0 from the failure red under simulated deuteranopia, and `#B67C00` at 3:1 was still muted at chroma
-> 0.132. As a fill it reaches **chroma 0.158** against the failure's 0.218, and separates from it by **ΔE 29.8
-> deutan**, and from the pass green by **ΔE 17.0 protan**, the tightest pair in the scale. The yellow sits a dozen
-> degrees further from orange than the mustard it replaced, which managed 10.0 against the green and turned brown as
-> soon as a tint or a dark stroke dimmed it.
->
-> Retuning it for a better stroke contrast walks straight back into the mud. A caution needing coloured text or a
-> mark takes the **second token**, `--skin--color-warn-stroke`, never a change to this one.
->
-> `--skin--color-fail` alone holds 4.5:1 on the page and serves as either text or mark there. `--skin--color-info` and
-> `--skin--color-pass` are **marks at 3:1**, not text: cyan and green are chroma-starved at the lightness 4.5:1
-> forces, so holding them to it left `info` at chroma 0.090 against the failure's 0.218, reading as dull beside
-> every other step. At the mark budget they reach 0.107 and 0.202 and lift from L 0.52 to L 0.61. They paint the
-> glyph, the rule and the fill of a notice whose text takes `--skin--color` on the tint, at 18.5:1.
->
-> Do **NOT** drop `--skin--color-fail` to the mark budget to match them: `markup/forms.css` and the components built on
-> the design system paint text with it, and red is the one hue reaching full chroma at a lightness dark enough to carry
-> a sentence.
+> `--skin--color-note`, `--skin--color-pass`, `--skin--color-flag` and `--skin--color-fail` hold 4.5:1 on the page,
+> the stripe and their own tint in **both** schemes, so each serves as text or mark; `markup/forms.css` paints text
+> with the failure. `--skin--color-warn` holds it on the light page and the stripe, at 4.87:1 and 4.53:1, and is
+> never set on its tint, where it falls to 4.16:1 there: any caution light enough to stay a gold rather than a brown
+> does. The dark gold holds on its tint, at 4.88:1, but the rule is the light one's, since a consumer writes one rule.
 
-Text painted in the colour of a step over its tint takes the step's **stroke role**, `--skin--color-info-stroke`,
-`--skin--color-pass-stroke`, `--skin--color-warn-stroke` or `--skin--color-fail-stroke`. A stroke holds AA on the
-page, the stripe and its own tint in both schemes. Over a tint a control deepens under the pointer, with a further 24%
-of the anchor, the label takes whichever of the stroke and `--skin--color-over` holds AA there: the info and pass
-strokes hold on their own, every stroke does on the dark page, and the light caution and failure strokes hand over to
-the dark page anchor, as a filled caution badge does. Holding every stroke to the deepened tint is what once made the
-caution an olive and the failure a maroon, and **neither is allowed back**: a warning is read by an amber and a
-failure by a red.
+Text painted in the colour of a step takes the step's **stroke role**, `--skin--color-note-stroke`,
+`--skin--color-pass-stroke`, `--skin--color-flag-stroke`, `--skin--color-warn-stroke` or `--skin--color-fail-stroke`. A stroke holds AA on the
+page, the stripe, the overlay and its own tint, and nothing past that: a label a widget sets over any other fill,
+such as a tint deepened under the pointer, is the widget's to hold to AA, falling back on `--skin--color` where the
+stroke falls short. In both schemes every stroke is its anchor, set at the most chroma the gamut holds where the
+tightest surface reaches 4.5:1: the tint on the light page, the overlay on the dark one, where it lifts to L 0.64:
 
-| Role   | Light page | Light stripe | Light tint | Dark page | Dark stripe | Dark tint |
-|--------|------------|--------------|------------|-----------|-------------|-----------|
-| `info` | 7.05:1     | 6.28:1       | 6.19:1     | 7.07:1    | 6.66:1      | 6.29:1    |
-| `pass` | 7.15:1     | 6.36:1       | 6.27:1     | 7.21:1    | 6.78:1      | 6.38:1    |
-| `warn` | 5.28:1     | 4.70:1       | 4.80:1     | 13.1:1    | 12.4:1      | 10.9:1    |
-| `fail` | 6.70:1     | 5.97:1       | 5.64:1     | 7.58:1    | 7.13:1      | 6.70:1    |
-
-The info and pass strokes carry their anchors 74% towards the text. The failure stroke carries its anchor 94% on the
-light page, a shade under the red that shouts, and 86% on the dark one. The caution stroke is the yellow carried 60%
-towards the text and, on the light page, turned 34° towards orange at the chroma the gamut holds, since a dim yellow
-is an olive; on the dark page it keeps its yellow with half again the chroma.
-
-The dark `info` and `pass` anchors are pinned by this table rather than by a mark budget of their own: at L 0.60
-their strokes land within a tenth of the light figures, so a notice reads as loud in either scheme. Lighter dark
-anchors held text contrast twice over, and their strokes then lightened and shed chroma for nothing.
-
-A widget deepening a status fill under the pointer or the press keeps the label as it stands: it **NEVER** retints the
-label per state, deepens past the 24% the shares are pinned by, or restates a derivation inline.
+| Role   | Light page | Light stripe | Light tint | Dark page | Dark stripe | Dark tint | Dark overlay |
+|--------|------------|--------------|------------|-----------|-------------|-----------|--------------|
+| `note` | 5.40:1     | 5.02:1       | 4.58:1     | 5.47:1    | 5.15:1      | 4.87:1    | 4.54:1       |
+| `pass` | 5.39:1     | 5.01:1       | 4.56:1     | 5.44:1    | 5.12:1      | 4.79:1    | 4.51:1       |
+| `flag` | 5.38:1     | 5.01:1       | 4.57:1     | 5.49:1    | 5.17:1      | 4.92:1    | 4.55:1       |
+| `warn` | 4.87:1     | 4.53:1       | 4.16:1     | 5.48:1    | 5.16:1      | 4.88:1    | 4.54:1       |
+| `fail` | 5.86:1     | 5.45:1       | 4.93:1     | 5.45:1    | 5.13:1      | 4.90:1    | 4.52:1       |
 
 Every other colour derives from them through `color-mix(in oklab, …)` or `oklch(from …)`, so an app retuning the
 anchors carries the whole interface along.
@@ -499,21 +492,24 @@ The striped table row is where the custom property cycle `css-developer` warns o
 Text roles hold WCAG AA contrast, 4.5:1 against the background they sit on, in **both** schemes and over the stripe;
 the focus ring holds 3:1. The exceptions a contrast check is allowed to pass over, each **by design**:
 
-- `--skin--border-color`, `--skin--color-disabled` and `--skin--color-placeholder`, below 3:1, carrying no meaning
-  on their own. The three share one value, 1.76:1 and 1.94:1 on the edit background: the last two stand for
-  text the reader has not supplied, and a disabled control is told from an empty one by its **background**, never by
-  the weight of its text. Reading either as a text role is the mistake to avoid
-- `--skin--color-info` and `--skin--color-pass`, marks at 3:1, since the hues cannot hold chroma at the lightness
-  4.5:1 forces
-- `--skin--color-warn`, a fill, at 1.68:1 stroked
+- `--skin--border-color` and `--skin--color-disabled`, below 3:1, sharing one value: a decorative line carries no
+  meaning, and WCAG exempts a disabled control. A line that identifies a control takes `--skin--border-color-field`
+  at 3:1, and a placeholder is text like any other, held to 4.5:1
+- `--skin--color-warn` and `--skin--color-warn-stroke` on the light caution tint, at 4.16:1, so caution text is never
+  set there
 
-The stroke roles are the text roles standing in for all four.
+The stroke roles are the text roles standing in for all five.
 
 # Palettes
 
 `palettes.css` carries the colours a chart, a coding or a map reads: four ten-step scales, nine series slots and four
 area classes. A step, a slot or a class is **NEVER** a substitute for a role token: a role says what a colour means in
 the interface, these say where a value sits or which thing it belongs to.
+
+> [!NOTE]
+> The ΔE and colour vision deficiency gates below are **chart-readability guarantees** for these palettes alone, not
+> contrast rules: WCAG lets a chart rely on its labels, and the gates keep the colours themselves apart. They bind
+> nothing outside `palettes.css`, so the WCAG-only budget under [Colours](#colours) still governs every role.
 
 ## Scales
 

@@ -67,28 +67,30 @@ const tokens: readonly Token[] = Object.keys(skin).filter(isToken);
 const budgets: Readonly<Record<Budget, number>> = { text: 4.5, mark: 3, none: 0 };
 
 const anchors: readonly Token[] = [
-	"color", "backgroundColor", "colorSubtle", "colorStrong",
-	"colorInfo", "colorPass", "colorWarn", "colorFail", "colorFocus"
+	"color", "backgroundColor", "colorSubtle", "colorStrong", "colorFocus"
 ];
 
 const fills: readonly Token[] = [
 	"backgroundColorEdit", "backgroundColorStripe",
-	"backgroundColorHover", "backgroundColorPressed", "backgroundColorSelected",
-	"backgroundColorInfo", "backgroundColorPass", "backgroundColorWarn", "backgroundColorFail"
+	"backgroundColorHover", "backgroundColorPressed", "backgroundColorSelected"
 ];
 
 const steps: readonly Step[] = [{
-	name: "Info", says: "Stated or provisional.",
-	mark: "colorInfo", stroke: "colorInfoStroke", fill: "backgroundColorInfo",
-	level: "info", mode: "safe", status: "pending"
+	name: "Note", says: "Stated or provisional.",
+	mark: "colorNote", stroke: "colorNoteStroke", fill: "backgroundColorNote",
+	level: "neutral", mode: "safe", status: "pending"
 }, {
 	name: "Pass", says: "Completed as intended.",
 	mark: "colorPass", stroke: "colorPassStroke", fill: "backgroundColorPass",
-	level: "highlight", mode: "commit", status: "success"
+	level: "positive", mode: "commit", status: "success"
+}, {
+	name: "Flag", says: "Singled out for attention.",
+	mark: "colorFlag", stroke: "colorFlagStroke", fill: "backgroundColorFlag",
+	level: "notable", mode: "publish", status: "paused"
 }, {
 	name: "Warn", says: "Completed with caveats.",
 	mark: "colorWarn", stroke: "colorWarnStroke", fill: "backgroundColorWarn",
-	level: "warning", mode: "alert", status: "warning"
+	level: "negative", mode: "alert", status: "warning"
 }, {
 	name: "Fail", says: "Failed to complete.",
 	mark: "colorFail", stroke: "colorFailStroke", fill: "backgroundColorFail",
@@ -104,14 +106,17 @@ const roles: readonly Role[] = [
 	{ token: "colorHover", budget: "text", use: "Controls under the pointer" },
 	{ token: "colorPressed", budget: "text", use: "Pressed controls" },
 	{ token: "colorSelected", budget: "text", use: "Selected items" },
-	{ token: "colorInfoStroke", budget: "text", use: "Info text" },
+	{ token: "colorNoteStroke", budget: "text", use: "Note text" },
 	{ token: "colorPassStroke", budget: "text", use: "Pass text" },
+	{ token: "colorFlagStroke", budget: "text", use: "Flag text" },
 	{ token: "colorWarnStroke", budget: "text", use: "Warn text" },
 	{ token: "colorFailStroke", budget: "text", use: "Fail text" },
+	{ token: "colorNote", budget: "text", use: "Notes, as text or mark" },
+	{ token: "colorPass", budget: "text", use: "Passes, as text or mark" },
+	{ token: "colorFlag", budget: "text", use: "Flags, as text or mark" },
 	{ token: "colorFail", budget: "text", use: "Failures, as text or mark" },
-	{ token: "colorInfo", budget: "mark", use: "Info glyphs and rules" },
-	{ token: "colorPass", budget: "mark", use: "Pass glyphs and rules" },
 	{ token: "colorFocus", budget: "mark", use: "The focus ring" },
+	{ token: "colorSelected", budget: "text", use: "Selected items on a pressed fill", ground: "backgroundColorPressed" },
 	{ token: "colorOver", budget: "text", use: "Text over the caution fill", ground: "colorWarn" },
 	{ token: "colorDisabled", budget: "none", use: "Disabled controls" },
 	{ token: "colorPlaceholder", budget: "none", use: "Placeholders" }
@@ -142,7 +147,7 @@ const faces: readonly (readonly [Token, string])[] = [
 
 const pangram = "The quick brown fox jumps over the lazy dog";
 
-const flags: readonly (readonly [Token, string])[] = [
+const switches: readonly (readonly [Token, string])[] = [
 	["viewportSmall", "A phone held upright: the one-column floor."],
 	["viewportMedium", "A tablet or a split window, where a second column fits."],
 	["viewportLarge", "A laptop, where navigation becomes a rail."],
@@ -162,7 +167,7 @@ render(".facts", [
 ].map(([value, label]) => `<li><strong>${value}</strong><span>${label}</span></li>`).join(""));
 
 
-render("[data-chips='anchors']", anchors.map(token => chip(token, split(token))).join(""));
+render("[data-chips='anchors']", anchors.map(token => chip(token, swatch(token))).join(""));
 
 render(".steps", steps.map(step).join(""));
 
@@ -294,13 +299,13 @@ render("[data-rows='opacities']", tokens.filter(token => /^opacity/.test(token))
 ).join(""));
 
 
-render(".flags", [
-	...flags.map(([token, hint]) => `<button type="button" class="flag" ${handle(token)}>
+render(".switches", [
+	...switches.map(([token, hint]) => `<button type="button" class="switch" ${handle(token)}>
 		<span class="led" aria-hidden="true"></span>
 		<span class="name">${short(token)}</span>
 		<span class="hint">${hint}</span>
 	</button>`),
-	`<button type="button" class="flag look" ${handle("look")}>
+	`<button type="button" class="switch look" ${handle("look")}>
 		<span class="name">${short("look")}</span>
 		<span class="hint">How loud the widgets of an area appear: <b data-value="look"></b>.</span>
 	</button>`
@@ -356,19 +361,6 @@ function chip(token: Token, sample: string): string {
 	return `<button type="button" class="chip" ${handle(token)}>${sample}<span class="label">
 		<span class="name">${short(token)}</span><span class="value" data-value="${token}"></span>
 	</span></button>`;
-}
-
-/**
- * Renders a colour sample split between the light and the dark scheme.
- *
- * @param token The colour token painting the sample
- *
- * @returns The markup of a sample whose halves pin a scheme each
- */
-function split(token: Token): string {
-	return `<span class="sample split" style="--lab-sample: ${reference(token)}">
-		<span data-theme="light"></span><span data-theme="dark"></span>
-	</span>`;
 }
 
 /**
@@ -544,7 +536,7 @@ function value(node: HTMLElement): string {
 
 	const name = node.dataset.value ?? "";
 	const scope = node.closest(".chip, .row") ?? node;
-	const samples = Array.from(scope.querySelectorAll(".split > span, .swatch"));
+	const samples = Array.from(scope.querySelectorAll(".swatch"));
 	const measured = scope.querySelector<HTMLElement>("[data-measure]");
 	const raw = isToken(name) ? getComputedStyle(document.documentElement).getPropertyValue(skin[name]).trim() : "";
 
@@ -563,10 +555,24 @@ function value(node: HTMLElement): string {
  */
 function sides(token: Token): readonly [string, string] {
 
-	const halves = all(`.chip[data-token="${token}"] .split > span`)
-		.map(half => hex(rgba(getComputedStyle(half).backgroundColor)).slice(0, 7).toLowerCase());
+	const paint = (theme: string): string => {
 
-	return [halves[0] ?? "#000000", halves[1] ?? "#000000"];
+		const probe = document.createElement("span");
+
+		probe.dataset.theme = theme;
+		probe.style.backgroundColor = reference(token);
+
+		document.body.append(probe);
+
+		const painted = hex(rgba(getComputedStyle(probe).backgroundColor)).slice(0, 7).toLowerCase();
+
+		probe.remove();
+
+		return painted;
+
+	};
+
+	return [paint("light"), paint("dark")];
 
 }
 

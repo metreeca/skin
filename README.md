@@ -69,15 +69,34 @@ written, so a malformed value leaves whatever reads it unstyled rather than on t
 ### Colours
 
 Retheme by retuning the anchors alone, `--skin--color`, `--skin--background-color`, `--skin--color-subtle`,
-`--skin--color-strong` and the four status colours `--skin--color-info`, `--skin--color-pass`, `--skin--color-warn` and
-`--skin--color-fail`: labels, borders, stripes, focus rings, state fills, notice tints and elevation surfaces derive
-from them and follow. The accents ship the Metreeca slate and orange, so an app supplies its own, a quieter value and a
-louder one per colour scheme, and rechecks that the text roles still hold AA contrast against the page and the striped
-row in both. The status colours take values of their own rather than derivations of an accent, so a success or a failure
-keeps reading as itself whatever colours an app brands its accents with, in either of the two colour schemes.
+`--skin--color-strong` and the five status colours `--skin--color-note`, `--skin--color-pass`, `--skin--color-flag`,
+`--skin--color-warn` and `--skin--color-fail`: labels, borders, stripes, focus rings, state fills, notice tints and
+elevation surfaces derive from them and follow. The status colours take values of their own rather than derivations of
+an accent, so a success or a failure reads as itself in both colour schemes, whatever accents an app brands with.
 
 Each anchor holds its `light-dark()` pair unresolved, so every scheme and every pinned subtree follows a single
 override, with no rule restated in a `prefers-color-scheme` query or per pinned scheme.
+
+The accents ship the Metreeca slate and orange, so an app supplies its own: a quieter value and a louder one, for each
+colour scheme. Each accent has a contrast target set by what it paints. An accent that meets its target keeps every
+colour derived from it within [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, on the page and on the fills a control
+paints: 4.5:1 for [text](https://www.w3.org/TR/WCAG22/#contrast-minimum), and 3:1 for marks, control boundaries and
+focus rings, as [non-text contrast](https://www.w3.org/TR/WCAG22/#non-text-contrast) requires.
+
+| Accent                 | Paints                                | Target in each scheme                                  |
+|------------------------|---------------------------------------|--------------------------------------------------------|
+| `--skin--color-strong` | selected items, labels on state fills | 5.3:1 on the page, for 4.5:1 on the pressed fill       |
+| `--skin--color-subtle` | text set in the top of its scale      | 4.5:1 on the page                                      |
+
+The other accent colours need no target of their own. Hover and pressed text moves the strong accent further from the
+page, so it gains contrast. Links and enabled controls take only the hue of the subtle accent and set their own
+lightness. Text over a strong fill picks black or white, whichever reads better.
+
+To try a candidate pair, open the [theming tuner](https://metreeca.github.io/skin/lab/#theming) of the specimen. It
+applies both accents to the whole page, and the [colour roles table](https://metreeca.github.io/skin/lab/#colours)
+marks every role that falls short of its budget, the strong accent included on the pressed fill it is tightest on.
+Against white, the defaults hold 5.51:1 for the strong orange and 10.0:1 for the subtle slate, so the orange clears its
+target by a hair and the slate by far, so a brand's strong accent is the one that needs checking in the tuner.
 
 ### Typography
 
@@ -109,7 +128,7 @@ by family in the [API reference](https://metreeca.github.io/skin/), along with w
 token to retune without reading through the stylesheets and the modules that state its value.
 
 The viewport breakpoints are the one exception: CSS does not accept a custom property in a media query, so an app cannot
-move them, though it can still force a breakpoint on or off by overriding its flag.
+move them, though it can still force a breakpoint on or off by overriding its switch.
 
 ### Subtrees
 
@@ -146,18 +165,20 @@ control in it that asks to be loud still is, since a stated attribute answers to
 <div style={css({ look: "subtle" })}>
 ```
 
-**What it means** is colour-coded, and every meaning lands on one four-step scale:
+**What it means** is colour-coded, and every meaning lands on one five-step scale:
 
-| Step   | Says                   | Token                |
-|--------|------------------------|----------------------|
-| `info` | stated or provisional  | `--skin--color-info` |
-| `pass` | completed as intended  | `--skin--color-pass` |
-| `warn` | completed with caveats | `--skin--color-warn` |
-| `fail` | failed to complete     | `--skin--color-fail` |
+| Step   | Says                      | Token                |
+|--------|---------------------------|----------------------|
+| `note` | stated or provisional     | `--skin--color-note` |
+| `pass` | completed as intended     | `--skin--color-pass` |
+| `flag` | singled out for attention | `--skin--color-flag` |
+| `warn` | completed with caveats    | `--skin--color-warn` |
+| `fail` | failed to complete        | `--skin--color-fail` |
 
-The shape is one unjudged step plus a three-step verdict ramp: `info` is not a milder `pass`, it is the absence of a
-verdict. Four steps is the ceiling, because colour carries no more, so a meaning the scale does not carry is stated in
-words rather than in a fifth colour.
+The shape is one unjudged step plus a four-step verdict ramp: `note` is not a milder `pass`, it is the absence of a
+verdict, and `flag` is not a milder `warn`, since it says a thing deserves attention without anything having gone
+wrong. Five steps is the ceiling, because colour carries no more at a glance, so a meaning the scale does not carry
+is stated in words rather than in a sixth colour that readers would have to learn.
 
 Three kinds of meaning share the scale, and which one a widget carries follows from what the widget is, so no widget
 carries two:
@@ -167,30 +188,31 @@ carries two:
 - **`status`**, on reported things: what the system says happened, at runtime
 
 `normal` is **the default of all three, and it is not a step**: it carries no colour coding at all and leaves the
-ordinary page colours, so a widget that states nothing is `normal` and a `level="normal"` passage is not a blue `info`
+ordinary page colours, so a widget that states nothing is `normal` and a `level="normal"` passage is not a blue `note`
 admonition. Only the marked values reach the scale. The widget maps those onto the steps and states that mapping in
-its own documentation.
+its own documentation, so two widgets never put the same meaning on different steps.
 
-| Attribute | `normal`            | `info`    | `pass`      | `warn`    | `fail`                |
-|-----------|---------------------|-----------|-------------|-----------|-----------------------|
-| `level`   | an ordinary passage | `info`    | `highlight` | `warning` | `critical`            |
-| `mode`    | an ordinary control | `safe`    | `commit`    | `alert`   | `danger`              |
-| `status`  | nothing to report   | `pending` | `success`   | `warning` | `failure` or `defect` |
+| Attribute | `normal`            | `note`    | `pass`     | `flag`    | `warn`     | `fail`                |
+|-----------|---------------------|-----------|------------|-----------|------------|-----------------------|
+| `level`   | an ordinary passage | `neutral` | `positive` | `notable` | `negative` | `critical`            |
+| `mode`    | an ordinary control | `safe`    | `commit`   | `publish` | `alert`    | `danger`              |
+| `status`  | nothing to report   | `pending` | `success`  | `paused`  | `warning`  | `failure` or `defect` |
 
 The two attributes together read as how it appears and what it means, here on two widgets:
 
 ```tsx
 <Button look="subtle" mode="danger"/>
-<Note   look="strong" level="warning"/>
+<Note   look="strong" level="negative"/>
 ```
 
 > [!IMPORTANT]
 >
 > A step is never told by colour alone: an icon and the wording carry the same meaning, since the two ends of the
-> ramp are the pair colour vision deficiency collapses most readily. `--skin--color-warn` is a fill rather than a
-> stroke, so a caution paints a badge and sets its message in the page colour over it. Text in the colour of a step
-> takes its stroke role, `--skin--color-info-stroke`, `--skin--color-pass-stroke`, `--skin--color-warn-stroke` or
-> `--skin--color-fail-stroke`, which holds AA contrast on the page, the striped row and the step's tint.
+> ramp are the pair colour vision deficiency collapses most readily. Text in the colour of a step takes its stroke
+> role, `--skin--color-note-stroke`, `--skin--color-pass-stroke`, `--skin--color-flag-stroke`,
+> `--skin--color-warn-stroke` or `--skin--color-fail-stroke`, which holds AA contrast on the page, the striped row
+> and the step's tint. The light caution stroke is the exception: it falls short of AA on the caution tint, so
+> caution text is set on the page or a striped row, and never on the caution tint.
 
 A thing lifted off the page takes a surface and the shadow that goes with it together, `--skin--background-color-raised`
 with `--skin--box-shadow-raised` for a card that stays in the flow and `--skin--background-color-overlay` with
@@ -239,7 +261,7 @@ style query.
 | `--skin--viewport-xlarge` | `90rem` | a desktop, where the measure is capped rather than stretched |
 
 Every width is a floor, so the narrow layout is what a rule states unconditionally and each breakpoint only adds to
-it, leaving the narrower flags on; a band pairs the wider flag as `off` with the narrower one as `on`.
+it, leaving the narrower switches on; a band pairs the wider switch as `off` with the narrower one as `on`.
 
 ```css
 @container style(--skin--viewport-medium: on) {
@@ -251,9 +273,9 @@ it, leaving the narrower flags on; a band pairs the wider flag as `off` with the
 
 The tokens are assigned on the root element and inherit, so every element sits inside a container the query matches
 and no rule declares one of its own. They make a breakpoint reusable rather than retunable: the width stays in the
-stylesheet, so overriding a flag forces it without moving the threshold, and an app wanting thresholds of its own
-writes its own media queries. Code needing the same answer reads the token through `getComputedStyle`, as it reads any
-other value outside the cascade.
+stylesheet, so overriding a switch forces it without moving the threshold, and an app wanting thresholds of its own
+writes its own media queries. Code needing the same answer reads the token through `getComputedStyle`, as it reads
+any other value outside the cascade, and gets the same answer a style query would at that moment.
 
 A widget changing shape because of the space it was given states a `@container` size query against its own inline size
 instead and needs no breakpoint at all.

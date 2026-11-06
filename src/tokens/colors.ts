@@ -23,6 +23,12 @@
  *
  * @remarks
  *
+ * **Contrast** — every role is held to [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA on the surfaces it is set on:
+ * 4.5:1 for [text](https://www.w3.org/TR/WCAG22/#contrast-minimum), and 3:1 for marks, control boundaries and focus
+ * rings, as [non-text contrast](https://www.w3.org/TR/WCAG22/#non-text-contrast) requires. A meaning is never told
+ * in colour alone, as [use of colour](https://www.w3.org/TR/WCAG22/#use-of-color) requires: a glyph or a word carries
+ * it too, for a reader who cannot tell the colours apart or who reads the page through a screen reader.
+ *
  * **Colour schemes** — the stylesheet ships each anchor as a `light-dark()` pair, so an interface follows the platform
  * with no work from the app. An app pinning a scheme sets `data-theme` to `light` or `dark` on any element, and the
  * subtree below it takes that scheme whatever the platform says, which is what lets a dark panel sit on a light page.
@@ -43,10 +49,10 @@
  * two values; the quieter one is the less saturated, which leaves it free to hold the higher contrast, as it does by
  * default.
  *
- * **Status** — `colorInfo`, `colorPass`, `colorWarn` and `colorFail` are a four-step scale every meaning a widget
- * carries lands on: `info` says no verdict has been passed, and `pass`, `warn` and `fail` are a verdict getting
- * worse. `info` is therefore not a milder `pass` but the absence of one, which is why the scale reads as one
- * unjudged step ahead of a three-step ramp.
+ * **Status** — `colorNote`, `colorPass`, `colorFlag`, `colorWarn` and `colorFail` are a five-step scale every
+ * meaning a widget carries lands on. `note` is not a milder `pass` but the absence of a verdict, so the scale reads
+ * as one unjudged step ahead of a four-step ramp, `pass`, `flag`, `warn` and `fail`, each verdict asking more of the
+ * reader than the last. `flag` singles a thing out for attention, where `warn` says that something has gone wrong.
  *
  * Three kinds of meaning share it, and which one a widget carries follows from what the widget is, so no widget
  * carries two: `level` on content, how much attention a passage deserves; `mode` on controls, what activating will
@@ -56,39 +62,30 @@
  *
  * How loud a widget appears is a separate axis, its `look`, told in placement, size and weight and never in colour.
  *
- * The four stand apart as anchors rather than derivations of an accent, so a meaning keeps reading as itself
+ * The five stand apart as anchors rather than derivations of an accent, so a meaning keeps reading as itself
  * whatever an app brands with, and each pairs with a `backgroundColor*` role tinting a notice. A step is never told
- * in colour alone: an icon or a word carries it too, since the two ends of the ramp are the pair colour vision
- * deficiency collapses most readily.
+ * in colour alone: an icon or a word carries it too, since `pass` and `fail` are the pair that colour vision
+ * deficiency collapses most readily, and a reader who cannot tell them apart still reads the icon and the word.
  *
- * **What a status colour may paint** — `colorFail` holds AA contrast on the page, the striped row and its own
- * tint, so it paints text or a mark. `colorInfo` and `colorPass` are **marks**, holding 3:1 rather than 4.5:1 in
- * the light colour scheme: they paint a glyph, a rule or a fill, and text over their tint takes `color`. In the dark
- * colour scheme they are tuned to read as loud as in the light one, so a notice keeps its weight across schemes.
- * `colorWarn` is a **fill**: a caution paints a filled badge with it and sets its message in the dark page anchor
- * over it, at 12.5:1. Stroking it on the page gives 1.68:1 and is a defect, so caution text takes `colorWarnStroke`.
+ * **What a status colour may paint** — `colorNote`, `colorPass`, `colorFlag` and `colorFail` hold AA contrast on
+ * the page, the striped row and their own tint in both colour schemes, so each paints text, a mark or a fill.
+ * `colorWarn` is a gold in both schemes, painting text or a mark on the page and the striped row, or a fill with its
+ * message in `colorOver`; it is never set on its own tint, where the light gold falls short.
  *
- * **Status text** — `colorInfoStroke`, `colorPassStroke`, `colorWarnStroke` and `colorFailStroke` paint text in
- * the colour of a step. Each holds AA contrast in both colour schemes on the page, the striped row and its step's
- * tint. A control deepening that tint under the pointer or the press, by a further 24% of the step, sets its label
- * in whichever of the stroke and `colorOver` holds AA there: the info and pass strokes do on their own, every
- * stroke does in the dark colour scheme, and the light caution and failure strokes hand over to `colorOver`.
- *
- * The asymmetry is forced by the colour space rather than chosen. Red reaches full saturation at a middling
- * lightness, so the failure colour is dark enough to read on white and loud at once; yellow reaches full saturation
- * only when it is very light, so a yellow dark enough to stroke on white has already spent its chroma. As a fill it
- * carries chroma 0.158 against the failure's 0.218, so the two shout equally, and it takes one value in both colour
- * schemes, as a {@link palettes series slot} does, since a warning yellow that dimmed on a dark page would stop being one.
+ * **Status text** — `colorNoteStroke`, `colorPassStroke`, `colorFlagStroke`, `colorWarnStroke` and
+ * `colorFailStroke` paint text in the colour of a step. Each is its anchor and holds AA contrast in both colour
+ * schemes on the page, the striped row and its step's tint, except `colorWarnStroke`, which falls short on the light
+ * caution tint and is never set there. A widget setting a label over any other fill, such as a tint deepened under
+ * the pointer, holds it to AA there itself, falling back on the page text, `color`, wherever the stroke falls short.
  *
  * **Text** — `colorLabel` names a field and `colorPlaceholder` stands in for a value not yet given. `colorEnabled`
  * marks a control that answers and `colorDisabled` one that does not. The enabled colour stays apart from the link
  * colours and from the surrounding text, so a control that answers is never mistaken for a link or for plain copy.
  *
  * Every text role holds AA contrast against the page and the striped row in both colour schemes, and `colorLabel`
- * holds it on the pressed fill of a control too, the deepest surface a label is set on. The exceptions are
- * `colorDisabled` and `colorPlaceholder`, which share one value with {@link borders `borderColor`} and carry no
- * meaning on their own. Both stand for text the reader has not supplied, and a disabled control is told from an
- * empty one by its background, never by the weight of its text, so neither colour is ever read as a text role.
+ * holds it on the pressed fill of a control too, the deepest surface a label is set on. `colorPlaceholder` holds it
+ * on the page, the striped row and the edit background, lighter than an entered value but legible. The one exception
+ * is `colorDisabled`, which shares its value with {@link borders `borderColor`}: WCAG exempts a disabled control.
  *
  * **Links** — `colorLink` paints a link and `colorLinkHover` a link under the pointer, both in the hue of the subtle
  * accent at a lightness of their own, so a link follows a brand while holding AA contrast whatever the brand supplies.
@@ -110,9 +107,8 @@
  * whatever an app brands with. It holds 3:1 on every surface a ring is drawn against, a pressed fill included, but
  * not against a fill in `colorStrong`: a ring around such a control is offset outside the fill, against the page.
  *
- * **Filled caution** — `colorOver` is what text takes over a fill painted in `colorWarn`, the one step that is always
- * a fill. It resolves to whichever page anchor is the dark one, so it stays dark in both colour schemes where
- * `color` and `backgroundColor` each swap sides. It is not the text over any other step: a fill painted in
+ * **Filled caution** — `colorOver` is what text takes over a fill painted in `colorWarn`: the page background, white
+ * over the light gold and dark over the dark one. It is not the text over any other step: a fill painted in
  * `colorFail` flips as `colorStrongOver` does, white in the light colour scheme and black in the dark one.
  *
  * **Filled accent** — `colorStrongOver` is what text takes over a fill painted in `colorStrong`. It is white or
@@ -146,13 +142,15 @@ export const colors = {
 	colorSubtle: "--skin--color-subtle",
 	colorStrong: "--skin--color-strong",
 
-	colorInfo: "--skin--color-info",
+	colorNote: "--skin--color-note",
 	colorPass: "--skin--color-pass",
+	colorFlag: "--skin--color-flag",
 	colorWarn: "--skin--color-warn",
 	colorFail: "--skin--color-fail",
 
-	colorInfoStroke: "--skin--color-info-stroke",
+	colorNoteStroke: "--skin--color-note-stroke",
 	colorPassStroke: "--skin--color-pass-stroke",
+	colorFlagStroke: "--skin--color-flag-stroke",
 	colorWarnStroke: "--skin--color-warn-stroke",
 	colorFailStroke: "--skin--color-fail-stroke",
 
@@ -178,8 +176,9 @@ export const colors = {
 	backgroundColorPressed: "--skin--background-color-pressed",
 	backgroundColorSelected: "--skin--background-color-selected",
 
-	backgroundColorInfo: "--skin--background-color-info",
+	backgroundColorNote: "--skin--background-color-note",
 	backgroundColorPass: "--skin--background-color-pass",
+	backgroundColorFlag: "--skin--background-color-flag",
 	backgroundColorWarn: "--skin--background-color-warn",
 	backgroundColorFail: "--skin--background-color-fail"
 
