@@ -15,27 +15,26 @@
  */
 
 /*
- * The faces default to the variable Roboto family index.css bundles with the app, each ahead of a generic stack
- * covering it until it loads. An app setting faces of its own loads them itself, and the browser then never fetches
- * the defaults: it downloads a face only once text set in it is painted, so an unused default costs no request.
+ * The faces default to the platform faces, which cost the app no download. A preset states and bundles faces of its
+ * own, as presets/roboto.css does with the Roboto faces of the Metreeca brand, and an app loads its own faces itself.
  */
 
 @property --skin--font-family {
     syntax: "*";
     inherits: true;
-    initial-value: "Roboto Variable", Helvetica, Arial, sans-serif;
+    initial-value: system-ui, sans-serif;
 }
 
 @property --skin--font-family-heading {
     syntax: "*";
     inherits: true;
-    initial-value: "Roboto Condensed Variable", Helvetica, Arial, sans-serif;
+    initial-value: system-ui, sans-serif;
 }
 
 @property --skin--font-family-mono {
     syntax: "*";
     inherits: true;
-    initial-value: "Roboto Mono Variable", Courier, monospace;
+    initial-value: ui-monospace, monospace;
 }
 
 /*
@@ -72,6 +71,17 @@
     syntax: "*";
     inherits: true;
     initial-value: 1em;
+}
+
+/*
+ * A mono face runs wider than the text face it is paired with, by a share that depends on the pair. The platform
+ * pair differs on every system, so the default sets no reduction, and a preset naming its faces states its own.
+ */
+
+@property --skin--font-size-mono {
+    syntax: "*";
+    inherits: true;
+    initial-value: 100%;
 }
 
 /*

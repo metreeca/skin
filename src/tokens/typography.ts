@@ -22,8 +22,13 @@
  * @remarks
  *
  * **Faces** — `fontFamily` carries the body face, `fontFamilyHeading` the one a title is set in and `fontFamilyMono`
- * the one a code span or a figure aligns on. Each ships as a Roboto face bundled with the app, ahead of a generic stack
- * covering it until it loads, so an app supplying a face of its own loads it and restates the fallbacks after it.
+ * the one a code span or a figure aligns on. Each defaults to a platform face, which costs no download, and a preset
+ * sets all three in faces it bundles, as `presets/roboto.css` does with the Roboto faces of the Metreeca brand. An app
+ * supplying a face of its own loads it and restates a generic stack after it, which covers the text until it loads.
+ *
+ * `fontSizeMono` sizes code, keys and program output relative to the text around them, so a mono face running wider
+ * than its text face does not stand out. The share depends on the pair, so it defaults to no reduction, and a preset
+ * or an app setting a mono face states the share measured for its own pair, as every preset shipped here does.
  *
  * **Sizes** — `fontSize` follows the reader's setting and grows slightly on a desktop-sized window, while
  * `fontSizeSmall` and `fontSizeLarge` follow whatever they sit in, keeping their ratio inside a subtree sized apart.
@@ -61,6 +66,7 @@ export const typography = {
 	fontSizeSmall: "--skin--font-size-small",
 	fontSizeLarge: "--skin--font-size-large",
 	fontSizeHeading: "--skin--font-size-heading",
+	fontSizeMono: "--skin--font-size-mono",
 
 	lineHeight: "--skin--line-height",
 	letterSpacingHeading: "--skin--letter-spacing-heading",

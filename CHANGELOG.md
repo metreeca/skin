@@ -9,6 +9,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `presets/roboto.css` - a preset setting the interface in the variable Roboto faces of the Metreeca brand, with
+  Roboto Condensed for headings and Roboto Mono for code, bundled with the app in place of the platform faces
+- `presets/inter.css` - a preset setting the interface in the variable Inter face, headings in Inter Tight, with
+  Geist Mono for code at `90%` of the text around it, bundled with the app as the Roboto preset bundles its faces
+- `fontSizeMono` - the size code, keys and program output are set at relative to the text around them, `100%` by
+  default; the Roboto preset sets Roboto Mono at `86%`, where its glyphs cover the area Roboto's do, in place of the
+  former unmeasured `87.5%`, and an app setting a mono face states the share for its own pair
 - `borderColorField` - the edge of a field, held to the 3:1 a control boundary takes on the page, the striped row and
   the edit background, which `markup/forms.css` draws around inputs, text areas and selects
 - `colorStrongOver` - text colour for a fill painted in the strong accent, taking white or black, whichever contrasts
@@ -130,6 +137,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   field an app rejects itself is marked at once through `aria-invalid="true"`, which assistive technology announces;
   a select is marked as an input and a text area are, where an invalid choice was left unmarked before
 - Form values - an input, a text area, a select or an output reads in the text colour whatever colour its label takes
+- Faces - `index.css` no longer bundles the Roboto faces and the font tokens default to the platform faces, so an app
+  setting faces of its own ships no Roboto files; an app keeping the Metreeca brand faces imports the new
+  `presets/roboto.css` preset in place of `index.css`, and its bundle carries the three Roboto faces as it did before
 
 ## [0.2.0](https://github.com/metreeca/skin/compare/v0.1.0...v0.2.0) - 2026-11-05
 

@@ -23,7 +23,7 @@
  * @module
  */
 
-import "../../src/index.css";
+import "../../src/presets/roboto.css";
 import { type Token, skin } from "../../src/index.js";
 import { borders } from "../../src/tokens/borders.js";
 import { colors } from "../../src/tokens/colors.js";

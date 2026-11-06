@@ -1,0 +1,38 @@
+/*
+ * Copyright © 2023-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* The design system set in Inter, Inter Tight for headings and Geist Mono for code, bundled with the app. */
+
+@import "../index.css";
+
+/* A font face is unaffected by a layer, so the faces stay outside it. */
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter-tight";
+@import "@fontsource-variable/geist-mono";
+
+/* Stated in the design system layer after the token modules, so an unlayered app rule still overrides the preset. */
+
+@layer skin {
+
+    :root {
+        --skin--font-family: "Inter Variable", system-ui, sans-serif;
+        --skin--font-family-heading: "Inter Tight Variable", system-ui, sans-serif;
+        --skin--font-family-mono: "Geist Mono Variable", ui-monospace, monospace;
+        --skin--font-size-mono: 90%; /* Measured: equal glyph area with Inter, Geist Mono running 27% wider. */
+    }
+
+}

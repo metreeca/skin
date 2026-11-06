@@ -64,27 +64,25 @@ no behaviour, and nothing in it imports a rendering framework.
 
 # Module Layout
 
-`src/index.css` imports the modules and is the only entry an app includes. The token modules come first, the
-anchors ahead of what derives from them, then the base rules by increasing structural complexity, so a composite lands
-after the plain elements it is built from and takes precedence where the two match with equal specificity. It carries
-the page defaults itself and nothing else: `color-scheme`, the page colours and the page typography, every one of them
-reading a token it does not state.
+`src/index.css` imports the modules and is the entry an app includes, unless the app includes a [preset](#presets)
+built on it instead. The token modules come first, the anchors ahead of what derives from them, then the base rules by
+increasing structural complexity, so a composite lands after the plain elements it is built from and takes precedence
+where the two match with equal specificity. It carries the page defaults itself and nothing else: `color-scheme`, the
+page colours and the page typography, every one of them reading a token it does not state.
 
-The package ships the **Metreeca brand as its defaults**: the accent anchors carry its slate and orange, and the font
-family tokens lead with the variable Roboto faces, which `index.css` imports from `@fontsource-variable/*` so a
-bundler ships them with the app. **A stylesheet naming a face loads it**, and never from a remote URL. An app setting
-faces of its own pays only for the unused files in its build and about 2.6 KB of gzipped `@font-face` rules: a
-browser fetches a face only once text set in it is painted, so its visitors never download Roboto. Neither CSS nor a
-bundler can make the imports conditional on an override, which is a runtime cascade fact; do **NOT** reintroduce a
-separate font or brand entry to avoid that cost.
+The package ships the **Metreeca colours as its defaults**: the accent anchors carry its slate and orange. The font
+family tokens default to the platform faces, so `index.css` loads **no** face and an app including it bundles none.
+Bundled faces belong to a preset, never to `index.css`: neither CSS nor a bundler can make a face import conditional on
+an override, which is a runtime cascade fact, so a face `index.css` imported would ship in every app's build.
 
-The modules fall into two groups, one folder each, and the split holds in both directions: nothing in `markup/`
-assigns a token, and every `var()` in `tokens/` is a token deriving from another.
+The modules fall into three groups, one folder each. Between `tokens/` and `markup/` the split holds in both
+directions: nothing in `markup/` assigns a token, and every `var()` in `tokens/` is a token deriving from another.
+`presets/` sits outside both, as an entry built on `index.css` rather than a module it imports.
 
 `src/tokens/` — a family per pair, `<family>.ts` naming the tokens and `<family>.css` stating their values, and the
 only place either side of the family is revised:
 
-- `typography` — the faces, defaulting to the variable Roboto family `index.css` bundles, the sizes, the weights, the
+- `typography` — the faces, defaulting to the platform faces, the sizes, the weights, the
   line height and the heading tracking
 - `spacings` — the ladder a thing is set apart from its neighbour on
 - `scalings` — the ladder a thing measured against the text is sized on
@@ -154,6 +152,71 @@ them out of the reference.
   fixes rather than names of the design system: the `hljs-*` tokens of highlight.js and the `markdown-alert*` blocks
   Markdown renders alerts as
 
+`src/presets/` — one entry per preset, each the whole design system set in faces of its own:
+
+- `inter.css` — the variable Inter face for text, Inter Tight for headings and Geist Mono for code; Inter's optical
+  size axis was tried for headings and dropped, since at the heading sizes, 21px at most, it narrows them by under 3%
+- `roboto.css` — the variable Roboto, Roboto Condensed and Roboto Mono faces of the Metreeca brand
+
+A preset's `--skin--font-size-mono` is **measured**: it is the share at which the average mono glyph covers the same
+area as the average text glyph, where a glyph's area is the x-height times its advance, averaged over English letter
+frequencies with spaces, at weight 400, from the face files themselves. The share is the square root of the text
+area over the mono area, rounded to the nearest half percent:
+
+| Pair                      | Width ratio | x-heights     | Share   |
+|---------------------------|-------------|---------------|---------|
+| Roboto with Roboto Mono   | 1.355       | 0.528 / 0.528 | `86%`   |
+| Inter with Geist Mono     | 1.266       | 0.546 / 0.530 | `90%`   |
+
+Equal area splits the difference between matching heights, which leaves code wider, and matching widths, which
+leaves it too small to read. A new preset measures its pair the same way, with `fontTools` reading the
+`*-latin-wght-normal.woff2` file of each face.
+
+# Presets
+
+A preset is an alternative entry: an app includes it **in place of** `index.css`, never beside it. It overrides tokens
+the way an app would, so it states values rather than defining tokens, and stays outside the
+[Token Contract](#token-contract). Every preset follows the same shape:
+
+```css
+@import "../index.css";
+
+@import "@fontsource-variable/roboto";
+
+@layer skin {
+    :root {
+        --skin--font-family: "Roboto Variable", system-ui, sans-serif;
+    }
+}
+```
+
+- it imports `../index.css` first, so its assignments land after the token modules in the same layer and override
+  their defaults, colours included
+- it states tokens **only** on `:root` inside `@layer skin`, so an unlayered app rule still overrides the preset
+- it restates only tokens the design system declares, and **NEVER** registers one: a second `@property` for a name
+  would replace the registration globally
+- it loads every face its font tokens name, from `@fontsource-variable/*` and never from a remote URL; the face
+  imports stay unlayered, since a layer has no effect on `@font-face`
+- it takes only faces published as a variable `@fontsource-variable/*` package under the SIL Open Font License 1.1 or
+  a licence as permissive: the package stays Apache-2.0 and depends on the faces without redistributing them, and
+  an app embedding them in its pages is what the OFL allows, provided no one sells the face files on their own
+- a preset setting a mono face **ALWAYS** states `--skin--font-size-mono` for its pair: the default is `100%`, since the
+  platform pair differs on every system, and how far a mono face is set below the text depends on its glyph width
+- `package.json` exports it as `./presets/<name>.css`, with the `@metreeca/source` condition, one entry per preset and
+  never a wildcard
+
+Vite carries into a bundle only the faces reached from the stylesheet an app imports, so the presets it does not import
+are left out of the build: an app on `index.css` bundles no face, and an app on a preset bundles that preset's faces
+alone. A throwaway build confirmed it, at 0 `.woff2` files under `index.css` against 22 under `presets/roboto.css`. An
+app overriding the faces of a preset still bundles them, so it includes `index.css` instead.
+
+The face packages stay in `dependencies`, so every consumer installs the faces of every preset. That cost is
+**immaterial** and is **NOT** a reason to move them to optional peers: installing a package puts nothing in a build.
+
+`src/index.test.ts` holds every file under `presets/` to the rules above, so a new preset is checked once it is added
+there. It does **not** hold a preset's colours to their budget: `colors.test.ts` evaluates the default colours alone,
+so a preset restating a colour anchor rechecks its figures as an app supplying its own brand does.
+
 # Layering
 
 The whole design system sits in one cascade layer, `skin`. Each module is imported into it, and the page defaults in
@@ -188,8 +251,8 @@ Two things the arrangement deliberately does not do:
   source order and specificity decide exactly as they did before, so the module order in `index.css` still carries the
   precedence a composite needs over its plain elements. Every extra layer name is a public commitment an app has to
   order against, bought for nothing.
-- **It does not touch the font imports.** The `@fontsource-variable/*` imports in `index.css` stay unlayered, since
-  they carry only `@font-face`, which a layer has no effect on.
+- **It does not touch the font imports.** The `@fontsource-variable/*` imports in a preset stay unlayered, since they
+  carry only `@font-face`, which a layer has no effect on.
 
 `@property` registrations are global regardless of the layer they are declared in, so a token module behaves
 identically inside it.
@@ -243,7 +306,8 @@ to the imports in `src/index.css`.
 `src/index.test.ts` fails when a declared name is defined in neither place or in both, when a defined name is not
 declared, when a rule reads a token no one declares, when a registration is missing or duplicated, when a token
 is stated per colour scheme in a query or attribute rule, and when a derived token carries a default it cannot
-resolve. It says nothing about the value behind the name.
+resolve. It says nothing about the value behind the name. The presets stay outside these checks and answer to their own,
+listed under [Presets](#presets).
 
 `src/tokens/colors.test.ts` is where a colour value is held to its budget. It evaluates every colour token as the
 page would, in both schemes and under the shipped brand, with the OKLab mixing and relative colour maths the
@@ -609,5 +673,6 @@ to the **all-pairs** measure rather than the adjacent one:
 # Literals
 
 The scale tokens are declared here, so a rule in this package reads them exactly as a consumer does, never as the
-number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs and the mono-face
-adjustments in `inlines.css`; each says in a comment why it sits below the scale.
+number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs and the underline
+offset and code tint in `inlines.css`; each says in a comment why it sits below the scale. The mono face size is
+**NOT** one of them: it depends on the face pair, so it is the `fontSizeMono` token a preset restates with its faces.

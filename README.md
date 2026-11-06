@@ -7,8 +7,8 @@ Essential design tokens and styles.
 **@metreeca/skin** is a foundational design system with clean, minimalist tokens for typography, spacing, colour,
 elevation and motion, and a base stylesheet that gives plain document markup a coherent look in light and dark schemes.
 
-The default look is the Metreeca brand and adapts to any brand book: redefining the tokens that carry a brand's faces,
-colours and shapes restyles every interface built on them, with no change to a single component.
+The default look sets the Metreeca colours in the platform faces and adapts to any brand book: a preset or an app
+restating the tokens for a brand's faces, colours and shapes restyles every interface without a component change.
 
 # Installation
 
@@ -37,8 +37,28 @@ import "@metreeca/skin/index.css";
 An app assembling its own HTML links it in the document head instead: the stylesheet has to reach the document before
 it is painted, or the first frame shows the unstyled markup.
 
-The stylesheet bundles the default faces with the app through package imports, which a bundler such as Vite resolves.
-Linked from the document head without one, it skips them and sets the type in the generic fallbacks.
+## Presets
+
+A preset is the whole design system restyled for a brand, included **in place of** `index.css`, never beside it:
+
+```typescript
+import "@metreeca/skin/presets/roboto.css";
+```
+
+| Stylesheet           | Faces                                                                              |
+|----------------------|------------------------------------------------------------------------------------|
+| `index.css`          | the platform faces, with no download                                               |
+| `presets/inter.css`  | Inter for text, Inter Tight for headings, Geist Mono for code                      |
+| `presets/roboto.css` | Roboto, Roboto Condensed and Roboto Mono, the variable faces of the Metreeca brand |
+
+Every stylesheet keeps the Metreeca colours unless it states colours of its own, so the presets shipped today differ in
+their faces alone. An app overrides a preset exactly as it overrides `index.css`, and its rules win over the preset.
+
+A preset bundles its faces with the app through package imports, which a bundler such as Vite resolves. Linked from the
+document head without one, it skips them and sets the type in the generic fallbacks after them.
+
+A bundle carries only the faces of the stylesheet an app imports: an app on `index.css` ships no face file, and the
+presets it does not import never reach its build, although every preset's face packages are installed with this one.
 
 ## Theming
 
@@ -50,7 +70,6 @@ differs by scheme is stated once, as a `light-dark()` pair with the light value 
     :root {
         --skin--color-subtle: light-dark(#1C275D, #9AB);
         --skin--color-strong: light-dark(#06C, #4AF);
-        --skin--font-family: Inter, Helvetica, Arial, sans-serif;
     }
 </style>
 ```
@@ -58,6 +77,8 @@ differs by scheme is stated once, as a `light-dark()` pair with the light value 
 The stylesheet declares its rules in a `skin` cascade layer, so a rule an app writes outside a layer wins whatever order
 the two stylesheets reach the document in, and whichever selector is the more specific. An app declaring layers of its
 own orders them after `skin`, or the design system outranks them, along with every rule they hold.
+
+A preset restates tokens inside the same layer, after the defaults it overrides, so an app rule wins over a preset too.
 
 An override in the document head, as above, is in force from the first frame, so a loader painted before the
 stylesheet arrives already reads the brand. An override in an app stylesheet takes effect once that stylesheet loads.
@@ -98,25 +119,33 @@ marks every role that falls short of its budget, the strong accent included on t
 Against white, the defaults hold 5.51:1 for the strong orange and 10.0:1 for the subtle slate, so the orange clears its
 target by a hair and the slate by far, so a brand's strong accent is the one that needs checking in the tuner.
 
+The package test suite holds only the shipped colours to these targets. A preset or an app stating colours of its own
+checks them in the tuner, since a brand falling short of its targets fails no build and shows only on the page.
+
 ### Typography
 
 `--skin--font-family` sets the body face, `--skin--font-family-heading` the face titles are set in, and
 `--skin--font-family-mono` the face for code spans and aligned figures, each a stack read in order.
 
-The faces default to Roboto, Roboto Condensed and Roboto Mono, bundled with the app. An app setting a face of its own
-loads it in the same stylesheet restating the tokens that name it, so the two never drift apart:
+The faces default to the platform faces, which cost no download, and a [preset](#presets) sets faces it bundles.
+
+An app setting a face of its own imports `index.css`, so its build carries no face it does not use. It loads the face
+in the same stylesheet restating the tokens that name it, so the two never drift apart:
 
 ```css
-@import "@fontsource-variable/inter";
+@import "@metreeca/skin/index.css";
+@import "@fontsource-variable/source-sans-3";
 
 :root {
-    --skin--font-family: "Inter Variable", Helvetica, Arial, sans-serif;
+    --skin--font-family: "Source Sans 3 Variable", system-ui, sans-serif;
 }
 ```
 
-The browser then never fetches the default faces, since it downloads a face only once text set in it is painted. A
-variable face covers every weight the weight tokens may be retuned to, where a face loaded in fixed weights leaves the
-browser synthesising the rest, and a generic fallback after it keeps text readable until it loads.
+A variable face covers every weight the weight tokens may be retuned to, where a face loaded in fixed weights leaves
+the browser synthesising the rest, and a generic fallback after it keeps text readable until it loads.
+
+`--skin--font-size-mono` sizes code, keys and program output relative to the text around them. It defaults to `100%`,
+since the platform faces differ on every system; a preset or an app setting a mono face states the share for its pair.
 
 `--skin--font-size`, `--skin--font-size-heading`, `--skin--font-weight` and `--skin--line-height` retune the type
 scale, and `--skin--letter-spacing-heading` corrects the heading tracking for a condensed or a wide face.

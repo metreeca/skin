@@ -36,6 +36,14 @@
     "./index.css": {
       "@metreeca/source": "./src/index.css",
       "default": "./dist/index.css"
+    },
+    "./presets/inter.css": {
+      "@metreeca/source": "./src/presets/inter.css",
+      "default": "./dist/presets/inter.css"
+    },
+    "./presets/roboto.css": {
+      "@metreeca/source": "./src/presets/roboto.css",
+      "default": "./dist/presets/roboto.css"
     }
   },
   "files": [
@@ -56,6 +64,9 @@
     "watch": "npx vite lab --open"
   },
   "dependencies": {
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/inter-tight": "^5.3.0",
     "@fontsource-variable/roboto": "^5.3.0",
     "@fontsource-variable/roboto-condensed": "^5.3.0",
     "@fontsource-variable/roboto-mono": "^5.3.0"

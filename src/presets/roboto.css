@@ -1,0 +1,41 @@
+/*
+ * Copyright © 2023-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * The design system set in the variable Roboto family of the Metreeca brand, bundled with the app. An app setting
+ * faces of its own imports index.css or another preset instead, so its build carries no Roboto files.
+ */
+
+@import "../index.css";
+
+/* A font face is unaffected by a layer, so the faces stay outside it. */
+
+@import "@fontsource-variable/roboto";
+@import "@fontsource-variable/roboto-condensed";
+@import "@fontsource-variable/roboto-mono";
+
+/* Stated in the design system layer after the token modules, so an unlayered app rule still overrides the preset. */
+
+@layer skin {
+
+    :root {
+        --skin--font-family: "Roboto Variable", system-ui, sans-serif;
+        --skin--font-family-heading: "Roboto Condensed Variable", system-ui, sans-serif;
+        --skin--font-family-mono: "Roboto Mono Variable", ui-monospace, monospace;
+        --skin--font-size-mono: 86%; /* Measured: equal glyph area with Roboto, Roboto Mono running 36% wider. */
+    }
+
+}

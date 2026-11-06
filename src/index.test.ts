@@ -23,8 +23,14 @@ describe("skin", () => {
 
 	const declared: ReadonlyArray<string> = Object.values(skin);
 
+	/*
+	 * A preset overrides tokens on top of the design system as an app would, rather than defining them, so the
+	 * presets stay outside the contract the token modules are held to and answer to the checks under "presets" instead.
+	 */
+
 	const stylesheets = readdirSync(new URL(".", import.meta.url), { recursive: true, encoding: "utf-8" })
 		.filter(name => name.endsWith(".css"))
+		.filter(name => !name.startsWith("presets/"))
 		.map(name => readFileSync(new URL(`./${ name }`, import.meta.url), "utf-8"));
 
 	/*
@@ -153,24 +159,99 @@ describe("stylesheets", () => {
 		const entry = readFileSync(new URL("./index.css", import.meta.url), "utf-8");
 
 		expect(sources
-			.filter(name => name !== "index.css")
+			.filter(name => name !== "index.css" && !name.startsWith("presets/"))
 			.filter(name => !entry.includes(`@import "./${ name }" layer(skin);`))
 		).toEqual([]);
 
 	});
 
-	it("loads every face the default font stacks lead with", () => {
+	it("loads no face from the design system entry", () => {
 
 		const entry = readFileSync(new URL("./index.css", import.meta.url), "utf-8");
 
-		const packages = sources
-			.map(name => readFileSync(new URL(`./${ name }`, import.meta.url), "utf-8"))
-			.flatMap(text => Array.from(text.matchAll(/@property\s+--skin--font-family[\w-]*\s*\{[^}]*initial-value:\s*"([^"]+) Variable"/g),
-				([ , face ]) => `@fontsource-variable/${ face.toLowerCase().replaceAll(" ", "-") }`
-			));
+		expect(entry).not.toMatch(/@import\s+"@fontsource/);
 
-		expect(packages).toHaveLength(3);
-		expect(packages.filter(pkg => !entry.includes(`@import "${ pkg }"`))).toEqual([]);
+	});
+
+});
+
+describe("presets", () => {
+
+	const declared: ReadonlyArray<string> = Object.values(skin);
+
+	const manifest: { readonly exports: Readonly<Record<string, unknown>> } = JSON.parse(
+		readFileSync(new URL("../package.json", import.meta.url), "utf-8")
+	);
+
+	const names = readdirSync(new URL("./presets/", import.meta.url)).filter(name => name.endsWith(".css"));
+
+	const layered = /@layer\s+skin\s*\{(?:[^{}]*\{[^{}]*})*[^{}]*}/g;
+
+	describe.each(names)("%s", name => {
+
+		const text = readFileSync(new URL(`./presets/${ name }`, import.meta.url), "utf-8").replace(/\/\*[\s\S]*?\*\//g, "");
+
+		const blocks = Array.from(text.match(layered) ?? [], block => block.replace(/^@layer\s+skin\s*\{/, ""));
+
+		const assignments = blocks.flatMap(block => Array.from(block.matchAll(/(--skin--[\w-]+)\s*:([^;]*);/g),
+			([ , token, value ]) => [ token, value ] as const
+		));
+
+		it("builds on the design system entry", () => {
+
+			expect(text).toContain(`@import "../index.css";`);
+
+		});
+
+		it("is exported by the package", () => {
+
+			expect(manifest.exports[`./presets/${ name }`]).toEqual({
+				"@metreeca/source": `./src/presets/${ name }`,
+				"default": `./dist/presets/${ name }`
+			});
+
+		});
+
+		it("states tokens on the root inside the design system layer alone", () => {
+
+			expect(text.replace(layered, "")).not.toMatch(/--skin--[\w-]+\s*:/);
+			expect(blocks.flatMap(block => Array.from(block.matchAll(/([^{}]+)\{/g), ([ , selector ]) => selector.trim()))
+				.filter(selector => selector !== ":root")
+			).toEqual([]);
+
+		});
+
+		it("overrides only tokens the design system declares", () => {
+
+			expect(assignments.map(([ token ]) => token).filter(token => !declared.includes(token))).toEqual([]);
+
+		});
+
+		it("sizes the mono face it sets", () => {
+
+			const tokens = assignments.map(([ token ]) => token);
+
+			expect(!tokens.includes("--skin--font-family-mono") || tokens.includes("--skin--font-size-mono")).toBe(true);
+
+		});
+
+		it("registers no token", () => {
+
+			expect(text).not.toMatch(/@property/);
+
+		});
+
+		it("loads every face its font stacks lead with", () => {
+
+			const packages = assignments
+				.filter(([ token ]) => token.startsWith("--skin--font-family"))
+				.flatMap(([ , value ]) => Array.from(value.matchAll(/^\s*"([^"]+) Variable"/g),
+					([ , face ]) => `@fontsource-variable/${ face.toLowerCase().replaceAll(" ", "-") }`
+				));
+
+			expect(packages.filter(pkg => !text.includes(`@import "${ pkg }";`))).toEqual([]);
+
+		});
 
 	});
 

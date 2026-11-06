@@ -45,12 +45,6 @@
 @import "./markup/forms.css" layer(skin);
 @import "./markup/alerts.css" layer(skin);
 
-/* The default faces, bundled with the app. A font face is unaffected by a layer, so these stay outside it. */
-
-@import "@fontsource-variable/roboto";
-@import "@fontsource-variable/roboto-condensed";
-@import "@fontsource-variable/roboto-mono";
-
 /* The page defaults: every token value is stated once by the module registering it, so this file only reads them. */
 
 @layer skin {

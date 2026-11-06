@@ -22,9 +22,10 @@
  * CSS value is written by hand, and assigned to a subtree through a style declaration any rendering layer accepts.
  * The values behind them are provided by the companion stylesheet.
  *
- * An app that includes the stylesheet gets the Metreeca look by default, light or dark according to the platform
- * colour scheme; one that redefines the tokens gets its own, with no component change. Components name tokens through
- * this contract rather than through literal strings, so a renamed token breaks the build instead of losing its style.
+ * An app that includes the stylesheet gets the Metreeca colours set in the platform faces, light or dark according to
+ * the platform colour scheme. One that includes a preset in its place gets the faces the preset bundles, and one that
+ * redefines the tokens gets its own look, with no component change. Components name tokens through this contract
+ * rather than through literal strings, so a renamed token breaks the build instead of losing its style.
  *
  * The tokens cover typography, spacing, sizing, borders, colours, elevation, data palettes, stacking, motion, opacity,
  * viewport breakpoints and the look of an area. {@link skin} gathers them all in one place, so a consumer names a token
@@ -38,12 +39,17 @@
  * import "@metreeca/skin/index.css";
  * ```
  *
+ * Include a preset in its place to set the interface in the faces the preset bundles:
+ *
+ * ```typescript
+ * import "@metreeca/skin/presets/roboto.css";
+ * ```
+ *
  * Override any token to restyle the whole interface, stating a colour for both schemes as a `light-dark()` pair:
  *
  * ```css
  * :root {
  *     --skin--color-strong: light-dark(#06C, #4AF);
- *     --skin--font-family: Inter, sans-serif;
  * }
  * ```
  *
@@ -69,7 +75,8 @@
  *
  * **Override order** — the stylesheet declares its rules in a `skin` cascade layer, so a rule an app or a component
  * writes outside a layer wins whatever order the two stylesheets reach the document in, and whichever selector is the
- * more specific. An app declaring layers of its own orders them after `skin`, or the design system outranks them.
+ * more specific. An app declaring layers of its own orders them after `skin`, or the design system outranks them. A
+ * preset restates tokens inside the same layer, after the defaults it overrides, so an app rule wins over a preset too.
  *
  * **Missing and malformed values** — a token carrying a literal states it as the registered default of its custom
  * property, so the value lives in one place. A malformed override is caught only where the token has a fixed type: a

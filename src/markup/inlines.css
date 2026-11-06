@@ -58,7 +58,7 @@ strong, b {
 
 code, kbd, samp {
     font-family: var(--skin--font-family-mono);
-    font-size: 87.5%; /* Optical nudge: the mono face shares the heights of the text face, its glyphs 29% wider. */
+    font-size: var(--skin--font-size-mono);
 }
 
 code {
