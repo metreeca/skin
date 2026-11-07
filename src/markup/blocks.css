@@ -43,7 +43,7 @@ p {
 
 blockquote {
 
-    padding: var(--skin--spacing-050);
+    padding: var(--skin--spacing-050) var(--skin--spacing-075);
     margin-bottom: var(--skin--spacing-100);
     background-color: var(--skin--background-color-stripe);
 
@@ -53,13 +53,23 @@ blockquote {
 
 }
 
-/* A preformatted block sits on the stripe like a quotation, keeping its breaks and scrolling past the measure. */
+/*
+ * A preformatted block sits on the stripe like a quotation, keeping its breaks and scrolling past the measure. A block
+ * given a tabindex, so that a keyboard can scroll it, shows the focus mark the controls carry.
+ */
 
 pre {
-    padding: var(--skin--spacing-050);
+
+    padding: var(--skin--spacing-050) var(--skin--spacing-075);
     margin-bottom: var(--skin--spacing-100);
     overflow-x: auto;
     background-color: var(--skin--background-color-stripe);
+
+    &:focus-visible {
+        outline: var(--skin--outline-focus);
+        outline-offset: var(--skin--border-width);
+    }
+
 }
 
 hr {
@@ -111,14 +121,55 @@ details {
     margin-bottom: var(--skin--spacing-100);
 
     &[open] > summary {
+
         margin-bottom: var(--skin--spacing-050);
+
+        /*
+         * Turned down, the chevron fills only the lower half of its box. Raising it by a quarter of the box diagonal
+         * keeps it centred on the summary text, where it sits while it points at the summary.
+         */
+
+        &::before {
+            transform: translateY(calc(-0.3536 * var(--skin--scaling-050))) rotate(45deg);
+        }
+
     }
 
 }
 
+/*
+ * A summary trades the platform triangle for a chevron in its own colour, which looks the same on every platform. The
+ * chevron points at the summary while the disclosure is closed and turns down towards the content once it is open.
+ */
+
 summary {
 
+    list-style-type: none;
     cursor: pointer;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
+
+    &::before {
+
+        content: "";
+
+        display: inline-block;
+        inline-size: var(--skin--scaling-050);
+        block-size: var(--skin--scaling-050);
+        margin-inline: var(--skin--spacing-025) var(--skin--spacing-075);
+        vertical-align: calc(0.5cap - var(--skin--scaling-025)); /* The centre of the box halfway up the capitals. */
+
+        border-right-style: var(--skin--border-style);
+        border-bottom-style: var(--skin--border-style);
+        border-width: calc(2 * var(--skin--border-width));
+        border-color: currentColor;
+
+        transform: translateY(0) rotate(-45deg);
+        transition: transform var(--skin--duration-fast) var(--skin--easing-standard);
+
+    }
 
     &:focus-visible {
         outline: var(--skin--outline-focus);

@@ -371,6 +371,49 @@ import { skin } from "@metreeca/skin";
 getComputedStyle(element).getPropertyValue(skin.colorStrong);
 ```
 
+## Navigation
+
+A list nested inside a `nav` reads as a compact table of contents, one level of nesting for each level of sections.
+Entries are set small in the label colour. Where any top-level entry heads subsections, every top-level entry is set in
+strong small capitals with its subsections unindented beneath it; an outline of top-level entries alone reads as a
+plain list. Each level from the third on is indented, and a link answers the pointer as any link does. How deep an
+outline runs is left to its markup: an entry it lists is never hidden, so it stays reachable by every reader.
+
+Each entry is a link to the heading of its section, or a `span` naming a section that has no heading to link to, such
+as a group of sections. Keep the entries out of headings: the page outline then lists every heading once, and a screen
+reader announces the depth of each entry from the nesting of its list, as for any other nested list on the page.
+
+```html
+<nav aria-label="Contents">
+    <ul>
+        <li><span>Foundations</span>
+            <ul>
+                <li><a href="#colours">Colours</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+```
+
+The entry for the section in view carries `aria-current="location"`. Assistive technologies announce it as the
+current location, and the design system sets it in the strong weight and the strong accent. The app sets the mark from
+the scroll position rather than from the location fragment, which says only where the reader last jumped. Watch every
+section, including a lead section with no entry of its own, so that scrolling back to the top clears every mark:
+
+```typescript
+const links = [...document.querySelectorAll<HTMLAnchorElement>("nav a")];
+
+const observer = new IntersectionObserver(entries => entries
+    .filter(entry => entry.isIntersecting)
+    .forEach(entry => links.forEach(link => link.hash === `#${entry.target.id}`
+        ? link.setAttribute("aria-current", "location") // an empty value reads as false
+        : link.removeAttribute("aria-current")
+    )), { rootMargin: "-30% 0px -65% 0px" } // a band a third of the way down the viewport
+);
+
+document.querySelectorAll("main > section").forEach(section => observer.observe(section));
+```
+
 # Support
 
 - open an [issue](https://github.com/metreeca/skin/issues) to report a problem or to suggest a new feature

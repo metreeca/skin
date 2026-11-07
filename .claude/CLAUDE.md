@@ -261,9 +261,9 @@ identically inside it.
 > [!WARNING]
 >
 > Layering removes specificity from the comparison **between** stylesheets: a design system rule can no longer outrank
-> a component rule, however specific it is. Nothing relies on that today, since no module here selects `label` or `nav`,
-> which components commonly style. Adding a high-specificity base rule for an element a component also styles is the
-> case to watch.
+> a component rule, however specific it is. Nothing relies on that today: no module selects `label`, and `lists.css`
+> reaches `nav` only for the lists and links it holds, which a component styling its own navigation overrides by
+> staying unlayered. Adding a high-specificity base rule for an element a component also styles is the case to watch.
 
 # Token Contract
 
@@ -717,6 +717,7 @@ to the **all-pairs** measure rather than the adjacent one:
 # Literals
 
 The scale tokens are declared here, so a rule in this package reads them exactly as a consumer does, never as the
-number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs and the underline
-offset and code tint in `inlines.css`; each says in a comment why it sits below the scale. The mono face size is
+number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs, the underline
+offset and code tint in `inlines.css` and the `0.08em` tracking of the small capitals in a `nav` in `lists.css`; each
+says in a comment why it sits below the scale. The mono face size is
 **NOT** one of them: it depends on the face pair, so it is the `fontSizeMono` token a preset restates with its faces.

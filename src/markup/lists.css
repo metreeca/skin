@@ -102,3 +102,79 @@ dl {
     }
 
 }
+
+/*
+ * A list in a navigation landmark reads as a compact outline of the sections it links to, quiet beside the document.
+ * Entries are set small, in the label colour and without markers. Each entry is a link, or a span naming a section
+ * with no heading to link to. Where any top-level entry heads subsections, every top-level entry is set in strong
+ * small capitals, so it stands out with no indent for the subsections beneath it. A wider gap then sets each group
+ * apart from the next with no separator. An outline of top-level entries alone reads as a plain list. From the third
+ * level on, each level is indented beneath the one above. No entry the markup lists is ever hidden, so each one stays
+ * reachable by every reader. Links run in tight lines and answer the pointer as any link does. The link marked current
+ * by aria-current is strong in the strong accent, so the reader sees where they stand by weight as well as by colour.
+ */
+
+nav {
+
+    & > ul {
+        font-size: var(--skin--font-size-small);
+    }
+
+    & ul {
+        padding-left: 0;
+    }
+
+    & li {
+
+        list-style-type: none;
+
+        & + li {
+            margin-top: 0;
+        }
+
+        & > :is(a, a:visited, span) {
+            display: block;
+            font-weight: var(--skin--font-weight);
+            color: var(--skin--color-label);
+        }
+
+        & > :is(a, a:visited) {
+
+            padding-block: var(--skin--spacing-010);
+
+            &:hover {
+                color: var(--skin--color-link-hover);
+            }
+
+            &[aria-current]:not([aria-current="false"]) {
+                font-weight: var(--skin--font-weight-strong);
+                color: var(--skin--color-strong);
+            }
+
+        }
+
+    }
+
+    & > ul:has(> li > ul) > li {
+
+        & + li {
+            margin-top: calc(var(--skin--spacing-100) + var(--skin--spacing-025)); /* Between the 100 and 150 steps. */
+        }
+
+        & > ul {
+            margin-top: var(--skin--spacing-050);
+        }
+
+    }
+
+    & > ul:has(> li > ul) > li > :is(a, a:visited, span) {
+        font-weight: var(--skin--font-weight-strong);
+        letter-spacing: 0.08em; /* Optical tracking for the small capitals of a top-level entry. */
+        text-transform: uppercase;
+    }
+
+    & ul ul ul {
+        padding-left: var(--skin--spacing-075);
+    }
+
+}

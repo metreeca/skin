@@ -38,8 +38,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   drawn as a key cap and `samp` set in the mono face, `mark` lies on the selected tint, `sub` and `sup` are set
   smaller without opening the line, and an `abbr` carrying a title offers it as help
 - Block markup - images, videos and frames never overflow their column, a `figure` takes a caption in the label size
-  and colour, a `details` summary offers the pointer and the focus mark, a `dialog` is an overlay surface centred
-  over the blanket, and a table `caption` titles its table at the start in the strong weight
+  and colour, a `details` summary offers the pointer and the focus mark and trades the platform triangle for a
+  chevron turning down once open, a `dialog` is an overlay surface centred over the blanket, and a table `caption`
+  titles its table from above, set at the start in the strong weight as a header cell is
+- Navigation markup - nested lists in a `nav` read as a compact table of contents: small entries in the label colour
+  without markers, top-level entries over subsections in strong small capitals, each level from the third on indented,
+  a `span` naming a section with no heading, and the `aria-current` link strong in the strong accent
 - Text wrapping - running text keeps a lone word off its last line and a heading spread over several lines has them
   balanced, while text areas and editable content keep the platform wrapping so words entered never jump between lines
 
@@ -103,6 +107,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
+  and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
 - Headings - `h2` stands an eighth over the heading size, so it is told from `h3` at a glance, and `h4` takes the
   label colour at the heading size while `h5` and `h6` are set in the small size and the label colour
 - `Flag` - the type naming the viewport tokens is renamed `Breakpoint`, so `flag` names the meaning scale step alone

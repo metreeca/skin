@@ -785,7 +785,7 @@ function home(): void {
 }
 
 /**
- * Marks the navigation link of the section in view.
+ * Marks the navigation link of the section in view, and none while the hero is in view.
  */
 function spy(): void {
 
@@ -793,12 +793,13 @@ function spy(): void {
 
 	const observer = new IntersectionObserver(entries => entries
 		.filter(entry => entry.isIntersecting)
-		.forEach(entry => links.forEach(link =>
-			link.toggleAttribute("aria-current", link.hash === `#${entry.target.id}`)
+		.forEach(entry => links.forEach(link => link.hash === `#${entry.target.id}`
+			? link.setAttribute("aria-current", "location") // an empty value reads as false
+			: link.removeAttribute("aria-current")
 		)), { rootMargin: "-30% 0px -65% 0px" }
 	);
 
-	all("main > section[id]").forEach(section => observer.observe(section));
+	all("main > section").forEach(section => observer.observe(section));
 
 }
 
