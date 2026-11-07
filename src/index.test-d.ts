@@ -103,6 +103,7 @@ describe("css", () => {
 		expectTypeOf(css({ colorStrong: "colorSubtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backgroundColor: "backgroundColorEdit" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ colorGray050: "colorHeat050" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ colorRed: "colorPurpleSubtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontSize: "fontSizeLarge" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontSize: "scaling125" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ scaling100: "scaling200" })).toEqualTypeOf<Style>();
@@ -122,6 +123,8 @@ describe("css", () => {
 
 		expectTypeOf(css({ backgroundColor: "colorHeat030" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backgroundColorSunken: "colorArea1" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ backgroundColorRaised: "colorYellowSubtle" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ backgroundColor: "colorWhite" })).toEqualTypeOf<Style>();
 
 	});
 
@@ -171,6 +174,12 @@ describe("css", () => {
 
 		// @ts-expect-error a fill where a scale step goes
 		css({ colorHeat050: "backgroundColorRaised" });
+
+		// @ts-expect-error an editor colour where an ink goes
+		css({ colorStrong: "colorRedStrong" });
+
+		// @ts-expect-error an ink where an editor colour goes
+		css({ colorBlack: "colorStrong" });
 
 	});
 

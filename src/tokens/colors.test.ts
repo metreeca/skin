@@ -23,6 +23,7 @@ import { describe, expect, it } from "vitest";
 import { borders } from "./borders.js";
 import { colors } from "./colors.js";
 import { elevations } from "./elevations.js";
+import { palettes } from "./palettes.js";
 
 
 /**
@@ -244,6 +245,15 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 		colors.colorFailStroke
 	];
 
+	const editor = [
+		palettes.colorBlack, palettes.colorGray, palettes.colorWhite,
+		palettes.colorRedStrong, palettes.colorRed, palettes.colorRedSubtle,
+		palettes.colorYellowStrong, palettes.colorYellow, palettes.colorYellowSubtle,
+		palettes.colorGreenStrong, palettes.colorGreen, palettes.colorGreenSubtle,
+		palettes.colorBlueStrong, palettes.colorBlue, palettes.colorBlueSubtle,
+		palettes.colorPurpleStrong, palettes.colorPurple, palettes.colorPurpleSubtle
+	];
+
 	const strokes: ReadonlyArray<{ stroke: string, tint: string }> = [
 		{ stroke: colors.colorNoteStroke, tint: colors.backgroundColorNote },
 		{ stroke: colors.colorPassStroke, tint: colors.backgroundColorPass },
@@ -268,8 +278,11 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 
 	it("paints every colour inside the sRGB gamut", async () => {
 
-		const tokens = [ ...Object.values(colors), borders.borderColor, ...Object.values(elevations) ]
-			.filter(token => /^--skin--(color|background-color|border-color)/.test(token));
+		const tokens = [
+			...[ ...Object.values(colors), borders.borderColor, ...Object.values(elevations) ]
+				.filter(token => /^--skin--(color|background-color|border-color)/.test(token)),
+			...editor
+		];
 
 		expect(tokens
 			.map(token => ({ token, channels: swatch(token) }))
@@ -300,6 +313,15 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 	it("holds the field boundary to 3:1 on the page, the stripe and the edit field", async () => {
 
 		expect(pairs([ borders.borderColorField ], [ page, stripe, edit ], MARK)).toEqual([]);
+
+	});
+
+	it("holds the plain editor colours to 3:1 on the page", async () => {
+
+		expect(pairs([
+			palettes.colorGray, palettes.colorRed, palettes.colorYellow,
+			palettes.colorGreen, palettes.colorBlue, palettes.colorPurple
+		], [ page ], MARK)).toEqual([]);
 
 	});
 

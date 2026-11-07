@@ -103,10 +103,28 @@ body {
 
 }
 
+/*
+ * The preset menu stands beside the scheme switch boxed as it is, its padding summing the switch's own and that of an
+ * option inside it, so the two match in height and edge and read as one group of page settings.
+ */
+
+.settings {
+    display: flex;
+    align-items: center;
+    gap: var(--skin--spacing-050);
+}
+
+.preset, .tune {
+    padding: calc(2 * var(--skin--spacing-025)) calc(var(--skin--spacing-025) + var(--skin--spacing-075));
+    border-color: var(--skin--border-color);
+    border-radius: var(--skin--border-radius-050);
+    font-size: var(--skin--font-size-small);
+}
+
 .scheme {
 
     display: flex;
-    padding: var(--skin--spacing-010);
+    padding: var(--skin--spacing-025);
     border-style: var(--skin--border-style);
     border-radius: var(--skin--border-radius-050);
     font-size: var(--skin--font-size-small);
@@ -640,6 +658,33 @@ main > section {
 
 
 /* Palettes. */
+
+.picker {
+
+    display: grid;
+    grid-template-columns: repeat(6, var(--skin--scaling-250));
+    gap: var(--skin--spacing-050);
+    inline-size: fit-content;
+    padding: var(--skin--spacing-100);
+    border-radius: var(--skin--border-radius-100);
+    background-color: var(--skin--background-color-overlay);
+    box-shadow: var(--skin--box-shadow-overlay);
+
+}
+
+.pick {
+
+    justify-content: center;
+    block-size: var(--skin--scaling-250);
+    padding: 0;
+    border-radius: var(--skin--border-radius-050);
+
+    &:enabled:hover {
+        outline: var(--skin--outline-focus);
+        outline-offset: var(--skin--border-width);
+    }
+
+}
 
 .ramps {
 
@@ -1176,13 +1221,40 @@ main > section {
 }
 
 
-/* Theming. */
+/*
+ * The brand tuner drops from the top bar over the page, aligned with the end of the bar, so the accents are retuned
+ * while any section is on show and the whole page repaints under them.
+ */
 
 .tuner {
 
-    display: grid;
-    gap: var(--skin--spacing-150);
-    align-items: start;
+    position: fixed;
+    inset: auto;
+    top: calc(var(--lab-bar) + var(--skin--spacing-050));
+    right: max(var(--lab-gutter), (100% - var(--lab-measure)) / 2 + var(--lab-gutter)); /* The end of the bar. */
+
+    inline-size: max-content; /* As wide as the override snippet, so the code shows whole. */
+    max-inline-size: calc(100% - 2 * var(--lab-gutter));
+    margin: 0;
+    padding: var(--skin--spacing-150);
+
+    border-style: var(--skin--border-style);
+    border-radius: var(--skin--border-radius-075);
+    background-color: var(--skin--background-color-overlay);
+    box-shadow: var(--skin--box-shadow-overlay);
+    color: var(--skin--color);
+
+    &:popover-open {
+        display: grid;
+        gap: var(--skin--spacing-100);
+    }
+
+    & > p {
+        contain: inline-size; /* Wraps to the width of the snippet rather than widening the popover. */
+        margin: 0;
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+    }
 
     & > .controls {
 
@@ -1199,36 +1271,33 @@ main > section {
             & > input {
                 inline-size: 100%;
                 block-size: var(--skin--scaling-250);
-                padding: var(--skin--spacing-010);
                 border-style: var(--skin--border-style);
                 border-radius: var(--skin--border-radius-050);
                 cursor: pointer;
+
+                /* The swatch takes the corners of a scheme option, the curve set inside the well's own. */
+
+                &::-webkit-color-swatch {
+                    border-radius: var(--skin--border-radius-025);
+                }
+
+                &::-moz-color-swatch {
+                    border-radius: var(--skin--border-radius-025);
+                }
             }
+        }
+
+        & > pre {
+            grid-column: 1 / -1;
+            margin: 0;
+            user-select: all; /* One click selects the whole override, ready to copy. */
+            border-radius: var(--skin--border-radius-050);
+            font-size: var(--skin--font-size-small);
         }
 
         & > button {
             grid-column: 1 / -1;
             justify-self: start;
-        }
-
-    }
-
-    & > pre {
-        margin: 0;
-        border-radius: var(--skin--border-radius-050);
-        font-size: var(--skin--font-size-small);
-    }
-
-}
-
-@container style(--skin--viewport-medium: on) {
-
-    .tuner {
-
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-
-        & > pre {
-            margin-top: calc(1lh + var(--skin--spacing-025)); /* Clears the well caption, set at the same size. */
         }
 
     }

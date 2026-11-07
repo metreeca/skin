@@ -23,6 +23,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `colorFlag`, `colorFlagStroke`, `backgroundColorFlag` - a fifth step of the meaning scale, between `pass` and
   `warn`, singling a thing out for attention although nothing has gone wrong; a violet holding AA on the page, the
   stripe and its own tint in both schemes, which the important Markdown alert now takes in place of the note blue
+- Editor colours - what an author picks to colour content, as text or fill: a neutral column of `colorBlack`,
+  `colorGray` and `colorWhite`, and red, yellow, green, blue and purple in a `Strong`, a plain and a `Subtle` step,
+  as `colorRedStrong`, `colorRed` and `colorRedSubtle`, each stating both colour schemes; the plain step holds 3:1
+  on the page, enough for large text and marks, and no other step or pairing carries a contrast guarantee
 - Form markup - disabled fields recede in the disabled colour, read-only fields keep their value in the text colour
   behind the decorative line in place of the field edge, checkboxes and radios take the size of the text, the
   enabled colour marks a ticked box, a slider and a progress bar, a file field's button is boxed as a button is, a

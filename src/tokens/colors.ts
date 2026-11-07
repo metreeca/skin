@@ -122,8 +122,9 @@
  * `backgroundColor`, which every other colour here stands on. A thing lifted off the page takes an
  * {@link elevations elevation surface} instead.
  *
- * The chart and map colours stand outside this: the {@link palettes heat scale, the series slots and the area
- * classes} keep values of their own, so a rebrand leaves what they code unchanged.
+ * The chart, map and editor colours stand outside this: the {@link palettes heat scale, the series slots, the area
+ * classes and the editor colours} keep values of their own, so a rebrand repaints neither what they code nor the
+ * content an author coloured with them: a chart, a map and a coloured passage all look the same under any brand.
  *
  * @module colors
  */

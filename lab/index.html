@@ -29,11 +29,45 @@
                 <span>@metreeca/<strong>skin</strong></span>
             </a>
 
-            <fieldset class="scheme" aria-label="Colour scheme">
-                <label><input type="radio" name="scheme" value="auto" checked><span>Auto</span></label>
-                <label><input type="radio" name="scheme" value="light"><span>Light</span></label>
-                <label><input type="radio" name="scheme" value="dark"><span>Dark</span></label>
-            </fieldset>
+            <div class="settings">
+
+                <select class="preset" aria-label="Preset">
+                    <option value="platform">System Font</option>
+                    <option value="inter">Inter</option>
+                    <option value="roboto" selected>Roboto</option>
+                </select>
+
+                <button type="button" class="tune" popovertarget="tuner">Brand Colours</button>
+
+                <div class="tuner" id="tuner" popover>
+
+                    <p>
+                        An app adopts a brand by restating the accent anchors once on <code>:root</code>, as an ordinary
+                        unlayered rule; the override follows both schemes and every pinned subtree.
+                    </p>
+
+                    <form class="controls" onsubmit="return false">
+
+                        <label>Subtle, light <input type="color" data-anchor="colorSubtle" data-side="light"></label>
+                        <label>Subtle, dark <input type="color" data-anchor="colorSubtle" data-side="dark"></label>
+                        <label>Strong, light <input type="color" data-anchor="colorStrong" data-side="light"></label>
+                        <label>Strong, dark <input type="color" data-anchor="colorStrong" data-side="dark"></label>
+
+                        <pre><code class="override"></code></pre>
+
+                        <button type="reset">Reset</button>
+
+                    </form>
+
+                </div>
+
+                <fieldset class="scheme" aria-label="Colour scheme">
+                    <label><input type="radio" name="scheme" value="auto" checked><span>System</span></label>
+                    <label><input type="radio" name="scheme" value="light"><span>Light</span></label>
+                    <label><input type="radio" name="scheme" value="dark"><span>Dark</span></label>
+                </fieldset>
+
+            </div>
 
         </header>
 
@@ -60,10 +94,6 @@
                 <a href="#tables">Tables</a>
                 <a href="#forms">Forms</a>
                 <a href="#alerts">Alerts</a>
-
-                <p>Adoption</p>
-
-                <a href="#theming">Theming</a>
 
             </nav>
 
@@ -125,6 +155,27 @@
                     <p class="note">Grounds for editing, striping and interaction states.</p>
                     <div class="chips" data-chips="fills"></div>
 
+                    <h3>Pinned schemes</h3>
+                    <p class="note">A <code>data-theme</code> attribute pins one scheme for everything below it.</p>
+
+                    <div class="islands">
+
+                        <article data-theme="light">
+                            <h3>Light</h3>
+                            <p>Pinned to the light scheme, with a <a href="#colours">link</a> and a field.</p>
+                            <input type="text" placeholder="Placeholder">
+                            <button type="button">Button</button>
+                        </article>
+
+                        <article data-theme="dark">
+                            <h3>Dark</h3>
+                            <p>Pinned to the dark scheme, with a <a href="#colours">link</a> and a field.</p>
+                            <input type="text" placeholder="Placeholder">
+                            <button type="button">Button</button>
+                        </article>
+
+                    </div>
+
                 </section>
 
                 <section id="palettes" data-family="palettes">
@@ -133,10 +184,17 @@
                         <p class="eyebrow">Foundations</p>
                         <h2>Palettes</h2>
                         <p class="lead">
-                            Colours a chart, a coding or a map reads. They say where a value sits or which thing it
-                            belongs to, and never stand in for a role.
+                            Colours an author picks, and a chart, a coding or a map reads. They say how content was
+                            coloured, where a value sits or which thing it belongs to, and never stand in for a role.
                         </p>
                     </header>
+
+                    <h3>Editor</h3>
+                    <p class="note">
+                        Colours an author picks for content, as text or fill: a neutral and five hues by three steps,
+                        strong standing out from the page and subtle staying close to it. Their pairing is the author's.
+                    </p>
+                    <div class="picker" role="group" aria-label="Editor colours"></div>
 
                     <h3>Scales</h3>
                     <p class="note">
@@ -680,59 +738,6 @@
                             <p class="markdown-alert-title">Caution</p>
                             <p>Advises about risks or negative outcomes of certain actions.</p>
                         </div>
-
-                    </div>
-
-                </section>
-
-                <!-- Adoption -------------------------------------------------------------------------------------->
-
-                <section id="theming">
-
-                    <header>
-                        <p class="eyebrow">Adoption</p>
-                        <h2>Theming</h2>
-                        <p class="lead">
-                            An app adopts a brand by restating the accent anchors once on <code>:root</code>, as an
-                            ordinary unlayered rule; the override follows both schemes and every pinned subtree.
-                        </p>
-                    </header>
-
-                    <div class="tuner">
-
-                        <form class="controls" onsubmit="return false">
-
-                            <label>Subtle, light <input type="color" data-anchor="colorSubtle" data-side="light"></label>
-                            <label>Subtle, dark <input type="color" data-anchor="colorSubtle" data-side="dark"></label>
-                            <label>Strong, light <input type="color" data-anchor="colorStrong" data-side="light"></label>
-                            <label>Strong, dark <input type="color" data-anchor="colorStrong" data-side="dark"></label>
-
-                            <button type="reset">Reset to Metreeca</button>
-
-                        </form>
-
-                        <pre><code class="override"></code></pre>
-
-                    </div>
-
-                    <h3>Pinned subtrees</h3>
-                    <p class="note">A <code>data-theme</code> attribute pins one scheme for everything below it.</p>
-
-                    <div class="islands">
-
-                        <article data-theme="light">
-                            <h3>Light</h3>
-                            <p>Pinned to the light scheme, with a <a href="#theming">link</a> and a field.</p>
-                            <input type="text" placeholder="Placeholder">
-                            <button type="button">Button</button>
-                        </article>
-
-                        <article data-theme="dark">
-                            <h3>Dark</h3>
-                            <p>Pinned to the dark scheme, with a <a href="#theming">link</a> and a field.</p>
-                            <input type="text" placeholder="Placeholder">
-                            <button type="button">Button</button>
-                        </article>
 
                     </div>
 

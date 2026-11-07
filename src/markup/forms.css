@@ -334,33 +334,34 @@ button {
 /*
  * A menu draws its arrow as a part of its own content, so the padding a rule states on the menu closes in on the
  * arrow from the end, as it does on the label from the start. The arrow keeps a room of its own clear of the label,
- * in place of the gap the platform sets, and still stands at the end of a menu stretched past its label. The
- * platform list keeps its native look, the picker not being opted in. A browser without the base appearance keeps
- * the native control whole, the arrow then taking whatever room the platform reserves for it.
+ * in place of the gap the platform sets, and still stands at the end of a menu stretched past its label. Label and
+ * arrow stand level with the middle of the menu, so one stretched taller than its label, as in a row of taller
+ * controls, keeps both centred rather than hung from the top. The platform list keeps its native look, the picker
+ * not being opted in. A browser without the base appearance keeps the native control whole, the arrow then taking
+ * whatever room the platform reserves for it beside the label, in a box the platform sizes and pads on its own.
  */
 
 select {
 
     appearance: base-select;
 
+    align-items: center;
     column-gap: var(--skin--spacing-075);
 
     /*
      * The arrow is drawn as the lucide down chevron a component marks a disclosure with, at the height and stroke of
      * an icon, and painted in the colour of the label through a mask cut to the box the icon takes. The box is
-     * centred on the label rather than hung from the top of the line, and is cropped to the stroke, round caps
-     * included, so the empty sides of the glyph add nothing to the room before it or to the padding after it: the
-     * menu is spaced by what its rules state rather than by the drawing. The stroke is stated in the glyph at the
-     * width the stroke token ships with, a mask having no way to read a custom property. The arrow keeps the colour of
-     * the label under forced colours, which would otherwise paint the box it is cut from in the page colour and leave
-     * nothing on show.
+     * cropped to the stroke, round caps included, so the empty sides of the glyph add nothing to the room before it
+     * or to the padding after it: the menu is spaced by what its rules state rather than by the drawing. The stroke
+     * is stated in the glyph at the width the stroke token ships with, a mask having no way to read a custom
+     * property. The arrow keeps the colour of the label under forced colours, which would otherwise paint the box it
+     * is cut from in the page colour and leave nothing on show where the arrow stood.
      */
 
     &::picker-icon {
 
         content: "";
 
-        align-self: center;
         margin-inline-start: auto;
 
         /*

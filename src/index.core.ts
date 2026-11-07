@@ -35,8 +35,8 @@ import type { Token } from "./index.js";
  * all three are lengths, because a size set from a gap is not a thing anyone means. A token belonging to no ladder, a
  * switch or a keyword, resolves to nothing and is left to the literal alone. A box token, shaping the element it is
  * assigned to, resolves to the ladder it is set from without being a step on it. A surface also takes a palette
- * colour, tinting an area by the class it belongs to, and the text the area holds then needs a `color` of its own,
- * holding contrast over that fill rather than over the page, which the fill replaces for everything inside it.
+ * colour, tinting an area by the class it belongs to or by the colour an author gave it. The text the area holds
+ * then needs a `color` of its own, since the fill replaces the page for everything inside it.
  *
  * @typeParam K The token being assigned
  */
@@ -92,7 +92,8 @@ export type Literal<K extends Token> =
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The scale steps, series slots and area classes, which address a colour by position rather than by role.
+ * The scale steps, series slots, area classes and editor colours, which name a colour by position, by the thing it
+ * belongs to or by its hue, never by role, so a role never takes one and a surface fill may.
  */
 export type Palette = Extract<Token,
 	| `colorGray${Step}`
@@ -101,6 +102,8 @@ export type Palette = Extract<Token,
 	| `colorHeat${Step}`
 	| `colorSeries${Slot}`
 	| `colorArea${Slot}`
+	| "colorBlack" | "colorGray" | "colorWhite"
+	| `color${Hue}${"" | "Strong" | "Subtle"}`
 >
 
 /**
@@ -206,6 +209,11 @@ export type Lifting = Extract<Token, "boxShadow">
  */
 type Step = "010" | "020" | "030" | "040" | "050" | "060" | "070" | "080" | "090" | "100"
 type Slot = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+/**
+ * A hue of the editor colours.
+ */
+type Hue = "Red" | "Yellow" | "Green" | "Blue" | "Purple"
 
 
 /**

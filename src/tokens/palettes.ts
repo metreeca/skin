@@ -17,11 +17,22 @@
 /**
  * Palette tokens.
  *
- * Names the colours a chart, a coding or a map reads: four ten-step scales, nine series slots and four area classes.
- * A step, a slot or a class says where a value sits or which thing it belongs to, and never stands in for a
- * {@link colors role}, which says what a colour means in the interface.
+ * Names the colours an author picks for content and the colours a chart, a coding or a map reads: eighteen editor
+ * colours, four ten-step scales, nine series slots and four area classes. An editor colour, a step, a slot or a class
+ * says how an author coloured content, where a value sits or which thing it belongs to. None ever stands in for a
+ * {@link colors role}, which says what a colour means in the interface, such as a failure or a disabled control.
  *
  * @remarks
+ *
+ * **Editor colours** — what an author picks to colour content, as text or as fill: a word set in red, a table cell
+ * filled in yellow, a highlight behind a phrase. They form a grid of a neutral and five hues by three steps, named
+ * as the `look` attribute names its own: `colorRedStrong` stands out from the page, `colorRedSubtle` stays close to
+ * it and `colorRed` sits between, with `colorBlack`, `colorGray` and `colorWhite` as the neutral steps. Each states
+ * both colour schemes, so a strong step is dark on the light page and light on the dark one. They are named for how
+ * they look and keep their values under any brand, since an author attaches no meaning the interface could rely on.
+ * For the same reason a widget never states a meaning with one. The plain step holds 3:1 on the page in either
+ * colour scheme, enough for large text and for a mark. That is the only contrast guarantee: any other step or
+ * combination is the author's to judge, and so is text at body size, which WCAG holds to 4.5:1 rather than 3:1.
  *
  * **Colour scales** — where a colour stands for a position rather than for a role, a ten-step scale provides it:
  * `colorGray*` for a neutral, `colorSubtle*` and `colorStrong*` for a branded one, and `colorHeat*` for a magnitude.
@@ -130,6 +141,25 @@ export const palettes = {
 	colorArea1: "--skin--color-area-1",
 	colorArea2: "--skin--color-area-2",
 	colorArea3: "--skin--color-area-3",
-	colorArea4: "--skin--color-area-4"
+	colorArea4: "--skin--color-area-4",
+
+	colorBlack: "--skin--color-black",
+	colorGray: "--skin--color-gray",
+	colorWhite: "--skin--color-white",
+	colorRedStrong: "--skin--color-red-strong",
+	colorRed: "--skin--color-red",
+	colorRedSubtle: "--skin--color-red-subtle",
+	colorYellowStrong: "--skin--color-yellow-strong",
+	colorYellow: "--skin--color-yellow",
+	colorYellowSubtle: "--skin--color-yellow-subtle",
+	colorGreenStrong: "--skin--color-green-strong",
+	colorGreen: "--skin--color-green",
+	colorGreenSubtle: "--skin--color-green-subtle",
+	colorBlueStrong: "--skin--color-blue-strong",
+	colorBlue: "--skin--color-blue",
+	colorBlueSubtle: "--skin--color-blue-subtle",
+	colorPurpleStrong: "--skin--color-purple-strong",
+	colorPurple: "--skin--color-purple",
+	colorPurpleSubtle: "--skin--color-purple-subtle"
 
 } as const;

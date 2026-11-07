@@ -18,13 +18,16 @@
  * Specimen.
  *
  * Shows every design system token and the base rules applying them to plain document markup, on a single page built
- * from the stylesheet alone, so what an app gets from the design system is seen without any component library.
+ * from the stylesheet alone, so what an app gets from the design system is seen without any component library. The
+ * page switches between the bare entry and each preset, showing the design system as an app including either sees it.
  *
  * @module
  */
 
-import "../../src/presets/roboto.css";
+import platform from "../../src/index.css?inline";
 import { type Token, skin } from "../../src/index.js";
+import inter from "../../src/presets/inter.css?inline";
+import roboto from "../../src/presets/roboto.css?inline";
 import { borders } from "../../src/tokens/borders.js";
 import { colors } from "../../src/tokens/colors.js";
 import { elevations } from "../../src/tokens/elevations.js";
@@ -129,7 +132,13 @@ const ramps: readonly (readonly [string, RegExp])[] = [
 	["heat", /^colorHeat\d{3}$/]
 ];
 
-const bars: readonly number[] = [72, 58, 90, 44, 66, 81, 37, 53, 62];
+const editor: readonly (readonly Token[])[] = [
+	["colorBlack", "colorRedStrong", "colorYellowStrong", "colorGreenStrong", "colorBlueStrong", "colorPurpleStrong"],
+	["colorGray", "colorRed", "colorYellow", "colorGreen", "colorBlue", "colorPurple"],
+	["colorWhite", "colorRedSubtle", "colorYellowSubtle", "colorGreenSubtle", "colorBlueSubtle", "colorPurpleSubtle"]
+];
+
+const bars: readonly number[] =[72, 58, 90, 44, 66, 81, 37, 53, 62];
 
 const map: readonly number[] = [
 	1, 1, 2, 2, 2, 3, 3, 3,
@@ -189,6 +198,8 @@ render(".series", `<div class="bars">${tokens.filter(token => /^colorSeries\d$/.
 	`<button type="button" class="column" data-ink ${handle(token)}
 		style="block-size: ${bars[index] ?? 50}%; background-color: ${reference(token)}">${token.slice(-1)}</button>`
 ).join("")}</div>`);
+
+render(".picker", editor.flat().map(pick).join(""));
 
 render(".areas", `
 	<div class="map">${map.map(slot => `<span style="background-color: var(--skin--color-area-${slot})"></span>`).join("")}</div>
@@ -326,6 +337,7 @@ document.addEventListener("click", event => {
 
 });
 
+preset();
 scheme();
 tuner();
 spy();
@@ -346,7 +358,7 @@ document.fonts.ready.then(refresh);
  * @returns The attribute markup
  */
 function handle(token: Token): string {
-	return `data-token="${token}" data-copy="${reference(token)}" title="skin.${token}: click to copy ${reference(token)}"`;
+	return `data-token="${token}" data-copy="${reference(token)}" title="skin.${token}&#10;${reference(token)}"`;
 }
 
 /**
@@ -361,6 +373,18 @@ function chip(token: Token, sample: string): string {
 	return `<button type="button" class="chip" ${handle(token)}>${sample}<span class="label">
 		<span class="name">${short(token)}</span><span class="value" data-value="${token}"></span>
 	</span></button>`;
+}
+
+/**
+ * Renders a swatch of the editor colour picker.
+ *
+ * @param token The editor colour the swatch stands for
+ *
+ * @returns The markup of a button filled with the colour, copying its token reference on click
+ */
+function pick(token: Token): string {
+	return `<button type="button" class="pick" aria-label="${short(token)}" ${handle(token)}
+		style="background-color: ${reference(token)}"></button>`;
 }
 
 /**
@@ -485,7 +509,7 @@ function role({ token, budget, use, ground }: Role): string {
 //// Behaviour /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Brings every live readout in line with the scheme, the brand and the viewport on show.
+ * Brings every live readout in line with the preset, the scheme, the brand and the viewport on show.
  */
 function refresh(): void {
 
@@ -573,6 +597,45 @@ function sides(token: Token): readonly [string, string] {
 	};
 
 	return [paint("light"), paint("dark")];
+
+}
+
+/**
+ * Wires the preset menu to the page, remembering the choice where the browser allows and starting on Roboto otherwise.
+ *
+ * The page carries one design system entry at a time, either the bare entry on platform faces or a single preset, as
+ * an app includes a preset in place of the entry and never beside it. The readouts follow each change of faces.
+ */
+function preset(): void {
+
+	const presets: Readonly<Record<string, string>> = { platform, inter, roboto };
+
+	const style = document.head.appendChild(document.createElement("style"));
+	const menu = document.querySelector<HTMLSelectElement>("select.preset");
+
+	const stored = (() => {
+		try { return localStorage.getItem("lab-preset") ?? "roboto"; } catch { return "roboto"; }
+	})();
+
+	const initial = Object.hasOwn(presets, stored) ? stored : "roboto";
+
+	const apply = (value: string): void => {
+
+		style.textContent = presets[value] ?? roboto;
+
+		try { localStorage.setItem("lab-preset", value); } catch { /* storage unavailable: the choice lasts the visit */ }
+
+		requestAnimationFrame(() => document.fonts.ready.then(refresh));
+
+	};
+
+	menu?.addEventListener("change", () => apply(menu.value));
+
+	if ( menu ) {
+		menu.value = initial;
+	}
+
+	apply(initial);
 
 }
 

@@ -252,6 +252,15 @@ Motion is stated the same way: `--skin--duration-*` says what kind of change a t
 `--skin--easing-*` how it accelerates, and every duration collapses to zero for a reader who asked for less motion, so
 a transition written through the tokens honours the preference with no rule of its own.
 
+Where an author colours content, as a word set in red or a table cell filled in yellow, take the colour from the editor
+grid: `--skin--color-black`, `--skin--color-gray` and `--skin--color-white` for a neutral, and red, yellow, green, blue
+and purple in three steps, as `--skin--color-red-strong`, `--skin--color-red` and `--skin--color-red-subtle`. A strong
+step stands out from the page and a subtle one stays close to it, in either colour scheme. Each colour serves as text or
+as fill and keeps its hue whatever an app brands with. The colours carry no meaning, so a widget never states a status
+with one. The plain step holds 3:1 on the page in either colour scheme, enough for large text and for a mark such as an
+underline. That is the only contrast guarantee: any other step or pairing is the author's to judge, and so is text set
+at body size, which WCAG holds to 4.5:1 rather than the 3:1 that large text and marks need.
+
 Where a colour stands for a position rather than for a role, take it from a ten-step scale: `--skin--color-gray-*` for
 a neutral, `--skin--color-subtle-*` and `--skin--color-strong-*` for a branded one, `--skin--color-heat-*` for a
 magnitude. The number is the share of the anchor the step carries, `010` the faintest and `100` the anchor itself, so

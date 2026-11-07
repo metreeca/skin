@@ -91,8 +91,9 @@ only place either side of the family is revised:
 - `borders` — the line, the radii, the focus ring, the invalid outline and the vector stroke width
 - `elevations` — the surfaces a thing lifted off the page is painted on, the shadows pairing with them, the
   translucent glass ground gathering floating surfaces without a shadow, and the blanket dimming what a modal covers
-- `palettes` — the four ten-step colour scales, the nine series slots and the four area classes, the three
-  accent-derived scales following the anchors and the heat scale, the slots and the classes stated as literals
+- `palettes` — the four ten-step colour scales, the nine series slots, the four area classes and the eighteen
+  editor colours, the three accent-derived scales following the anchors and the heat scale, the slots, the classes
+  and the editor colours stated as literals
 - `layers` — the stacking order two things overlapping the page are settled by
 - `motions` — the durations a change takes and the curves it accelerates on, the durations collapsing under
   `prefers-reduced-motion`
@@ -566,14 +567,57 @@ The stroke roles are the text roles standing in for all five.
 
 # Palettes
 
-`palettes.css` carries the colours a chart, a coding or a map reads: four ten-step scales, nine series slots and four
-area classes. A step, a slot or a class is **NEVER** a substitute for a role token: a role says what a colour means in
-the interface, these say where a value sits or which thing it belongs to.
+`palettes.css` carries the colours an author picks and a chart, a coding or a map reads: eighteen editor colours,
+four ten-step scales, nine series slots and four area classes. A colour, a step, a slot or a class is **NEVER** a
+substitute for a role token: a role says what a colour means in the interface, these say how an author coloured
+content, where a value sits or which thing it belongs to.
 
 > [!NOTE]
 > The ΔE and colour vision deficiency gates below are **chart-readability guarantees** for these palettes alone, not
 > contrast rules: WCAG lets a chart rely on its labels, and the gates keep the colours themselves apart. They bind
 > nothing outside `palettes.css`, so the WCAG-only budget under [Colours](#colours) still governs every role.
+
+## Editor
+
+The editor colours are what an **author** picks to colour content, as text or as fill: a word set in red, a table
+cell filled in yellow, a highlight behind a phrase. They are editing colours, not interface roles, laid out as the
+pickers of document editors lay theirs out, simplified to a grid of a neutral and five hues by three steps:
+
+| Step     | Neutral | Red          | Yellow          | Green          | Blue          | Purple          |
+|----------|---------|--------------|-----------------|----------------|---------------|-----------------|
+| `strong` | `black` | `red-strong` | `yellow-strong` | `green-strong` | `blue-strong` | `purple-strong` |
+| normal   | `gray`  | `red`        | `yellow`        | `green`        | `blue`        | `purple`        |
+| `subtle` | `white` | `red-subtle` | `yellow-subtle` | `green-subtle` | `blue-subtle` | `purple-subtle` |
+
+Every name takes the `--skin--color-` prefix.
+
+- **No text and fill axis.** Any colour serves as text or as fill, and how an author combines them is **NOT** the
+  design system's concern: the grid is held to the gamut, as the series slots are, and the plain step to 3:1 against
+  the page, so a word set in it stays legible as large text; no other pairing carries a contrast guarantee
+- **Steps named as `look` names its own.** `strong` stands out from the page and `subtle` stays close to it, the
+  plain name sitting between; the neutral column takes `black`, `gray` and `white` for its three steps
+- **Muted, three steps.** Chroma 0.04 to 0.19, sampled from document-editor pickers rather than set at the
+  gamut's edge, on three steps in OKLab lightness: near 0.91, 0.66 to 0.69 and 0.49 on the light page, and near
+  0.37, 0.57 and 0.78 on the dark one, where a tint is capped at chroma 0.06
+- **Plain step at 3:1, NOT 4.5:1.** The plain step is the one an author picks first and sets as text, so it holds
+  3:1 on the page, the WCAG minimum for large text and marks, which the editor pickers it was sampled from hold too.
+  Spaced evenly at 0.70 the light side fell to 2.6:1, so it is lowered by as little as 3:1 requires; the dark side
+  holds 3.9:1 at its even spacing and is left there. Taking it to 4.5:1 would crowd the strong step into two
+  near-identical darks per hue, and no step is held to 4.5:1 for body-size text. Lowering it further, or raising it
+  towards 0.70 again, is **NOT** a free retune: the suite fails below 3:1
+- **Five hues.** Red, yellow, green and blue are the hues every author names, a quarter turn apart, and purple the
+  one between them sitting next to none; orange, teal, lime, sky and magenta each fall between two of the five
+- **Named by hue.** The `css-developer:colours` rule naming a colour for its emphasis does **NOT** apply: the author
+  picks a hue and attaches no meaning, so the hue is the content
+- **Literals, NOT derivations,** for the reason `--skin--color-fail` is one: a passage an author made blue stays blue
+  under any brand, and no hue follows a status anchor, so retuning an outcome repaints no content
+- **One `light-dark()` pair each.** The steps are measured from the page, so `strong` is dark on the light page and
+  light on the dark one and `subtle` the reverse, `black` and `white` included
+
+> [!WARNING]
+>
+> Red, green, yellow and blue sit near `fail`, `pass`, `warn` and `note`, so a reader may take red text for an error.
+> The editor colours carry **no** meaning and are **NEVER** used by a widget to say one: a meaning goes to its step.
 
 ## Scales
 

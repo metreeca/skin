@@ -27,9 +27,9 @@
  * redefines the tokens gets its own look, with no component change. Components name tokens through this contract
  * rather than through literal strings, so a renamed token breaks the build instead of losing its style.
  *
- * The tokens cover typography, spacing, sizing, borders, colours, elevation, data palettes, stacking, motion, opacity,
- * viewport breakpoints and the look of an area. {@link skin} gathers them all in one place, so a consumer names a token
- * without knowing which of these concerns it belongs to or importing anything beyond the package root.
+ * The tokens cover typography, spacing, sizing, borders, colours, elevation, data and editor palettes, stacking,
+ * motion, opacity, viewport breakpoints and the look of an area. {@link skin} gathers them all in one place, so a
+ * consumer names any token from the package root, without knowing which concern it belongs to.
  *
  * @example
  *
@@ -224,8 +224,8 @@ export type Token = keyof typeof skin
  * Admits only what the token in hand can carry, as three alternatives, two named by types left out of this reference:
  *
  * - `Alias<K>` — the {@link Token token names} `K` may be set from, taken off the ladders it belongs to and no other:
- *   a colour offers colours, a surface fill the palette colours as well, classing an area by its colour, and a text
- *   size the type and scaling ladders and not the spacing one, though all are lengths.
+ *   a colour offers colours, a surface fill the palette colours as well, classing an area or colouring it as an
+ *   author chose, and a text size the type and scaling ladders and not the spacing one, though all are lengths.
  *   An alias stands for whatever the token it names carries, so `colorStrong: "colorSubtle"` assigns a reference to
  *   that token rather than the text of its name. A token on no ladder, a switch or a keyword, has no alias at all.
  * - `Literal<K>` — the CSS values `K` takes written out, of the shape it is defined over: a colour where a colour

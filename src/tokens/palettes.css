@@ -15,9 +15,10 @@
  */
 
 /*
- * The colours a chart, a coding or a map reads: four ten-step scales, nine series slots and four area classes. A step,
- * a slot or a class says where a value sits or which thing it belongs to, and is never a substitute for a role token,
- * which says what a colour means in the interface.
+ * The colours an author picks for content and the colours a chart, a coding or a map reads: eighteen editor colours,
+ * four ten-step scales, nine series slots and four area classes. An editor colour, a step, a slot or a class says how
+ * an author coloured content, where a value sits or which thing it belongs to. None is ever a substitute for a role
+ * token, which says what a colour means in the interface, and an app retuning the roles repaints none of them.
  */
 
 /*
@@ -405,4 +406,141 @@
     syntax: "<color>";
     inherits: true;
     initial-value: #33A02C;
+}
+
+/*
+ * The editor colours are what an author picks to colour content: a word set in red, a table cell filled in yellow,
+ * a highlight behind a phrase. They form a grid of six columns, a neutral and five hues, by three steps named as the
+ * look attribute names its own: strong stands out from the page, subtle stays close to it and the plain name sits
+ * between them. The neutral column takes black, gray and white for its three steps.
+ *
+ * The values are muted as the pickers of document editors keep them, at chroma 0.04 to 0.19 rather than at the
+ * gamut's edge, on three steps in OKLab lightness from the page: near 0.91, 0.66 to 0.69 and 0.49 on the light page,
+ * and near 0.37, 0.57 and 0.78 on the dark one, where a tint is capped at chroma 0.06. Gray sits on the plain step,
+ * while black and white keep the ends of the scale their names promise, beyond the lightness the five hues span.
+ *
+ * The plain step is the one a picker names red or blue, so it is the one an author reaches for first and most often
+ * sets as text. It holds 3:1 against the page, the WCAG minimum for large text and for a mark such as an underline
+ * or a cell border, which the editor pickers it was sampled from hold as well: spaced evenly at 0.70 on the light
+ * page it fell to 2.6:1, so it sits lower there by as little as 3:1 requires, while on the dark page it holds 3.9:1
+ * at its even spacing. It stops short of 4.5:1 on purpose: that far down it would crowd the strong step and leave each
+ * hue two near-identical darks. No step is held to 4.5:1, so text at body size is the author's to judge.
+ *
+ * Any colour serves as text or as fill, and how an author combines them is otherwise the author's to judge: the
+ * package holds them to the gamut and the plain step to 3:1, with no guarantee for any other pairing. Each states
+ * both schemes, so the strong step is dark on the light page and light on the dark one, and the subtle step the
+ * reverse, black and white included, so a step stands out from or recedes into the page whichever scheme is in force.
+ *
+ * They carry literals named for how they look, since an author attaches no meaning the interface could rely on: a
+ * passage made blue stays blue whatever an app brands with, and retuning a status colour repaints no content. Red,
+ * yellow, green and blue are the hues every author names, a quarter turn apart, and purple is the one hue between
+ * them sitting next to none, while orange, teal and the rest each fall between two of the five.
+ */
+
+@property --skin--color-black {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#000, #EEE);
+}
+
+@property --skin--color-gray {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#91949D, #74777F);
+}
+
+@property --skin--color-white {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#FFF, #111);
+}
+
+@property --skin--color-red-strong {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#A0392C, #FF9786);
+}
+
+@property --skin--color-red {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#EB6E6E, #C2494C);
+}
+
+@property --skin--color-red-subtle {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#F8D7D3, #533936);
+}
+
+@property --skin--color-yellow-strong {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#7A601D, #CCB070);
+}
+
+@property --skin--color-yellow {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#B49036, #957206);
+}
+
+@property --skin--color-yellow-subtle {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#F3E995, #423D14);
+}
+
+@property --skin--color-green-strong {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#446A45, #9CC59C);
+}
+
+@property --skin--color-green {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#65A368, #4B884E);
+}
+
+@property --skin--color-green-subtle {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#D0EFD0, #2A442B);
+}
+
+@property --skin--color-blue-strong {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#2A57B6, #96BAFF);
+}
+
+@property --skin--color-blue {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#6192F6, #4172D7);
+}
+
+@property --skin--color-blue-subtle {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#D2E0FA, #364156);
+}
+
+@property --skin--color-purple-strong {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#7842A0, #D29DFF);
+}
+
+@property --skin--color-purple {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#BB76F3, #9650CB);
+}
+
+@property --skin--color-purple-subtle {
+    syntax: "*";
+    inherits: true;
+    initial-value: light-dark(#EAD8F9, #483954);
 }
