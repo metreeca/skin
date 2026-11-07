@@ -170,7 +170,7 @@ const context = document.createElement("canvas").getContext("2d", { willReadFreq
 
 render(".facts", [
 	[tokens.length, "tokens"],
-	[families.length, "families"],
+	[families.length, "token families"],
 	[2, "colour schemes"],
 	[1, "cascade layer"]
 ].map(([value, label]) => `<li><strong>${value}</strong><span>${label}</span></li>`).join(""));
@@ -674,12 +674,36 @@ function scheme(): void {
 }
 
 /**
- * Wires the brand tuner to the accent anchors of the page.
+ * Wires the brand tuner to the accent anchors of the page, remembering the override where the browser allows.
  */
 function tuner(): void {
 
+	const root = document.documentElement;
 	const inputs = all<HTMLInputElement>("input[data-anchor]");
 	const form = document.querySelector(".tuner form");
+
+	const stored = ((): readonly (readonly [string, unknown])[] => {
+		try {
+
+			const value: unknown = JSON.parse(localStorage.getItem("lab-brand") ?? "{}");
+
+			return typeof value === "object" && value !== null ? Object.entries(value) : [];
+
+		} catch {
+			return [];
+		}
+	})();
+
+	const save = (): void => {
+
+		const overrides = Object.fromEntries(accents
+			.map(token => [token, root.style.getPropertyValue(skin[token])])
+			.filter(([, value]) => value)
+		);
+
+		try { localStorage.setItem("lab-brand", JSON.stringify(overrides)); } catch { /* storage unavailable: the brand lasts the visit */ }
+
+	};
 
 	const sync = (): void => inputs.forEach(input => {
 
@@ -698,7 +722,8 @@ function tuner(): void {
 		const [light, dark] = ["light", "dark"].map(side => pair.find(peer => peer.dataset.side === side)?.value);
 
 		if ( isToken(anchor) && light && dark ) {
-			document.documentElement.style.setProperty(skin[anchor], `light-dark(${light}, ${dark})`);
+			root.style.setProperty(skin[anchor], `light-dark(${light}, ${dark})`);
+			save();
 			requestAnimationFrame(refresh);
 		}
 
@@ -708,7 +733,9 @@ function tuner(): void {
 
 		event.preventDefault();
 
-		accents.forEach(token => document.documentElement.style.removeProperty(skin[token]));
+		accents.forEach(token => root.style.removeProperty(skin[token]));
+
+		try { localStorage.removeItem("lab-brand"); } catch { /* storage unavailable: nothing to forget */ }
 
 		requestAnimationFrame(() => {
 			refresh();
@@ -716,6 +743,13 @@ function tuner(): void {
 		});
 
 	});
+
+	stored
+		.flatMap(([token, value]) => isToken(token) && accents.includes(token) && typeof value === "string"
+			? [[skin[token], value] as const]
+			: []
+		)
+		.forEach(([property, value]) => root.style.setProperty(property, value));
 
 	sync();
 
