@@ -605,14 +605,22 @@ function sides(token: Token): readonly [string, string] {
  * Wires the preset menu to the page, remembering the choice where the browser allows and starting on Roboto otherwise.
  *
  * The page carries one design system entry at a time, either the bare entry on platform faces or a single preset, as
- * an app includes a preset in place of the entry and never beside it. The readouts follow each change of faces.
+ * an app includes a preset in place of the entry and never beside it. The readouts follow each change of faces, and so
+ * does the import named in the hero, which stays the one stylesheet an app includes to get exactly what is on show.
  */
 function preset(): void {
 
 	const presets: Readonly<Record<string, string>> = { platform, inter, roboto };
 
+	const entries: Readonly<Record<string, string>> = {
+		platform: "@metreeca/skin/index.css",
+		inter: "@metreeca/skin/presets/inter.css",
+		roboto: "@metreeca/skin/presets/roboto.css"
+	};
+
 	const style = document.head.appendChild(document.createElement("style"));
 	const menu = document.querySelector<HTMLSelectElement>("select.preset");
+	const entry = document.querySelector<HTMLElement>("code.entry");
 
 	const stored = (() => {
 		try { return localStorage.getItem("lab-preset") ?? "roboto"; } catch { return "roboto"; }
@@ -623,6 +631,10 @@ function preset(): void {
 	const apply = (value: string): void => {
 
 		style.textContent = presets[value] ?? roboto;
+
+		if ( entry ) {
+			entry.textContent = entries[value] ?? entries.roboto;
+		}
 
 		try { localStorage.setItem("lab-preset", value); } catch { /* storage unavailable: the choice lasts the visit */ }
 
