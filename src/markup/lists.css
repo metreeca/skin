@@ -169,7 +169,7 @@ nav {
 
     & > ul:has(> li > ul) > li > :is(a, a:visited, span) {
         font-weight: var(--skin--font-weight-strong);
-        letter-spacing: 0.08em; /* Optical tracking for the small capitals of a top-level entry. */
+        letter-spacing: var(--skin--letter-spacing-caps);
         text-transform: uppercase;
     }
 

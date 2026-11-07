@@ -150,6 +150,10 @@ since the platform faces differ on every system; a preset or an app setting a mo
 `--skin--font-size`, `--skin--font-size-heading`, `--skin--font-weight` and `--skin--line-height` retune the type
 scale, and `--skin--letter-spacing-heading` corrects the heading tracking for a condensed or a wide face.
 
+`--skin--line-height-display` sets the tighter leading of display type, `--skin--letter-spacing-caps` the tracking of
+small capitals and `--skin--inline-size-prose` the reading measure of prose. A component reads them in place of
+literals, so an app retuning one of them reaches every title, label and lead in the interface at once.
+
 Running text wraps so that no lone word is left on its last line, and a heading spread over several lines has them
 balanced, while text being typed keeps the platform wrapping. No token carries this choice: an app opting out writes
 `text-wrap-style: auto` in an ordinary rule, which outranks the design system wherever it reaches the page.
@@ -369,6 +373,22 @@ colour scheme in force:
 import { skin } from "@metreeca/skin";
 
 getComputedStyle(element).getPropertyValue(skin.colorStrong);
+```
+
+## Heading Groups
+
+An `hgroup` titles a page or a section with no class attached. Its heading is set as display type, on the tighter
+display leading and with no rule beneath; an `h1` or `h2` also stands well above its size in running text. A paragraph
+ahead of the heading is an eyebrow naming the part of the page, set in strong small capitals of the strong accent. A
+paragraph after it is a lead saying what follows, set larger in the label colour. The whole group keeps to the prose
+measure, so a long title or a long lead never runs across the full width of a wide column.
+
+```html
+<hgroup>
+    <p>Foundations</p>
+    <h2>Colours</h2>
+    <p>A handful of anchors carry literal values, and every other colour derives from them.</p>
+</hgroup>
 ```
 
 ## Navigation

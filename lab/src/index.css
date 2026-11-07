@@ -282,46 +282,19 @@ main > section {
         border-top-style: var(--skin--border-style);
     }
 
-    & > header {
-
-        margin-bottom: var(--skin--spacing-100);
-
-        & > h2 {
-            margin-bottom: var(--skin--spacing-025);
-            font-size: var(--skin--scaling-200);
-            line-height: 1.1; /* Optical leading for display type, tighter than the running text. */
-        }
-
-    }
-
     & > h3, & > .pair > div > h3 {
         margin-top: var(--skin--spacing-200);
         font-size: var(--skin--font-size-large);
     }
 
-    & > header + h3, & > .pair > div > h3:first-child {
+    & > hgroup + h3, & > .pair > div > h3:first-child {
         margin-top: 0;
     }
 
 }
 
-.eyebrow {
-    margin-bottom: var(--skin--spacing-025);
-    font-size: var(--skin--font-size-small);
-    font-weight: var(--skin--font-weight-strong);
-    letter-spacing: 0.08em; /* Optical tracking for the small capitals of an eyebrow. */
-    text-transform: uppercase;
-    color: var(--skin--color-strong);
-}
-
-.lead {
-    max-inline-size: 60ch; /* A comfortable reading measure. */
-    font-size: var(--skin--font-size-large);
-    color: var(--skin--color-label);
-}
-
 .note {
-    max-inline-size: 75ch; /* A comfortable reading measure. */
+    max-inline-size: var(--skin--inline-size-prose);
     margin-bottom: var(--skin--spacing-100);
     color: var(--skin--color-label);
 }
@@ -329,15 +302,6 @@ main > section {
 .hero {
 
     padding-block: var(--skin--spacing-150) var(--skin--spacing-250);
-
-    & > h1 {
-        padding: 0;
-        margin-top: 0;
-        border-bottom-style: none;
-        margin-bottom: var(--skin--spacing-100);
-        font-size: var(--skin--scaling-250);
-        line-height: 1.1; /* Optical leading for display type, tighter than the running text. */
-    }
 
     & > .hint {
         margin-top: var(--skin--spacing-150);
@@ -368,7 +332,7 @@ main > section {
         & > strong {
             font-family: var(--skin--font-family-heading);
             font-size: var(--skin--scaling-200);
-            line-height: 1.1; /* Optical leading for display figures. */
+            line-height: var(--skin--line-height-display);
         }
 
         & > span {

@@ -17,7 +17,8 @@
 /**
  * Typography tokens.
  *
- * Names the faces, sizes, weights and line height text is set in, which an app overrides to retype a whole interface.
+ * Names the faces, sizes and weights text is set in, the leading and tracking it is spaced on and the measure prose
+ * keeps to, which an app overrides to retype a whole interface, from running text to titles, labels and leads.
  *
  * @remarks
  *
@@ -44,6 +45,13 @@
  * `letterSpacingHeading` ships neutral and lets the brand face decide, so an app supplying a condensed or a wide face
  * corrects the heading tracking through this token alone, without restating the rule for every heading level.
  *
+ * **Display and labels** — `lineHeightDisplay` is the tight leading of display type, such as the heading of an
+ * `hgroup` or a figure set large. `letterSpacingCaps` spaces out a label set in small capitals, which would otherwise
+ * look crowded, as the eyebrow of a heading group and the top-level entries of a `nav` outline are.
+ *
+ * **Measure** — `inlineSizeProse` caps a run of prose at a comfortable reading measure. It is stated in characters of
+ * the element it caps, so a heading group capped as a whole holds fewer characters per line in its larger lead.
+ *
  * **Weights** — `fontWeight` is text at rest and `fontWeightStrong` anything marked out from it, from a link or a term
  * to a heading, a label, a tab or a table header, so emphasis reads the same wherever it occurs in the interface.
  *
@@ -69,7 +77,11 @@ export const typography = {
 	fontSizeMono: "--skin--font-size-mono",
 
 	lineHeight: "--skin--line-height",
+	lineHeightDisplay: "--skin--line-height-display",
 	letterSpacingHeading: "--skin--letter-spacing-heading",
+	letterSpacingCaps: "--skin--letter-spacing-caps",
+
+	inlineSizeProse: "--skin--inline-size-prose",
 
 	fontWeight: "--skin--font-weight",
 	fontWeightStrong: "--skin--font-weight-strong"

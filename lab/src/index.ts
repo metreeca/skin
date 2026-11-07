@@ -228,9 +228,21 @@ render("[data-rows='type']", [
 		`letter-spacing: ${reference("letterSpacingHeading")}; font-family: ${reference("fontFamilyHeading")}; font-weight: ${reference("fontWeightStrong")}`,
 		"Heading tracking"
 	)),
+	row("letterSpacingCaps", specimen(
+		`letter-spacing: ${reference("letterSpacingCaps")}; text-transform: uppercase; font-size: ${reference("fontSizeSmall")}; font-weight: ${reference("fontWeightStrong")}`,
+		"Small capitals"
+	)),
 	row("lineHeight", specimen(`line-height: ${reference("lineHeight")}`,
 		"Running text is set on the base line height, which holds a paragraph together at the measure a page allows "
 		+ "while leaving room enough between lines for the eye to find the start of the next one."
+	)),
+	row("lineHeightDisplay", specimen(
+		`line-height: ${reference("lineHeightDisplay")}; font-size: calc(${reference("fontSizeHeading")} * 2); font-family: ${reference("fontFamilyHeading")}; font-weight: ${reference("fontWeightStrong")}`,
+		"Display type is set tight, so a title running over two lines holds together"
+	)),
+	row("inlineSizeProse", specimen(`max-inline-size: ${reference("inlineSizeProse")}`,
+		"Prose is held to a comfortable reading measure, so a line of running text stays short enough for the eye to "
+		+ "travel back to the start of the next one without losing its place, however wide the column it sits in grows."
 	))
 ].join(""));
 

@@ -35,10 +35,10 @@ h1 {
 
     /*
      * A top-level heading opening a new part of the text stands further off what precedes it than the block gap, so
-     * the break reads at a glance; one opening its container keeps flush with the top, adding no room of its own.
+     * the break reads at a glance; one opening its container or titling a heading group adds no room of its own.
      */
 
-    &:not(:first-child) {
+    &:not(:first-child, hgroup > *) {
         margin-top: var(--skin--spacing-150);
     }
 
@@ -68,4 +68,51 @@ h5, h6 {
     margin-bottom: var(--skin--spacing-050);
     font-size: var(--skin--font-size-small);
     color: var(--skin--color-label);
+}
+
+/*
+ * A heading group titles a page or a section, its heading set as display type with no rule beneath it. The whole
+ * group keeps to the prose measure, so its lead, set larger than the running text, holds fewer characters per line.
+ */
+
+hgroup {
+
+    max-inline-size: var(--skin--inline-size-prose);
+    margin-bottom: var(--skin--spacing-100);
+
+    & > :is(h1, h2, h3, h4, h5, h6) {
+        padding: 0;
+        border-bottom-style: none;
+        margin-bottom: var(--skin--spacing-025);
+        line-height: var(--skin--line-height-display);
+    }
+
+    & > h1 {
+        margin-bottom: var(--skin--spacing-100);
+        font-size: calc(var(--skin--font-size-heading) * 2.5); /* A ratio on the heading size, as outside a group. */
+    }
+
+    & > h2 {
+        font-size: calc(var(--skin--font-size-heading) * 2); /* A ratio on the heading size, as outside a group. */
+    }
+
+    /* A paragraph ahead of the heading is an eyebrow, naming the part of the page in small capitals of the accent. */
+
+    & > p:has(~ :is(h1, h2, h3, h4, h5, h6)) {
+        margin-bottom: var(--skin--spacing-025);
+        font-size: var(--skin--font-size-small);
+        font-weight: var(--skin--font-weight-strong);
+        letter-spacing: var(--skin--letter-spacing-caps);
+        text-transform: uppercase;
+        color: var(--skin--color-strong);
+    }
+
+    /* A paragraph after the heading is a lead, saying what follows in a larger size and the quieter label colour. */
+
+    & > :is(h1, h2, h3, h4, h5, h6) ~ p {
+        margin-bottom: 0;
+        font-size: var(--skin--font-size-large);
+        color: var(--skin--color-label);
+    }
+
 }

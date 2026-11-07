@@ -83,7 +83,7 @@ directions: nothing in `markup/` assigns a token, and every `var()` in `tokens/`
 only place either side of the family is revised:
 
 - `typography` — the faces, defaulting to the platform faces, the sizes, the weights, the
-  line height and the heading tracking
+  line heights of text and display type, the heading and small capitals tracking, and the prose measure
 - `spacings` — the ladder a thing is set apart from its neighbour on
 - `scalings` — the ladder a thing measured against the text is sized on
 - `colors` — the nine colour anchors, each registered as a `light-dark()` pair where it varies by scheme, and the
@@ -718,6 +718,6 @@ to the **all-pairs** measure rather than the adjacent one:
 
 The scale tokens are declared here, so a rule in this package reads them exactly as a consumer does, never as the
 number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs, the underline
-offset and code tint in `inlines.css` and the `0.08em` tracking of the small capitals in a `nav` in `lists.css`; each
-says in a comment why it sits below the scale. The mono face size is
-**NOT** one of them: it depends on the face pair, so it is the `fontSizeMono` token a preset restates with its faces.
+offset and code tint in `inlines.css`; each says in a comment why it sits below the scale. The mono face size, the
+small capitals tracking, the display leading and the prose measure are **NOT** among them: each is a token, the mono
+size because it depends on the face pair and the others because consumer components read the same values.
