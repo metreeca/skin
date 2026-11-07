@@ -68,7 +68,7 @@ no behaviour, and nothing in it imports a rendering framework.
 built on it instead. The token modules come first, the anchors ahead of what derives from them, then the base rules by
 increasing structural complexity, so a composite lands after the plain elements it is built from and takes precedence
 where the two match with equal specificity. It carries the page defaults itself and nothing else: `color-scheme`, the
-page colours and the page typography, every one of them reading a token it does not state.
+page colours and the page typography, its wrapping included, every value it reads a token it does not state.
 
 The package ships the **Metreeca colours as its defaults**: the accent anchors carry its slate and orange. The font
 family tokens default to the platform faces, so `index.css` loads **no** face and an app including it bundles none.

@@ -40,6 +40,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Block markup - images, videos and frames never overflow their column, a `figure` takes a caption in the label size
   and colour, a `details` summary offers the pointer and the focus mark, a `dialog` is an overlay surface centred
   over the blanket, and a table `caption` titles its table at the start in the strong weight
+- Text wrapping - running text keeps a lone word off its last line and a heading spread over several lines has them
+  balanced, while text areas and editable content keep the platform wrapping so words entered never jump between lines
 
 ### Fixed
 

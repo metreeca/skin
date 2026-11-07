@@ -150,6 +150,10 @@ since the platform faces differ on every system; a preset or an app setting a mo
 `--skin--font-size`, `--skin--font-size-heading`, `--skin--font-weight` and `--skin--line-height` retune the type
 scale, and `--skin--letter-spacing-heading` corrects the heading tracking for a condensed or a wide face.
 
+Running text wraps so that no lone word is left on its last line, and a heading spread over several lines has them
+balanced, while text being typed keeps the platform wrapping. No token carries this choice: an app opting out writes
+`text-wrap-style: auto` in an ordinary rule, which outranks the design system wherever it reaches the page.
+
 ### Other Tokens
 
 Spacings, radii, elevations, palettes, motions and the other families are overridden the same way. Every token is listed

@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
+/*
+ * A heading running over more than one line has its lines balanced in place of the page wrapping, so none is left
+ * holding a lone word. Only the style is set, so a heading inside a run kept on one line still stays on that line.
+ */
+
 h1, h2, h3, h4, h5, h6 {
     clear: both;
+    text-wrap-style: balance;
     font-weight: var(--skin--font-weight-strong);
     font-family: var(--skin--font-family-heading);
     letter-spacing: var(--skin--letter-spacing-heading);

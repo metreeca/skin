@@ -60,6 +60,13 @@
         font-weight: var(--skin--font-weight);
         line-height: var(--skin--line-height);
 
+        /*
+         * Running text of every kind, from a paragraph to a list item, a cell or a caption, inherits wrapping that
+         * keeps a lone word off its last line. Only the style is set, so a run kept on one line still stays on it.
+         */
+
+        text-wrap-style: pretty;
+
         /* Greyscale antialiasing keeps macOS from emboldening text; other platforms ignore it. */
 
         -webkit-font-smoothing: antialiased;

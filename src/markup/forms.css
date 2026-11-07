@@ -46,6 +46,12 @@ input, textarea, select, output {
     color: var(--skin--color);
 }
 
+/* Text being typed keeps the platform wrapping, so words already entered never jump between lines as more follow. */
+
+textarea, [contenteditable] {
+    text-wrap-style: auto;
+}
+
 /* A field's edge is what identifies it as one, so it takes the line held to the control boundary budget. */
 
 input, textarea, select {
