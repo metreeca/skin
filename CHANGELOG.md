@@ -104,6 +104,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Headings - `h2` stands an eighth over the heading size, so it is told from `h3` at a glance, and `h4` takes the
   label colour at the heading size while `h5` and `h6` are set in the small size and the label colour
 - `Flag` - the type naming the viewport tokens is renamed `Breakpoint`, so `flag` names the meaning scale step alone
+- `data-theme` - the attribute pinning a colour scheme on the root element or on any subtree is renamed
+  `data-scheme`, after the `color-scheme` it settles; an element left on the old name follows the platform
 - `colorInfo`, `colorInfoStroke`, `backgroundColorInfo` - renamed `colorNote`, `colorNoteStroke` and
   `backgroundColorNote`, with the custom properties `--skin--color-note`, `--skin--color-note-stroke` and
   `--skin--background-color-note`, so the step pairs with `pass`, `flag`, `warn` and `fail`; the old names are gone

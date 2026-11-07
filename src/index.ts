@@ -56,7 +56,7 @@
  * Pin a colour scheme, on the root element or on any subtree that has to differ from the page:
  *
  * ```tsx
- * <aside data-theme="dark">
+ * <aside data-scheme="dark">
  * ```
  *
  * Assign the tokens inline to restyle a single subtree instead:

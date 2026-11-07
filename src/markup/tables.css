@@ -63,7 +63,7 @@ caption {
 }
 
 /*
- * A table opts into stripes with a data-striped attribute, as an island opts into a scheme with data-theme. Its body
+ * A table opts into stripes with a data-striped attribute, as an island opts into a scheme with data-scheme. Its body
  * rows then alternate with the stripe from the second on, so the first row sits on the page under the header rule.
  * The row paints its own background rather than retuning the page ground, which every derived colour reads.
  */

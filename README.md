@@ -161,7 +161,7 @@ move them, though it can still force a breakpoint on or off by overriding its sw
 
 ### Subtrees
 
-An interface follows the platform colour scheme on its own. An app that has to pin one sets `data-theme` to `light` or
+An interface follows the platform colour scheme on its own. An app that has to pin one sets `data-scheme` to `light` or
 `dark`, on the root element or on any subtree that has to differ from the page around it, which a
 `prefers-color-scheme` query cannot express. The pinned subtree takes its side of every `light-dark()` pair, the app's
 overrides included, and the stylesheet states `color-scheme` alongside, so native controls and scrollbars follow it

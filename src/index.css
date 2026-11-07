@@ -83,15 +83,15 @@
      * since the island would otherwise inherit them as the root resolved them.
      */
 
-    [data-theme="light"] {
+    [data-scheme="light"] {
         color-scheme: light;
     }
 
-    [data-theme="dark"] {
+    [data-scheme="dark"] {
         color-scheme: dark;
     }
 
-    [data-theme] {
+    [data-scheme] {
         color: var(--skin--color);
         background-color: var(--skin--background-color);
     }

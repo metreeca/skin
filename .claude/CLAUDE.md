@@ -281,13 +281,13 @@ A token lives in two places, both inside its family pair, revised together:
   the focus ring, the invalid outline
 - a **scheme-varying value** states both schemes in one value, as `light-dark(light, dark)`, registered
   `syntax: "*"`: a literal pair is the registration's `initial-value`, a pair of derivations a `:root` assignment. It
-  is **NEVER** stated in a `prefers-color-scheme` query or a `[data-theme]` rule
+  is **NEVER** stated in a `prefers-color-scheme` query or a `[data-scheme]` rule
 
 **Neither scheme is the default of the other**, and **one value covers every case**. A `"*"` token holds the pair
 unresolved and inherits it as written, so it is picked where a rule paints with it, against the `color-scheme` in
-force there: `index.css` settles that from the platform on `:root` and from `data-theme` on any element, so a pinned
-root and a pinned subtree each take their own side. An app overrides the token the same way, once on `:root`, and the
-override follows every scheme and every pinning with no selector restated.
+force there: `index.css` settles that from the platform on `:root` and from `data-scheme` on any element, so a
+pinned root and a pinned subtree each take their own side. An app overrides the token the same way, once on `:root`,
+and the override follows every scheme and every pinning with no selector restated.
 
 > [!CAUTION]
 > A scheme-varying token is **NEVER** registered with a real syntax such as `<color>`: a typed property resolves
@@ -295,11 +295,11 @@ override follows every scheme and every pinning with no selector restated.
 > same holds for a derivation reading one, which is why every colour role is registered `"*"`.
 
 Scheme rules would bring back what this avoids: an app overriding a token stated in four rules has to restate all
-four, since an unlayered `:root` rule under a media query beats the layered `[data-theme]` rule on a pinned root, and a
-pinned subtree takes the layered attribute rule over what it inherits.
+four, since an unlayered `:root` rule under a media query beats the layered `[data-scheme]` rule on a pinned root, and
+a pinned subtree takes the layered attribute rule over what it inherits.
 
 Native controls, scrollbars and the caret answer to `color-scheme` as the tokens do, and `index.css` restates the page
-colours on any `[data-theme]` element, which would otherwise inherit them as the root resolved them.
+colours on any `[data-scheme]` element, which would otherwise inherit them as the root resolved them.
 
 `src/index.ts` gathers the families into `skin` and adds nothing of its own; a new family is added to the spread and
 to the imports in `src/index.css`.

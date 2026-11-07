@@ -30,7 +30,7 @@
  * it too, for a reader who cannot tell the colours apart or who reads the page through a screen reader.
  *
  * **Colour schemes** — the stylesheet ships each anchor as a `light-dark()` pair, so an interface follows the platform
- * with no work from the app. An app pinning a scheme sets `data-theme` to `light` or `dark` on any element, and the
+ * with no work from the app. An app pinning a scheme sets `data-scheme` to `light` or `dark` on any element, and the
  * subtree below it takes that scheme whatever the platform says, which is what lets a dark panel sit on a light page.
  * An app supplying its brand states a value per scheme too, as a single `light-dark()` pair on `:root` that every
  * scheme and every pinned subtree follows, and rechecks that the text roles still hold AA contrast against the page

@@ -38,7 +38,7 @@ describe("skin", () => {
 	 */
 
 	const query = /@media[^{]*\{(?:[^{}]*\{[^{}]*})*[^{}]*}/g;
-	const forced = /\[data-theme[^{}]*\{[^{}]*}/g;
+	const forced = /\[data-scheme[^{}]*\{[^{}]*}/g;
 
 	const unconditional = stylesheets.map(text => text.replace(query, "").replace(forced, ""));
 	const conditional = stylesheets.flatMap(text => [ ...text.match(query) ?? [], ...text.match(forced) ?? [] ]);
@@ -48,10 +48,10 @@ describe("skin", () => {
 	 * is one an app would have to restate per scheme, and again per pinning, to override.
 	 */
 
-	const schemed = conditional.filter(rule => /prefers-color-scheme|\[data-theme/.test(rule));
+	const schemed = conditional.filter(rule => /prefers-color-scheme|\[data-scheme/.test(rule));
 
 	const assignments = (texts: ReadonlyArray<string>): ReadonlyArray<readonly [string, string]> => texts
-		.flatMap(text => Array.from(text.matchAll(/(?::root|\[data-theme)[^{}]*\{([^}]*)}/g), ([ , rule ]) => rule))
+		.flatMap(text => Array.from(text.matchAll(/(?::root|\[data-scheme)[^{}]*\{([^}]*)}/g), ([ , rule ]) => rule))
 		.flatMap(rule => Array.from(rule.matchAll(/(--skin--[\w-]+)\s*:([^;]*);/g),
 			([ , token, value ]) => [ token, value ] as const
 		));

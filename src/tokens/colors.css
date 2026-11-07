@@ -49,7 +49,7 @@
 /*
  * Each anchor states both schemes in one value, as light-dark(light, dark), and neither scheme is the default of the
  * other. The value is held unresolved and picked where a rule paints with it, according to the color-scheme in force
- * there: index.css settles that from the platform and from any data-theme attribute, so a pinned subtree or a pinned
+ * there: index.css settles that from the platform and from any data-scheme attribute, so a pinned subtree or a pinned
  * root takes its own side of the pair with no rule restating the anchor for it. An app overrides an anchor the same
  * way, once, and the override follows every scheme and every pinning.
  *
