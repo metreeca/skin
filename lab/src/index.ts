@@ -169,10 +169,10 @@ const context = document.createElement("canvas").getContext("2d", { willReadFreq
 
 
 render(".facts", [
-	[tokens.length, "tokens"],
-	[families.length, "token families"],
+	[1, "cascade layer"],
 	[2, "colour schemes"],
-	[1, "cascade layer"]
+	[families.length, "token families"],
+	[tokens.length, "tokens"]
 ].map(([value, label]) => `<li><strong>${value}</strong><span>${label}</span></li>`).join(""));
 
 
@@ -340,6 +340,7 @@ document.addEventListener("click", event => {
 preset();
 scheme();
 tuner();
+home();
 spy();
 refresh();
 
@@ -579,11 +580,11 @@ function value(node: HTMLElement): string {
  */
 function sides(token: Token): readonly [string, string] {
 
-	const paint = (theme: string): string => {
+	const paint = (scheme: string): string => {
 
 		const probe = document.createElement("span");
 
-		probe.dataset.theme = theme;
+		probe.dataset.scheme = scheme;
 		probe.style.backgroundColor = reference(token);
 
 		document.body.append(probe);
@@ -651,9 +652,9 @@ function scheme(): void {
 	const apply = (value: string): void => {
 
 		if ( value === "light" || value === "dark" ) {
-			document.documentElement.setAttribute("data-theme", value);
+			document.documentElement.setAttribute("data-scheme", value);
 		} else {
-			document.documentElement.removeAttribute("data-theme");
+			document.documentElement.removeAttribute("data-scheme");
 		}
 
 		try { localStorage.setItem("lab-scheme", value); } catch { /* storage unavailable: the choice lasts the visit */ }
@@ -752,6 +753,22 @@ function tuner(): void {
 		.forEach(([property, value]) => root.style.setProperty(property, value));
 
 	sync();
+
+}
+
+/**
+ * Wires the brand link to bring the page back to the top, leaving the address bare of any section fragment.
+ */
+function home(): void {
+
+	document.querySelector(".brand")?.addEventListener("click", event => {
+
+		event.preventDefault();
+
+		history.replaceState(history.state, "", location.pathname + location.search);
+		window.scrollTo({ top: 0 });
+
+	});
 
 }
 

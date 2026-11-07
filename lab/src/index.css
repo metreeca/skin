@@ -219,7 +219,7 @@ body {
     .toc {
 
         position: sticky;
-        top: calc(var(--lab-bar) + var(--skin--spacing-150));
+        top: calc(var(--lab-bar) + var(--skin--spacing-250)); /* Level with the content of a section scrolled to. */
         align-self: start;
 
         flex-direction: column;
@@ -237,7 +237,7 @@ body {
             color: var(--skin--color-label);
 
             &:first-child {
-                margin-top: var(--skin--spacing-025);
+                margin-top: 0;
             }
         }
 
@@ -247,10 +247,6 @@ body {
 
 
 /* Sections. */
-
-main {
-    scroll-margin-top: var(--lab-bar); /* Clears the top bar when the brand link scrolls back to the top. */
-}
 
 main > section {
 
