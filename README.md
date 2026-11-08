@@ -397,7 +397,12 @@ A list nested inside a `nav` reads as a compact table of contents, one level of 
 Entries are set small in the label colour. Where any top-level entry heads subsections, every top-level entry is set in
 strong small capitals with its subsections unindented beneath it; an outline of top-level entries alone reads as a
 plain list. Each level from the third on is indented, and a link answers the pointer as any link does. How deep an
-outline runs is left to its markup: an entry it lists is never hidden, so it stays reachable by every reader.
+outline runs is left to its markup: the outline never hides an entry it lists, so it stays reachable by every reader.
+
+A top-level group may fold behind its label: wrap its label and its list in a `details` element, the label as the
+`summary`. The summary reads as the label it stands for, with a chevron at the far end of the line, and folded groups
+close up into a tight run of labels. Mark a group `open` to show its entries from the start, such as the group holding
+the section in view, so the reader finds the current entry without opening anything.
 
 Each entry is a link to the heading of its section, or a `span` naming a section that has no heading to link to, such
 as a group of sections. Keep the entries out of headings: the page outline then lists every heading once, and a screen

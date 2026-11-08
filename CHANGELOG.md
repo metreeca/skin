@@ -43,7 +43,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   titles its table from above, set at the start in the strong weight as a header cell is
 - Navigation markup - nested lists in a `nav` read as a compact table of contents: small entries in the label colour
   without markers, top-level entries over subsections in strong small capitals, each level from the third on indented,
-  a `span` naming a section with no heading, and the `aria-current` link strong in the strong accent
+  a `span` naming a section with no heading, a top-level group folding behind its label as a `details` disclosure
+  with a quiet chevron at the end of the line, and the `aria-current` link strong in the strong accent
 - `lineHeightDisplay`, `letterSpacingCaps`, `inlineSizeProse` - the tight leading of display type, the tracking of
   small capitals and the reading measure of prose, so a component titling, labelling or leading a section reads
   them in place of literals and an app retuning one reaches every title, label and lead across the interface

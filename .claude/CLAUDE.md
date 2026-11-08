@@ -262,8 +262,8 @@ identically inside it.
 >
 > Layering removes specificity from the comparison **between** stylesheets: a design system rule can no longer outrank
 > a component rule, however specific it is. Nothing relies on that today: no module selects `label`, and `lists.css`
-> reaches `nav` only for the lists and links it holds, which a component styling its own navigation overrides by
-> staying unlayered. Adding a high-specificity base rule for an element a component also styles is the case to watch.
+> reaches `nav` only for the lists, links and disclosures it holds, which a component styling its own navigation
+> overrides by staying unlayered. Adding a high-specificity base rule for an element a component also styles is the case to watch.
 
 # Token Contract
 

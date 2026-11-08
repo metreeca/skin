@@ -107,9 +107,12 @@ dl {
  * A list in a navigation landmark reads as a compact outline of the sections it links to, quiet beside the document.
  * Entries are set small, in the label colour and without markers. Each entry is a link, or a span naming a section
  * with no heading to link to. Where any top-level entry heads subsections, every top-level entry is set in strong
- * small capitals, so it stands out with no indent for the subsections beneath it. A wider gap then sets each group
- * apart from the next with no separator. An outline of top-level entries alone reads as a plain list. From the third
- * level on, each level is indented beneath the one above. No entry the markup lists is ever hidden, so each one stays
+ * small capitals, so it stands out with no indent for the subsections beneath it. A wider gap then sets each open
+ * group apart from its neighbours with no separator. A top-level group may also fold behind its label as a disclosure.
+ * Its summary reads as the label it stands for, aligned with the entries beneath, and its chevron sits quietly at the
+ * far end of the line. Folded groups close up into a tight run of labels, and an opened one takes the gap of an
+ * unfolded group. An outline of top-level entries alone reads as a plain list. From the third level on, each level is
+ * indented beneath the one above. The outline itself never hides an entry the markup lists, so each one stays
  * reachable by every reader. Links run in tight lines and answer the pointer as any link does. The link marked current
  * by aria-current is strong in the strong accent, so the reader sees where they stand by weight as well as by colour.
  */
@@ -155,9 +158,9 @@ nav {
 
     }
 
-    & > ul:has(> li > ul) > li {
+    & > ul:has(> li > :is(ul, details)) > li {
 
-        & + li {
+        &:has(> ul, > details[open]) + li, & + li:has(> ul, > details[open]) {
             margin-top: calc(var(--skin--spacing-100) + var(--skin--spacing-025)); /* Between the 100 and 150 steps. */
         }
 
@@ -165,12 +168,48 @@ nav {
             margin-top: var(--skin--spacing-050);
         }
 
-    }
+        & > :is(a, a:visited, span), & > details > summary {
+            font-weight: var(--skin--font-weight-strong);
+            letter-spacing: var(--skin--letter-spacing-caps);
+            text-transform: uppercase;
+        }
 
-    & > ul:has(> li > ul) > li > :is(a, a:visited, span) {
-        font-weight: var(--skin--font-weight-strong);
-        letter-spacing: var(--skin--letter-spacing-caps);
-        text-transform: uppercase;
+        & > details {
+
+            margin-bottom: 0;
+
+            & > summary {
+
+                display: flex;
+                align-items: center;
+                padding-block: var(--skin--spacing-010);
+                color: var(--skin--color-label);
+
+                &::before {
+                    order: 1;
+                    margin-inline: auto var(--skin--spacing-025);
+                    border-width: var(--skin--border-width);
+                    border-color: var(--skin--border-color-field);
+                    transform: translateY(calc(-0.3536 * var(--skin--scaling-050))) rotate(45deg);
+                }
+
+                &:hover {
+                    color: var(--skin--color-link-hover);
+                }
+
+            }
+
+            /*
+             * Turned up, the chevron fills only the upper half of its box, so it is lowered by a quarter of the box
+             * diagonal, the same distance it is raised by while it points down, and stays centred on the summary text.
+             */
+
+            &[open] > summary::before {
+                transform: translateY(calc(0.3536 * var(--skin--scaling-050))) rotate(-135deg);
+            }
+
+        }
+
     }
 
     & ul ul ul {
