@@ -45,6 +45,18 @@ h1 {
 }
 
 /*
+ * A lower heading stands as far off what precedes it whether that is a paragraph or a container with no margin of its
+ * own, so a section break reads the same wherever it falls. One opening its container, titling a heading group or
+ * following straight on from another heading adds none, since what holds or precedes it already sets it apart.
+ */
+
+h2, h3, h4, h5, h6 {
+    &:not(:first-child, hgroup > *, :is(h1, h2, h3, h4, h5, h6) + *) {
+        margin-top: var(--skin--spacing-150);
+    }
+}
+
+/*
  * Each level below the first is told from the next by one cue at a time, so a deep outline stays readable in a column
  * without the sizes running away: the second stands an eighth over the heading size, the third and fourth take it as
  * it stands, the fourth in the quieter colour of a label, and the last two are set smaller still in that colour.

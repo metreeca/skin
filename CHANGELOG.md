@@ -117,7 +117,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
   and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
 - Headings - `h2` stands an eighth over the heading size, so it is told from `h3` at a glance, and `h4` takes the
-  label colour at the heading size while `h5` and `h6` are set in the small size and the label colour
+  label colour at the heading size while `h5` and `h6` are set in the small size and the label colour; `h2` to `h6`
+  stand as far off a bare container as off a paragraph, adding no room where they open their container, title a
+  heading group or follow straight on from another heading, since what holds or precedes them already sets them apart
 - `Flag` - the type naming the viewport tokens is renamed `Breakpoint`, so `flag` names the meaning scale step alone
 - `data-theme` - the attribute pinning a colour scheme on the root element or on any subtree is renamed
   `data-scheme`, after the `color-scheme` it settles; an element left on the old name follows the platform
