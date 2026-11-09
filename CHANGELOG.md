@@ -53,6 +53,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the whole group held to the prose measure, so a page or section title needs no class of its own
 - Text wrapping - running text keeps a lone word off its last line and a heading spread over several lines has them
   balanced, while text areas and editable content keep the platform wrapping so words entered never jump between lines
+- Off-screen markup - an element carrying `data-offscreen` is kept from sight and out of the page flow while staying
+  in the accessibility tree, for a status region or the name of a control shown as an icon, which the native `hidden`
+  attribute would remove for every reader alike, and which no consumer package now has to hide with styles of its own
 
 ### Fixed
 

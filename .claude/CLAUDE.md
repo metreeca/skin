@@ -67,8 +67,10 @@ no behaviour, and nothing in it imports a rendering framework.
 `src/index.css` imports the modules and is the entry an app includes, unless the app includes a [preset](#presets)
 built on it instead. The token modules come first, the anchors ahead of what derives from them, then the base rules by
 increasing structural complexity, so a composite lands after the plain elements it is built from and takes precedence
-where the two match with equal specificity. It carries the page defaults itself and nothing else: `color-scheme`, the
-page colours and the page typography, its wrapping included, every value it reads a token it does not state.
+where the two match with equal specificity. It carries the page defaults itself: `color-scheme`, the page colours and
+the page typography, its wrapping included, every value it reads a token it does not state. Beside them it carries
+only the rules for the attributes that apply to any element: `data-scheme`, pinning a colour scheme, and
+`data-offscreen`, keeping text from sight while leaving it to assistive technology.
 
 The package ships the **Metreeca colours as its defaults**: the accent anchors carry its slate and orange. The font
 family tokens default to the platform faces, so `index.css` loads **no** face and an app including it bundles none.

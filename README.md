@@ -439,6 +439,16 @@ const observer = new IntersectionObserver(entries => entries
 document.querySelectorAll("main > section").forEach(section => observer.observe(section));
 ```
 
+## Off-screen Content
+
+Text only a screen reader needs, such as a status region announcing what a gesture did or the name of a control shown
+as an icon, carries `data-offscreen`. The element is kept from sight and out of the page flow while assistive technology
+still finds and reads it, where the native `hidden` attribute would remove it for every reader alike.
+
+```html
+<p role="status" data-offscreen>Card moved to Done.</p>
+```
+
 # Support
 
 - open an [issue](https://github.com/metreeca/skin/issues) to report a problem or to suggest a new feature
