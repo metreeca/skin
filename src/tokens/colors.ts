@@ -78,14 +78,15 @@
  * caution tint and is never set there. A widget setting a label over any other fill, such as a tint deepened under
  * the pointer, holds it to AA there itself, falling back on the page text, `color`, wherever the stroke falls short.
  *
- * **Text** — `colorLabel` names a field and `colorPlaceholder` stands in for a value not yet given. `colorEnabled`
- * marks a control that answers and `colorDisabled` one that does not. The enabled colour stays apart from the link
- * colours and from the surrounding text, so a control that answers is never mistaken for a link or for plain copy.
+ * **Text** — `colorLabel` names a field. `colorPlaceholder` stands in for a value not yet given, and sets `small`
+ * text apart from prose. `colorEnabled` marks a control that answers and `colorDisabled` one that does not. A
+ * control in the enabled colour is never mistaken for a link or for the plain copy around it.
  *
  * Every text role holds AA contrast against the page and the striped row in both colour schemes, and `colorLabel`
  * holds it on the pressed fill of a control too, the deepest surface a label is set on. `colorPlaceholder` holds it
- * on the page, the striped row and the edit background, lighter than an entered value but legible. The one exception
- * is `colorDisabled`, which shares its value with {@link borders `borderColor`}: WCAG exempts a disabled control.
+ * on the page, the striped row and the edit background, lighter than an entered value but legible; text set in it
+ * stays off control fills, where only `colorLabel` holds AA. The one exception is `colorDisabled`, which shares its
+ * value with {@link borders `borderColor`}: WCAG exempts a disabled control from the contrast minimum.
  *
  * **Links** — `colorLink` paints a link and `colorLinkHover` a link under the pointer, both in the hue of the subtle
  * accent at a lightness of their own, so a link follows a brand while holding AA contrast whatever the brand supplies.

@@ -328,7 +328,8 @@
     /*
      * A placeholder is text, so it holds AA wherever a field sits: the shares are the lightest at 4.5:1 on the stripe,
      * the tightest surface, at 4.71:1 there and 5.06:1 on the page in the light scheme, 4.68:1 and 4.97:1 in the dark
-     * one. That still leaves it well short of an entered value, which takes the full text anchor.
+     * one. That still leaves it well short of an entered value, which takes the full text anchor. The same shares
+     * set `small` text apart from prose, on the same surfaces and to the same budget.
      */
 
     --skin--color-placeholder: light-dark(

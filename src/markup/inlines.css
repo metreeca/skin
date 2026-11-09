@@ -115,9 +115,14 @@ abbr[title] {
     cursor: help;
 }
 
+/*
+ * Side comments and fine print recede in the placeholder colour, the faintest text the page holds to AA contrast, so
+ * they are set on the page and the stripe and never over a control tint, where only the label colour holds it.
+ */
+
 small {
     font-size: var(--skin--font-size-small);
-    color: var(--skin--color-label);
+    color: var(--skin--color-placeholder);
 }
 
 /*

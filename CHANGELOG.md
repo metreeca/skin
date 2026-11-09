@@ -118,6 +118,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- `small` - set in the placeholder colour in place of the label colour, receding further from the prose around it
+  while holding AA contrast on the page and the striped row in both schemes, though no longer over a control tint
 - Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
   and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
 - Focus marks - links and `details` summaries are ringed with the corners a control is rounded with, and a
