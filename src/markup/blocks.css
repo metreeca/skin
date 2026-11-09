@@ -125,12 +125,12 @@ details {
         margin-bottom: var(--skin--spacing-050);
 
         /*
-         * Turned down, the chevron fills only the lower half of its box. Raising it by a quarter of the box diagonal
-         * keeps it centred on the summary text, where it sits while it points at the summary.
+         * Turned up, the chevron fills only the upper half of its box, so it is lowered by a quarter of the box
+         * diagonal, the same distance it is raised by while it points down, and stays centred on the summary text.
          */
 
         &::before {
-            transform: translateY(calc(-0.3536 * var(--skin--scaling-050))) rotate(45deg);
+            transform: translateY(calc(0.3536 * var(--skin--scaling-050))) rotate(-135deg);
         }
 
     }
@@ -138,8 +138,14 @@ details {
 }
 
 /*
- * A summary trades the platform triangle for a chevron in its own colour, which looks the same on every platform. The
- * chevron points at the summary while the disclosure is closed and turns down towards the content once it is open.
+ * A summary trades the platform triangle for a chevron drawn in the quiet stroke of a field border, which looks the
+ * same on every platform and leaves the wording of the summary to carry the weight. The chevron points down towards
+ * the content while the disclosure is closed and turns up once it is open, which reads the same in either writing
+ * direction. Turned down, it fills only the lower half of its box, so it is raised by a quarter of the box diagonal.
+ *
+ * The chevron stands at the end of the first line of every summary, wherever the disclosure sits, so a reader finds
+ * it in the same place throughout an interface. It floats there rather than taking a flex row, which would split the
+ * wording of a summary into separate items and lose the spaces between them, and is centred on the first line.
  */
 
 summary {
@@ -155,19 +161,42 @@ summary {
 
         content: "";
 
-        display: inline-block;
+        float: inline-end;
         inline-size: var(--skin--scaling-050);
         block-size: var(--skin--scaling-050);
-        margin-inline: var(--skin--spacing-025) var(--skin--spacing-075);
-        vertical-align: calc(0.5cap - var(--skin--scaling-025)); /* The centre of the box halfway up the capitals. */
+        margin-block-start: calc(0.5lh - var(--skin--scaling-025)); /* Centred on the first line. */
+        margin-inline: var(--skin--spacing-075) var(--skin--spacing-025);
 
         border-right-style: var(--skin--border-style);
         border-bottom-style: var(--skin--border-style);
-        border-width: calc(2 * var(--skin--border-width));
-        border-color: currentColor;
+        border-width: var(--skin--border-width);
+        border-color: var(--skin--border-color-field);
 
-        transform: translateY(0) rotate(-45deg);
+        transform: translateY(calc(-0.3536 * var(--skin--scaling-050))) rotate(45deg);
         transition: transform var(--skin--duration-fast) var(--skin--easing-standard);
+
+    }
+
+    /*
+     * A summary worded as a single heading or paragraph sets its first line in that block, at a line height of its
+     * own, so the summary lays the block and the chevron out in a row instead and centres the chevron on the block.
+     * The row splits no wording, since the block is one item already, where the float would sit off its middle.
+     */
+
+    &:has(> :is(h1, h2, h3, h4, h5, h6, p):only-child) {
+
+        display: flex;
+        align-items: center;
+
+        & > :is(h1, h2, h3, h4, h5, h6, p) {
+            flex-grow: 1;
+        }
+
+        &::before {
+            order: 1;
+            flex-shrink: 0;
+            margin-block-start: 0;
+        }
 
     }
 

@@ -180,32 +180,13 @@ nav {
 
             & > summary {
 
-                display: flex;
-                align-items: center;
                 padding-block: var(--skin--spacing-010);
                 color: var(--skin--color-label);
-
-                &::before {
-                    order: 1;
-                    margin-inline: auto var(--skin--spacing-025);
-                    border-width: var(--skin--border-width);
-                    border-color: var(--skin--border-color-field);
-                    transform: translateY(calc(-0.3536 * var(--skin--scaling-050))) rotate(45deg);
-                }
 
                 &:hover {
                     color: var(--skin--color-link-hover);
                 }
 
-            }
-
-            /*
-             * Turned up, the chevron fills only the upper half of its box, so it is lowered by a quarter of the box
-             * diagonal, the same distance it is raised by while it points down, and stays centred on the summary text.
-             */
-
-            &[open] > summary::before {
-                transform: translateY(calc(0.3536 * var(--skin--scaling-050))) rotate(-135deg);
             }
 
         }

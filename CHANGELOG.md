@@ -38,9 +38,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   drawn as a key cap and `samp` set in the mono face, `mark` lies on the selected tint, `sub` and `sup` are set
   smaller without opening the line, and an `abbr` carrying a title offers it as help
 - Block markup - images, videos and frames never overflow their column, a `figure` takes a caption in the label size
-  and colour, a `details` summary offers the pointer and the focus mark and trades the platform triangle for a
-  chevron turning down once open, a `dialog` is an overlay surface centred over the blanket, and a table `caption`
-  titles its table from above, set at the start in the strong weight as a header cell is
+  and colour, a `details` summary offers the pointer and the focus mark and trades the platform triangle for a chevron
+  in the quiet stroke of a field border at the end of its first line, pointing down while closed and up once open in
+  either writing direction, a `dialog` is an overlay surface centred over the blanket, and a table `caption` titles
+  its table from above, set at the start in the strong weight as a header cell is
 - Navigation markup - nested lists in a `nav` read as a compact table of contents: small entries in the label colour
   without markers, top-level entries over subsections in strong small capitals, each level from the third on indented,
   a `span` naming a section with no heading, a top-level group folding behind its label as a `details` disclosure
