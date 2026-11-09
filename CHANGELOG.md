@@ -33,7 +33,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   fieldset stays inside its column and a legend is set in the strong weight, as the heading of its group; a meter
   is drawn flat in the enabled colour, taking the caution and failure steps for a value off or far from the optimum,
   its bar held clear of the outline by even room; a colour well holds its swatch by even room on every side as well;
-  the button clearing a search field is drawn as a cross in the colour of the value, in place of the platform glyph
+  the button clearing a search field is drawn as a cross in the colour of the value, in place of the platform glyph;
+  a date or time field shows the button opening its picker only while hovered or focused, so filled fields at rest
+  read as values rather than as controls, and a disabled or read-only field, which takes no input, never shows it
 - Text markup - `h4` to `h6` are styled as headings, `b` is bold and `i`, `cite`, `dfn` and `var` italic, `kbd` is
   drawn as a key cap and `samp` set in the mono face, `mark` lies on the selected tint, `sub` and `sup` are set
   smaller without opening the line, and an `abbr` carrying a title offers it as help

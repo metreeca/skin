@@ -258,6 +258,25 @@ input, textarea {
         padding: 0;
     }
 
+    /*
+     * A date or time field shows the button opening its picker only while it is worked on, under the pointer or
+     * holding the keyboard, so a row of filled fields at rest reads as values rather than as controls. The button
+     * keeps its room while hidden, so the value stands still as the button comes and goes, and a field taking no
+     * input never shows it. The types are named since Blink draws the arrow of a suggestion list with the same part.
+     */
+
+    &:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]) {
+
+        &::-webkit-calendar-picker-indicator {
+            visibility: hidden;
+        }
+
+        &:enabled:not([readonly]):is(:hover, :focus)::-webkit-calendar-picker-indicator {
+            visibility: visible;
+        }
+
+    }
+
     /* A file field is its button and the name it picked, so it carries no box of its own around the two. */
 
     &[type=file] {
