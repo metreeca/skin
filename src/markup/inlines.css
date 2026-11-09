@@ -29,10 +29,12 @@ a, a:visited {
 
     /*
      * A link answers the pointer by turning to the hover colour, and keeps it through the press rather than flashing a
-     * colour of its own. The focus is marked by the outline a native control carries, which no underline rule clears.
+     * colour of its own. The focus is marked by the outline a native control carries, which no underline rule clears,
+     * rounded as the corners of a control are, so the mark reads the same wherever the keyboard lands.
      */
 
     &:focus-visible {
+        border-radius: var(--skin--border-radius-025);
         outline: var(--skin--outline-focus);
         outline-offset: var(--skin--border-width);
     }

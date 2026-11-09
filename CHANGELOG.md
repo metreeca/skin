@@ -120,6 +120,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
   and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
+- Focus marks - links and `details` summaries are ringed with the corners a control is rounded with, and a
+  preformatted block is rounded at rest, so the focus mark curves the same wherever the keyboard lands
 - Headings - `h2` stands an eighth over the heading size, so it is told from `h3` at a glance, and `h4` takes the
   label colour at the heading size while `h5` and `h6` are set in the small size and the label colour; `h2` to `h6`
   stand as far off a bare container as off a paragraph, adding no room where they open their container, title a

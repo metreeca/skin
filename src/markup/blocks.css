@@ -63,6 +63,7 @@ pre {
     padding: var(--skin--spacing-050) var(--skin--spacing-075);
     margin-bottom: var(--skin--spacing-100);
     overflow-x: auto;
+    border-radius: var(--skin--border-radius-025);
     background-color: var(--skin--background-color-stripe);
 
     &:focus-visible {
@@ -201,6 +202,7 @@ summary {
     }
 
     &:focus-visible {
+        border-radius: var(--skin--border-radius-025);
         outline: var(--skin--outline-focus);
         outline-offset: var(--skin--border-width);
     }
