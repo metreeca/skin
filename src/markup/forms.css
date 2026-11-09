@@ -249,6 +249,15 @@ input, textarea {
 
     }
 
+    /*
+     * The part a date or time field draws its values in is cleared of its padding as every element is, so the field
+     * stands one line high inside its own padding and border like any other field, in the engines exposing the part.
+     */
+
+    &::-webkit-datetime-edit-fields-wrapper {
+        padding: 0;
+    }
+
     /* A file field is its button and the name it picked, so it carries no box of its own around the two. */
 
     &[type=file] {
