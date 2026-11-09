@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+/*
+ * Cells stand separate rather than collapsed, so each draws its own rule and a header cell kept in view while the rows
+ * scroll carries the rule under it. A border is therefore stated on a cell: a row or a row group draws none of its own.
+ */
+
 table {
     width: 100%;
     max-width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     margin-bottom: var(--skin--spacing-150);
 }

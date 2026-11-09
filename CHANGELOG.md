@@ -115,6 +115,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   maroon, because every stroke was held to AA on a tint deepened under the pointer, a fill no token names; a stroke
   is now held to the surfaces it is set on alone, and a widget setting a label over any other fill holds it to AA
   there itself, falling back on the page text wherever the stroke falls short of AA on that fill
+- `table` - a header cell made sticky lost the rule under it, which stayed behind as the rows scrolled; cells now
+  stand separate, so each carries its own rule, and a stylesheet relying on collapsed borders has to adapt: a border
+  on a row or a row group no longer draws, and a `hidden` border no longer suppresses the rule of the cell beside it
 
 ### Changed
 
