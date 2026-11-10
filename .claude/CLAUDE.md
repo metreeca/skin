@@ -85,7 +85,7 @@ directions: nothing in `markup/` assigns a token, and every `var()` in `tokens/`
 only place either side of the family is revised:
 
 - `typography` — the faces, defaulting to the platform faces, the sizes, the weights, the
-  line heights of text and display type, the heading and small capitals tracking, and the prose measure
+  line heights of text and display type, the heading and small capitals tracking and casing, and the prose measure
 - `spacings` — the ladder a thing is set apart from its neighbour on
 - `scalings` — the ladder a thing measured against the text is sized on
 - `colors` — the nine colour anchors, each registered as a `light-dark()` pair where it varies by scheme, and the

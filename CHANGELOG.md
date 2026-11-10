@@ -51,6 +51,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `lineHeightDisplay`, `letterSpacingCaps`, `inlineSizeProse` - the tight leading of display type, the tracking of
   small capitals and the reading measure of prose, so a component titling, labelling or leading a section reads
   them in place of literals and an app retuning one reaches every title, label and lead across the interface
+- `textTransformHeading`, `textTransformCaps` - the casing of headings, as written by default, and of labels in
+  capitals, uppercase by default, so a call site recases every title or label in a subtree by restating one token
 - Heading groups - an `hgroup` sets its heading as display type with no rule beneath, a paragraph ahead of it as an
   eyebrow in strong small capitals of the strong accent and one after it as a lead, larger and in the label colour,
   the whole group held to the prose measure, so a page or section title needs no class of its own

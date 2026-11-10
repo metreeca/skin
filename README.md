@@ -154,6 +154,11 @@ scale, and `--skin--letter-spacing-heading` corrects the heading tracking for a 
 small capitals and `--skin--inline-size-prose` the reading measure of prose. A component reads them in place of
 literals, so an app retuning one of them reaches every title, label and lead in the interface at once.
 
+`--skin--text-transform-heading` sets the casing of headings, as written by default, and `--skin--text-transform-caps`
+that of labels in capitals. Both inherit, so a call site restating one on a subtree recases every title or label in it.
+The caps casing and the caps tracking are independent tokens, so an app setting labels in mixed case with
+`--skin--text-transform-caps: none` restates `--skin--letter-spacing-caps` as `normal` in the same rule.
+
 Running text wraps so that no lone word is left on its last line, and a heading spread over several lines has them
 balanced, while text being typed keeps the platform wrapping. No token carries this choice: an app opting out writes
 `text-wrap-style: auto` in an ordinary rule, which outranks the design system wherever it reaches the page.

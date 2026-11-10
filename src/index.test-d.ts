@@ -47,6 +47,14 @@ describe("skin", () => {
 
 describe("Value", () => {
 
+	it("admits a value for every token", () => {
+
+		type Unset = { [K in Token]-?: [Exclude<Value<K>, undefined>] extends [never] ? K : never }[Token]
+
+		expectTypeOf<Unset>().toBeNever();
+
+	});
+
 	it("closes the value space of a keyword token", () => {
 
 		expectTypeOf<Value<"viewportMedium">>().toEqualTypeOf<"on" | "off" | undefined>();
@@ -103,6 +111,7 @@ describe("css", () => {
 	it("takes a token off the same ladder as a value", () => {
 
 		expectTypeOf(css({ colorStrong: "colorSubtle" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ borderColorField: "colorSubtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backgroundColor: "backgroundColorEdit" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backgroundColorHoverNeutral: "backgroundColorPressedNeutral" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ colorGray050: "colorHeat050" })).toEqualTypeOf<Style>();
@@ -195,7 +204,9 @@ describe("css", () => {
 
 		expectTypeOf(css({ colorStrong: "#D60" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ color: "currentColor" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ borderColorField: "#767676" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontSize: "1.5rem" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ inlineSizeProse: "65ch" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ spacing100: 0 })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ letterSpacingHeading: "-0.02em" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ durationFast: "150ms" })).toEqualTypeOf<Style>();
@@ -207,6 +218,7 @@ describe("css", () => {
 	it("takes a number where the value is a scalar", () => {
 
 		expectTypeOf(css({ lineHeight: 1.2 })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ lineHeightDisplay: 1.1 })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontWeight: 600 })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ opacityLoading: 0.5 })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ zIndexModal: 10 })).toEqualTypeOf<Style>();
@@ -218,6 +230,8 @@ describe("css", () => {
 		expectTypeOf(css({ viewportMedium: "on" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ borderStyle: "dashed" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backdropFilterGlass: "none" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ textTransformHeading: "uppercase" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ textTransformCaps: "none" })).toEqualTypeOf<Style>();
 
 	});
 
@@ -268,6 +282,9 @@ describe("css", () => {
 
 		// @ts-expect-error no such line style
 		css({ borderStyle: "squiggly" });
+
+		// @ts-expect-error no such casing
+		css({ textTransformCaps: "small-caps" });
 
 	});
 

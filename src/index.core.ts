@@ -76,18 +76,19 @@ export type Alias<K extends Token> =
  */
 export type Literal<K extends Token> =
 	K extends Palette | Ink | Fill ? Paint :
-		K extends Type | Scaling | Spacing | Radius | Stroke | Tracking | Padding | Rounding ? Size :
-			K extends "lineHeight" ? Leading :
+		K extends Type | Scaling | Spacing | Radius | Stroke | Tracking | Padding | Rounding | "inlineSizeProse" ? Size :
+			K extends `lineHeight${string}` ? Leading :
 				K extends Weight ? Heft :
 					K extends Opacity ? Fade :
 						K extends Layer ? Order :
 							K extends Timing ? Time :
 								K extends Easing ? Curve :
 									K extends "borderStyle" ? Line :
-										K extends Breakpoint ? Switch :
-											K extends Family | Shadow | Lifting ? Open :
-												K extends Filter ? Blur :
-													never
+										K extends "textTransformHeading" | "textTransformCaps" ? Case :
+											K extends Breakpoint ? Switch :
+												K extends Family | Shadow | Lifting ? Open :
+													K extends Filter ? Blur :
+														never
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,9 +109,9 @@ export type Palette = Extract<Token,
 >
 
 /**
- * The tokens painting a mark or a passage of text, and the rule between two of them.
+ * The tokens painting a mark or a passage of text, the rule between two of them and the edge of a control.
  */
-export type Ink = Exclude<Extract<Token, `color${string}` | "borderColor">, Palette>
+export type Ink = Exclude<Extract<Token, `color${string}` | `borderColor${string}`>, Palette>
 
 /**
  * The tokens painting a surface.
@@ -266,6 +267,11 @@ type Curve = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | "step-
  * A line style.
  */
 type Line = "none" | "hidden" | "solid" | "dashed" | "dotted" | "double" | "groove" | "ridge" | "inset" | "outset"
+
+/**
+ * A text casing, or `none` to leave the text as written.
+ */
+type Case = "none" | "capitalize" | "uppercase" | "lowercase"
 
 /**
  * A filter applied to what shows through, as a chain of filter functions or as none at all.

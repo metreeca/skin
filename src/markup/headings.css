@@ -25,6 +25,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: var(--skin--font-weight-strong);
     font-family: var(--skin--font-family-heading);
     letter-spacing: var(--skin--letter-spacing-heading);
+    text-transform: var(--skin--text-transform-heading);
 }
 
 h1 {
@@ -115,7 +116,7 @@ hgroup {
         font-size: var(--skin--font-size-small);
         font-weight: var(--skin--font-weight-strong);
         letter-spacing: var(--skin--letter-spacing-caps);
-        text-transform: uppercase;
+        text-transform: var(--skin--text-transform-caps);
         color: var(--skin--color-strong);
     }
 

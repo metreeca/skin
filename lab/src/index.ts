@@ -229,8 +229,16 @@ render("[data-rows='type']", [
 		"Heading tracking"
 	)),
 	row("letterSpacingCaps", specimen(
-		`letter-spacing: ${reference("letterSpacingCaps")}; text-transform: uppercase; font-size: ${reference("fontSizeSmall")}; font-weight: ${reference("fontWeightStrong")}`,
+		`letter-spacing: ${reference("letterSpacingCaps")}; text-transform: ${reference("textTransformCaps")}; font-size: ${reference("fontSizeSmall")}; font-weight: ${reference("fontWeightStrong")}`,
 		"Small capitals"
+	)),
+	row("textTransformHeading", specimen(
+		`text-transform: ${reference("textTransformHeading")}; font-family: ${reference("fontFamilyHeading")}; font-weight: ${reference("fontWeightStrong")}`,
+		"Heading casing"
+	)),
+	row("textTransformCaps", specimen(
+		`text-transform: ${reference("textTransformCaps")}; letter-spacing: ${reference("letterSpacingCaps")}; font-size: ${reference("fontSizeSmall")}; font-weight: ${reference("fontWeightStrong")}`,
+		"Label casing"
 	)),
 	row("lineHeight", specimen(`line-height: ${reference("lineHeight")}`,
 		"Running text is set on the base line height, which holds a paragraph together at the measure a page allows "

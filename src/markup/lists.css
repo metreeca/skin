@@ -171,7 +171,7 @@ nav {
         & > :is(a, a:visited, span), & > details > summary {
             font-weight: var(--skin--font-weight-strong);
             letter-spacing: var(--skin--letter-spacing-caps);
-            text-transform: uppercase;
+            text-transform: var(--skin--text-transform-caps);
         }
 
         & > details {

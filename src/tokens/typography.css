@@ -107,6 +107,23 @@
 }
 
 /*
+ * Casing is a brand choice, so headings and labels in capitals each read it from a token. Headings ship as written and
+ * labels in capitals; a call site states another casing on a subtree, and every title or label inside it follows.
+ */
+
+@property --skin--text-transform-heading {
+    syntax: "none | capitalize | uppercase | lowercase";
+    inherits: true;
+    initial-value: none;
+}
+
+@property --skin--text-transform-caps {
+    syntax: "none | capitalize | uppercase | lowercase";
+    inherits: true;
+    initial-value: uppercase;
+}
+
+/*
  * Running text takes a line height leaving room for the eye to find the start of the next line. Display type, set
  * several times larger, needs far less of it, and tighter leading holds a title spread over two lines together.
  */

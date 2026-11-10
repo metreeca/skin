@@ -17,8 +17,8 @@
 /**
  * Typography tokens.
  *
- * Names the faces, sizes and weights text is set in, the leading and tracking it is spaced on and the measure prose
- * keeps to, which an app overrides to retype a whole interface, from running text to titles, labels and leads.
+ * Names the faces, sizes, weights and casing text is set in, the leading and tracking it is spaced on and the measure
+ * prose keeps to. An app overrides them to retype a whole interface, from running text to titles, labels and leads.
  *
  * @remarks
  *
@@ -48,6 +48,11 @@
  * **Display and labels** — `lineHeightDisplay` is the tight leading of display type, such as the heading of an
  * `hgroup` or a figure set large. `letterSpacingCaps` spaces out a label set in small capitals, which would otherwise
  * look crowded, as the eyebrow of a heading group and the top-level entries of a `nav` outline are.
+ *
+ * **Casing** — `textTransformHeading` sets the casing of every heading, as written by default, and `textTransformCaps`
+ * that of every label in capitals, so a call site restating either on a subtree recases every title or label inside.
+ * Neither token is derived from the other, and a label leaving capitals usually drops its extra tracking as well, so
+ * an app turning `textTransformCaps` to `none` restates `letterSpacingCaps` as `normal` in the same rule.
  *
  * **Measure** — `inlineSizeProse` caps a run of prose at a comfortable reading measure. It is stated in characters of
  * the element it caps, so a heading group capped as a whole holds fewer characters per line in its larger lead.
@@ -80,6 +85,8 @@ export const typography = {
 	lineHeightDisplay: "--skin--line-height-display",
 	letterSpacingHeading: "--skin--letter-spacing-heading",
 	letterSpacingCaps: "--skin--letter-spacing-caps",
+	textTransformHeading: "--skin--text-transform-heading",
+	textTransformCaps: "--skin--text-transform-caps",
 
 	inlineSizeProse: "--skin--inline-size-prose",
 
