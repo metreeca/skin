@@ -49,7 +49,6 @@ describe("Value", () => {
 
 	it("closes the value space of a keyword token", () => {
 
-		expectTypeOf<Value<"look">>().toEqualTypeOf<"subtle" | "normal" | "strong" | undefined>();
 		expectTypeOf<Value<"viewportMedium">>().toEqualTypeOf<"on" | "off" | undefined>();
 
 	});
@@ -88,6 +87,9 @@ describe("css", () => {
 
 		// @ts-expect-error retired token name
 		css({ fontWeightHeavy: 600 });
+
+		// @ts-expect-error retired token name
+		css({ look: "subtle" });
 
 	});
 
@@ -207,7 +209,6 @@ describe("css", () => {
 
 	it("takes a keyword off the closed set a token carries", () => {
 
-		expectTypeOf(css({ look: "subtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ viewportMedium: "on" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ borderStyle: "dashed" })).toEqualTypeOf<Style>();
 
@@ -250,9 +251,6 @@ describe("css", () => {
 	});
 
 	it("rejects a keyword outside the closed set a token carries", () => {
-
-		// @ts-expect-error no such visual register
-		css({ look: "loud" });
 
 		// @ts-expect-error a switch is on or off
 		css({ viewportMedium: "yes" });

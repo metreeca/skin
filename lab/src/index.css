@@ -1112,19 +1112,6 @@ main > section {
         grid-column: 1 / -1;
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-label);
-
-        & > b {
-            font-family: var(--skin--font-family-mono);
-            color: var(--skin--color);
-        }
-    }
-
-    &.look > .name::after {
-        content: none;
-    }
-
-    &.look > .name {
-        grid-column: 1 / -1;
     }
 
 }

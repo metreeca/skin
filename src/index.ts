@@ -28,8 +28,8 @@
  * rather than through literal strings, so a renamed token breaks the build instead of losing its style.
  *
  * The tokens cover typography, spacing, sizing, borders, colours, elevation, data and editor palettes, stacking,
- * motion, opacity, viewport breakpoints and the look of an area. {@link skin} gathers them all in one place, so a
- * consumer names any token from the package root, without knowing which concern it belongs to.
+ * motion, opacity and viewport breakpoints. {@link skin} gathers them all in one place, so a consumer names any token
+ * from the package root, without having to know which of these concerns it belongs to.
  *
  * @example
  *
@@ -117,7 +117,6 @@ import { scalings } from "./tokens/scalings.js";
 import { spacings } from "./tokens/spacings.js";
 import { typography } from "./tokens/typography.js";
 import { viewports } from "./tokens/viewports.js";
-import { visuals } from "./tokens/visuals.js";
 
 
 /**
@@ -173,8 +172,7 @@ export const skin = {
 	...layers,
 	...motions,
 	...opacities,
-	...viewports,
-	...visuals
+	...viewports
 
 };
 
@@ -202,8 +200,7 @@ export type Property = typeof skin[Token]
  * Every token is optional, so an override names the ones it restyles and leaves the rest at whatever the cascade
  * already gives them. Each takes the {@link Value value} that token admits, be that a name off the ladder it belongs
  * to or a CSS value of the shape it carries, so an editor offers the handful of names and keywords that belong where
- * one is assigned: a colour offers colours, a text size the type and scaling ladders, the visual register the three
- * words it is defined over.
+ * one is assigned: a colour offers colours, a text size the type and scaling ladders, a viewport switch `on` and `off`.
  */
 export type Tokens = {
 

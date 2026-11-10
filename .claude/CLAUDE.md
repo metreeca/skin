@@ -469,24 +469,13 @@ without the readings interfering.
 > and the JSX prop. `primary` is **NOT** a value: it names a position in a flow, one per dialog, which a control
 > cannot know about itself, where `strong` names a level the control does know.
 
-How loud a widget appears is a property of the **area** rather than of the widget, so an area settles it for
-everything it holds through `--skin--look`, from the `visuals` family. **EVERY** widget taking a `look` reads it the
-same way, so an app learns the mechanism once:
-
-- the widget **NEVER** defaults the attribute: it renders one only where the consumer asked for it, since the
-  attribute has to be absent for the area to have a say
-- the stylesheet keys each step on the attribute, `[look="subtle"]`, and repeats that step for a widget carrying no
-  attribute inside `@container style(--skin--look: subtle)`, which is the only way a rule branches on a value
-- the two forms carry the same declarations, restated: a style query is a conditional group and takes rules of its
-  own, so they cannot be written as one selector
-
-A widget stating a `look` answers to that alone, which is what leaves one loud control standing in a quietened
-toolbar.
+The design system carries the vocabulary and **NO** token for it. An area-wide `--skin--look` existed and was
+dropped: it reached every widget in the area alike, and no area wants its buttons, fields and badges quietened
+together. A binding package settling a default for an area does it per kind of widget, through a knob of its own.
 
 > [!CAUTION]
-> What a widget **means** is **NEVER** settled this way. A meaning belongs to the one widget carrying it, so `mode`,
-> `level` and `status` are stated at the widget and inherited by nothing: an area quietening its controls leaves each
-> of them saying what it says.
+> What a widget **means** is **NEVER** settled for an area. A meaning belongs to the one widget carrying it, so
+> `mode`, `level` and `status` are stated at the widget and inherited by nothing.
 
 ### Tensions on the record
 

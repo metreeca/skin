@@ -32,7 +32,6 @@
 @import "./tokens/motions.css" layer(skin);
 @import "./tokens/opacities.css" layer(skin);
 @import "./tokens/viewports.css" layer(skin);
-@import "./tokens/visuals.css" layer(skin);
 
 @import "./markup/reset.css" layer(skin);
 

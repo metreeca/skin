@@ -177,6 +177,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   setting faces of its own ships no Roboto files; an app keeping the Metreeca brand faces imports the new
   `presets/roboto.css` preset in place of `index.css`, and its bundle carries the three Roboto faces as it did before
 
+### Removed
+
+- `look` - the area-wide visual register and its `--skin--look` custom property, along with `look` in `css()`: one
+  value reaching every widget in an area could not quieten the buttons of a toolbar without its fields, so a binding
+  package settles a default look per kind of widget, and a widget stating `look` itself is unaffected
+
 ## [0.2.0](https://github.com/metreeca/skin/compare/v0.1.0...v0.2.0) - 2026-11-05
 
 ### Added

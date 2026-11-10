@@ -39,7 +39,6 @@ import { scalings } from "../../src/tokens/scalings.js";
 import { spacings } from "../../src/tokens/spacings.js";
 import { typography } from "../../src/tokens/typography.js";
 import { viewports } from "../../src/tokens/viewports.js";
-import { visuals } from "../../src/tokens/visuals.js";
 import "./index.css";
 
 
@@ -62,7 +61,7 @@ type Step = Readonly<{
 
 
 const families = [
-	typography, spacings, scalings, colors, borders, elevations, palettes, layers, motions, opacities, viewports, visuals
+	typography, spacings, scalings, colors, borders, elevations, palettes, layers, motions, opacities, viewports
 ];
 
 const tokens: readonly Token[] = Object.keys(skin).filter(isToken);
@@ -322,17 +321,12 @@ render("[data-rows='opacities']", tokens.filter(token => /^opacity/.test(token))
 ).join(""));
 
 
-render(".switches", [
-	...switches.map(([token, hint]) => `<button type="button" class="switch" ${handle(token)}>
+render(".switches", switches.map(([token, hint]) => `<button type="button" class="switch" ${handle(token)}>
 		<span class="led" aria-hidden="true"></span>
 		<span class="name">${short(token)}</span>
 		<span class="hint">${hint}</span>
-	</button>`),
-	`<button type="button" class="switch look" ${handle("look")}>
-		<span class="name">${short("look")}</span>
-		<span class="hint">How loud the widgets of an area appear: <b data-value="look"></b>.</span>
 	</button>`
-].join(""));
+).join(""));
 
 
 all(".play").forEach(play => play.addEventListener("click", () => {

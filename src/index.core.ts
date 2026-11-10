@@ -83,10 +83,9 @@ export type Literal<K extends Token> =
 							K extends Timing ? Time :
 								K extends Easing ? Curve :
 									K extends "borderStyle" ? Line :
-										K extends "look" ? Look :
-											K extends Breakpoint ? Switch :
-												K extends Family | Shadow | Lifting ? Open :
-													never
+										K extends Breakpoint ? Switch :
+											K extends Family | Shadow | Lifting ? Open :
+												never
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,11 +259,6 @@ type Curve = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | "step-
  * A line style.
  */
 type Line = "none" | "hidden" | "solid" | "dashed" | "dotted" | "double" | "groove" | "ridge" | "inset" | "outset"
-
-/**
- * A visual register, saying how loud the widgets of an area appear.
- */
-type Look = "subtle" | "normal" | "strong"
 
 /**
  * The answer a breakpoint switch carries.

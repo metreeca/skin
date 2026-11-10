@@ -191,16 +191,7 @@ for the same channel, so a widget can carry both without one reading interfering
 recedes, `normal` is ordinary, `strong` is larger, earlier, heavier and bounded, and would read as strong in a
 single-colour interface. The pair is the one the colour anchors already use, so a single vocabulary names this axis
 throughout. A widget offers the steps that say something about it and names them in its own documentation, so a tab
-strip with no form louder than its rule takes `subtle` and `normal` alone, and an area written in a step it does not
-offer lands on the nearest one it does.
-
-A widget stating no `look` takes the one the area around it is written in, from `--skin--look`, which is `normal`
-where nothing assigns it. An app quietens a whole toolbar, panel or screen by assigning the token there, and the one
-control in it that asks to be loud still is, since a stated attribute answers to itself alone.
-
-```tsx
-<div style={css({ look: "subtle" })}>
-```
+strip with no form louder than its rule takes `subtle` and `normal` alone.
 
 **What it means** is colour-coded, and every meaning lands on one five-step scale:
 
