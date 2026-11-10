@@ -138,6 +138,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `small` - set in the placeholder colour in place of the label colour, receding further from the prose around it
   while holding AA contrast on the page and the striped row in both schemes, though no longer over a control tint
+- Description lists - a `dt` term is set at the size of the text around it rather than at nine tenths of it, keeping
+  the strong weight and the label colour that tell it apart from the description beneath
 - Enlarged images - an image carrying `active` is set on an overlay card hugging the picture, outlined, rounded and
   padded as a dialog is, rather than stretched over the viewport, so a picture with transparent areas stands on a
   surface, and a picture smaller than the viewport keeps its own size rather than being scaled up to fill the screen

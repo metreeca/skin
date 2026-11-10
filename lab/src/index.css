@@ -546,7 +546,6 @@ main > section {
 
             & > dt {
                 margin: 0;
-                font-size: inherit;
                 font-weight: var(--skin--font-weight);
                 color: var(--skin--color-label);
             }
