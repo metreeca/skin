@@ -59,6 +59,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Off-screen markup - an element carrying `data-offscreen` is kept from sight and out of the page flow while staying
   in the accessibility tree, for a status region or the name of a control shown as an icon, which the native `hidden`
   attribute would remove for every reader alike, and which no consumer package now has to hide with styles of its own
+- `backgroundColorHoverNeutral`, `backgroundColorPressedNeutral` - translucent states for a control answering to no
+  accent, deepening whatever surface it stands on by the same step, so a tool in a sunken tray reacts as visibly as
+  one on the page; text, labels, enabled controls and the focus ring hold their budgets over both on every surface
+  but the overlay, where a control on a menu, a popover or a dialog takes the accent states instead
+- `strokeWidthStrong` - the stroke counterpart of `fontWeightStrong`, half again as thick as `strokeWidth`, so a
+  glyph set beside strong text reads at the same weight and follows the plain width wherever an app retunes it
+- `backdropFilterGlass` - the faint blur taken behind `backgroundColorGlass`, keeping what shows through from
+  competing with the surfaces gathered on the glass, typed by the new exported `Filter` ladder
+- `durationSpin` - the period of one turn of a busy mark, kept under `prefers-reduced-motion` while every other
+  duration collapses, since a mark that stopped turning would say the work was over while it is still under way
 
 ### Fixed
 

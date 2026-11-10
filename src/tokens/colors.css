@@ -230,6 +230,16 @@
     inherits: true;
 }
 
+@property --skin--background-color-hover-neutral {
+    syntax: "*";
+    inherits: true;
+}
+
+@property --skin--background-color-pressed-neutral {
+    syntax: "*";
+    inherits: true;
+}
+
 @property --skin--background-color-note {
     syntax: "*";
     inherits: true;
@@ -441,6 +451,29 @@
     --skin--background-color-pressed: light-dark(
         color-mix(in oklab, var(--skin--color-strong) 12%, var(--skin--background-color)),
         oklab(from color-mix(in oklab, var(--skin--color-strong) 16%, var(--skin--background-color)) l calc(a * 2) calc(b * 2))
+    );
+
+    /*
+     * A control answering to no accent is told apart by lightness alone, so its states are laid over the surface it
+     * stands on rather than mixed into the page. A tint mixed into the page reads on the page and nowhere else: the
+     * sunken surface already sits a step from the page in the direction the tint travels, so the two all but meet
+     * there. Each state is page ink at a share of cover instead, deepening any surface by the same step, the press
+     * twice as far as the hover, whatever the surface the control happens to stand on.
+     *
+     * The shares are the heaviest at which the label, an enabled control and the focus ring hold their budgets over
+     * the pressed state on the page, the stripe, the edit field and the sunken surface: the tightest is the sunken
+     * surface in the light scheme, at 4.54:1 and 3.02:1, and the stripe in the dark one, at 4.52:1 and 3.06:1. The
+     * dark overlay leaves no room for a visible step, the label sitting at 4.66:1 on it bare, so a control set on a
+     * menu, a popover or a dialog takes the accent states above instead of these.
+     */
+
+    --skin--background-color-hover-neutral: light-dark(
+        color-mix(in oklab, var(--skin--color) 4.25%, transparent),
+        color-mix(in oklab, var(--skin--color) 3.25%, transparent)
+    );
+    --skin--background-color-pressed-neutral: light-dark(
+        color-mix(in oklab, var(--skin--color) 8.5%, transparent),
+        color-mix(in oklab, var(--skin--color) 6.5%, transparent)
     );
 
     /*

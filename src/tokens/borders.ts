@@ -18,7 +18,7 @@
  * Border tokens.
  *
  * Names what is drawn at the edge of a box: the line enclosing it, the corner rounding it, the outline marking it
- * focused and the one marking it invalid, together with the weight a vector glyph is stroked at.
+ * focused and the one marking it invalid, together with the weights a vector glyph is stroked at.
  *
  * @remarks
  *
@@ -45,6 +45,8 @@
  * not hold 3:1 against a fill in {@link colors `colorStrong`}, so a rule ringing such a control offsets it outside.
  *
  * **Strokes** — `strokeWidth` is a bare number in viewport user units, so a glyph keeps its weight at any size.
+ * `strokeWidthStrong` is the stroke counterpart of {@link typography `fontWeightStrong`}: a glyph set beside strong
+ * text takes it, so the two read at the same weight. It derives from `strokeWidth`, so an app retunes both at once.
  *
  * @module borders
  */
@@ -71,6 +73,7 @@ export const borders = {
 	outlineFocus: "--skin--outline-focus",
 	outlineInvalid: "--skin--outline-invalid",
 
-	strokeWidth: "--skin--stroke-width"
+	strokeWidth: "--skin--stroke-width",
+	strokeWidthStrong: "--skin--stroke-width-strong"
 
 } as const;

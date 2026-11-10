@@ -1044,6 +1044,24 @@ main > section {
     inset-inline-start: calc(100% - var(--skin--scaling-125));
 }
 
+/* The busy mark turns whether or not the section runs, as it does wherever work is under way. */
+
+.spinner {
+    inline-size: var(--skin--scaling-125);
+    block-size: var(--skin--scaling-125);
+    fill: none;
+    stroke: var(--skin--color-strong);
+    stroke-width: var(--skin--stroke-width);
+    stroke-linecap: round;
+    animation: lab-spin var(--skin--duration-spin) linear infinite;
+}
+
+@keyframes lab-spin {
+    to {
+        rotate: 1turn;
+    }
+}
+
 
 /* Layers. */
 

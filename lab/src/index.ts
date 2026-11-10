@@ -74,7 +74,8 @@ const anchors: readonly Token[] = [
 
 const fills: readonly Token[] = [
 	"backgroundColorEdit", "backgroundColorStripe",
-	"backgroundColorHover", "backgroundColorPressed", "backgroundColorSelected"
+	"backgroundColorHover", "backgroundColorPressed", "backgroundColorSelected",
+	"backgroundColorHoverNeutral", "backgroundColorPressedNeutral"
 ];
 
 const steps: readonly Step[] = [{
@@ -266,7 +267,9 @@ render("[data-chips='shape']", [
 	chip("outlineFocus", shape(`outline: ${reference("outlineFocus")}; outline-offset: ${reference("borderWidth")}`)),
 	chip("outlineInvalid", shape(`outline: ${reference("outlineInvalid")}`)),
 	chip("strokeWidth", `<span class="sample"><svg viewBox="0 0 24 24" aria-hidden="true"
-		style="stroke-width: ${reference("strokeWidth")}"><path d="M20 6 9 17l-5-5"/></svg></span>`)
+		style="stroke-width: ${reference("strokeWidth")}"><path d="M20 6 9 17l-5-5"/></svg></span>`),
+	chip("strokeWidthStrong", `<span class="sample"><svg viewBox="0 0 24 24" aria-hidden="true"
+		style="stroke-width: ${reference("strokeWidthStrong")}"><path d="M20 6 9 17l-5-5"/></svg></span>`)
 ].join(""));
 
 
@@ -283,8 +286,9 @@ render(".stage", `
 		</button>
 	</div>
 	<div class="panel backdrop">
+		${tag("backdropFilterGlass")}
 		<button type="button" class="card float" ${handle("backgroundColorGlass")}
-			style="background-color: ${reference("backgroundColorGlass")}">
+			style="background-color: ${reference("backgroundColorGlass")}; backdrop-filter: ${reference("backdropFilterGlass")}">
 			<span class="name">${short("backgroundColorGlass")}</span><span class="value">gathers floating controls</span>
 		</button>
 	</div>
@@ -305,8 +309,12 @@ render("[data-chips='shadows']", tokens.filter(token => /^boxShadow/.test(token)
 
 
 render("[data-rows='motions']", [
-	...tokens.filter(token => /^duration/.test(token)).map(token => row(token, track(token, "easingStandard"))),
-	...tokens.filter(token => /^easing/.test(token)).map(token => row(token, track("durationSlow", token)))
+	...tokens.filter(token => /^duration/.test(token) && token !== "durationSpin").map(token =>
+		row(token, track(token, "easingStandard"))
+	),
+	...tokens.filter(token => /^easing/.test(token)).map(token => row(token, track("durationSlow", token))),
+	row("durationSpin", `<span class="viz"><svg class="spinner" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg></span>`)
 ].join(""));
 
 

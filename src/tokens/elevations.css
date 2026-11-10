@@ -16,8 +16,9 @@
 
 /*
  * What a thing lifted off the page is painted on: the surface carrying its own background, the shadow setting it apart
- * from what it covers, and the blanket dimming the page behind a thing demanding an answer. A surface and its shadow
- * are taken together, since either one alone leaves the lift unreadable.
+ * from what it covers, the blanket dimming the page behind a thing demanding an answer, and the glass gathering
+ * floating surfaces, blurring what shows through it. A surface and its shadow are taken together, since a surface
+ * without its shadow, or a shadow without its surface, leaves the lift unreadable.
  */
 
 @property --skin--background-color-raised {
@@ -43,6 +44,17 @@
 @property --skin--background-color-glass {
     syntax: "*";
     inherits: true;
+}
+
+/*
+ * A faint blur taken alongside the glass, below any step of the spacing ladder: just enough to soften what shows
+ * through so it does not compete with the surfaces set on the glass, while staying recognisable as what lies behind.
+ */
+
+@property --skin--backdrop-filter-glass {
+    syntax: "*";
+    inherits: true;
+    initial-value: blur(0.5px);
 }
 
 @property --skin--box-shadow-raised {

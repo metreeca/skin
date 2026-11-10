@@ -104,6 +104,14 @@
  * library builds on the design system, a tab, a menu item or a toggle filling its box, and the suite holds each to
  * its budget on the surfaces such a control reaches.
  *
+ * **Neutral states** — `backgroundColorHoverNeutral` and `backgroundColorPressedNeutral` answer the pointer on a
+ * control answering to no accent, such as a borderless button or a tool in a tray. They are translucent, so they
+ * deepen whatever surface the control stands on by the same step: a control in a sunken tray changes as visibly as
+ * one on the page. The press steps twice as far from the surface as the hover. The text, the label, an enabled
+ * control and the focus ring hold their budgets over either state on the page, the stripe, the edit field and the
+ * sunken surface. The overlay is not among them, so a control on a menu, a popover or a dialog takes the accent
+ * states instead. Like the accent fills, they are painted by no base rule and are reserved for component controls.
+ *
  * `colorFocus` carries a value of its own per colour scheme, so that where the keyboard stands is told the same way
  * whatever an app brands with. It holds 3:1 on every surface a ring is drawn against, a pressed fill included, but
  * not against a fill in `colorStrong`: a ring around such a control is offset outside the fill, against the page.
@@ -177,6 +185,9 @@ export const colors = {
 	backgroundColorHover: "--skin--background-color-hover",
 	backgroundColorPressed: "--skin--background-color-pressed",
 	backgroundColorSelected: "--skin--background-color-selected",
+
+	backgroundColorHoverNeutral: "--skin--background-color-hover-neutral",
+	backgroundColorPressedNeutral: "--skin--background-color-pressed-neutral",
 
 	backgroundColorNote: "--skin--background-color-note",
 	backgroundColorPass: "--skin--background-color-pass",

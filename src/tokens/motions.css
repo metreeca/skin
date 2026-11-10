@@ -16,7 +16,8 @@
 
 /*
  * How long a change takes and how it accelerates. The fast step is for a change the eye should not have to wait for,
- * the normal one for a change that has to be followed, and the slow one for a change covering the viewport.
+ * the normal one for a change that has to be followed, and the slow one for a change covering the viewport. The spin
+ * is no change at all, but the period a busy mark keeps turning at for as long as the work it signals lasts.
  */
 
 @property --skin--duration-fast {
@@ -35,6 +36,17 @@
     syntax: "<time>";
     inherits: true;
     initial-value: 400ms;
+}
+
+/*
+ * The period of one turn of a busy mark, which stays out of the reduced motion collapse below: a mark that stops
+ * turning stops saying the work is under way, and a steady rotation is the one motion its meaning rests on.
+ */
+
+@property --skin--duration-spin {
+    syntax: "<time>";
+    inherits: true;
+    initial-value: 1s;
 }
 
 /*
@@ -62,7 +74,8 @@
 
 /*
  * A reader who asked for less motion gets none: collapsing the durations stops every transition stated through them,
- * with no rule of its own anywhere else. The easings are left alone, since a curve over no time changes nothing.
+ * with no rule of its own anywhere else. The easings are left alone, since a curve over no time changes nothing, and
+ * so is the spin, which a busy mark needs to keep saying that the work is still under way.
  */
 
 @media (prefers-reduced-motion: reduce) {

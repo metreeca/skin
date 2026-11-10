@@ -16,8 +16,8 @@
 
 /*
  * What is drawn at the edge of a box: the line that encloses it, the corner that rounds it, the outline that marks it
- * focused and the one that marks it invalid. The stroke width sits here too, carrying the weight of a drawn line
- * where the line is a vector glyph rather than a border.
+ * focused and the one that marks it invalid. The stroke widths sit here too, carrying the weight of a drawn line
+ * where the line is a vector glyph rather than a border, plain or beside strong text.
  *
  * Nothing here carries a plain default beside its ladder: a box names the step it rounds on, as it names the step it
  * is spaced on, so one reading serves both. The border radius token is no such default, since no rule reads it: it
@@ -107,10 +107,15 @@
     initial-value: 2;
 }
 
+@property --skin--stroke-width-strong {
+    syntax: "*";
+    inherits: true;
+}
+
 /*
- * The three values standing on other tokens, which an initial value cannot carry: the enclosing line takes the
- * disabled colour, and the two marks are assembled from the width, the style and the colour role each one signals.
- * The focus mark is drawn at twice the width, so it reads as a mark rather than as a second border.
+ * The values standing on other tokens, which an initial value cannot carry: the enclosing line takes the disabled
+ * colour, and the two marks are assembled from the width, the style and the colour role each one signals. The focus
+ * mark is drawn at twice the width, so it reads as a mark rather than as a second border.
  */
 
 :root {
@@ -138,5 +143,9 @@
 
     --skin--outline-focus: var(--skin--border-style) calc(2 * var(--skin--border-width)) var(--skin--color-focus);
     --skin--outline-invalid: var(--skin--border-style) var(--skin--border-width) var(--skin--color-fail);
+
+    /* A glyph set beside strong text is stroked half again as thick, to match the heavier letters beside it. */
+
+    --skin--stroke-width-strong: calc(1.5 * var(--skin--stroke-width));
 
 }

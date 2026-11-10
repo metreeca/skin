@@ -256,6 +256,7 @@ export type {
 	Timing,
 	Easing,
 	Shadow,
+	Filter,
 	Family,
 	Breakpoint,
 	Padding,

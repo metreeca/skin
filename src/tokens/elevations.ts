@@ -44,7 +44,8 @@
  * **Glass** — `backgroundColorGlass` is a translucent ground a step darker than the page, gathering surfaces that float
  * over the page into one group without a shadow to set them apart, such as a stack of transient notices. It carries no
  * text of its own: the surfaces set on it do, painted with `backgroundColorOverlay`, which stands out from it in either
- * scheme, so their text keeps its contrast whatever the glass lets through.
+ * scheme, so their text keeps its contrast whatever the glass lets through. The glass takes `backdropFilterGlass` as
+ * its backdrop filter, a faint blur that keeps what shows through from competing with the surfaces gathered on it.
  *
  * @module elevations
  */
@@ -62,6 +63,7 @@ export const elevations = {
 	backgroundColorSunken: "--skin--background-color-sunken",
 	backgroundColorBlanket: "--skin--background-color-blanket",
 	backgroundColorGlass: "--skin--background-color-glass",
+	backdropFilterGlass: "--skin--backdrop-filter-glass",
 
 	boxShadowRaised: "--skin--box-shadow-raised",
 	boxShadowOverlay: "--skin--box-shadow-overlay",

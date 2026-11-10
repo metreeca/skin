@@ -90,15 +90,16 @@ only place either side of the family is revised:
 - `scalings` — the ladder a thing measured against the text is sized on
 - `colors` — the nine colour anchors, each registered as a `light-dark()` pair where it varies by scheme, and the
   text, status, state and surface roles derived from them
-- `borders` — the line, the radii, the focus ring, the invalid outline and the vector stroke width
+- `borders` — the line, the radii, the focus ring, the invalid outline and the vector stroke widths, plain and strong
 - `elevations` — the surfaces a thing lifted off the page is painted on, the shadows pairing with them, the
-  translucent glass ground gathering floating surfaces without a shadow, and the blanket dimming what a modal covers
+  translucent glass ground gathering floating surfaces without a shadow and the blur taken behind it, and the blanket
+  dimming what a modal covers
 - `palettes` — the four ten-step colour scales, the nine series slots, the four area classes and the eighteen
   editor colours, the three accent-derived scales following the anchors and the heat scale, the slots, the classes
   and the editor colours stated as literals
 - `layers` — the stacking order two things overlapping the page are settled by
 - `motions` — the durations a change takes and the curves it accelerates on, the durations collapsing under
-  `prefers-reduced-motion`
+  `prefers-reduced-motion`, and the period a busy mark turns at, which keeps turning under it
 - `opacities` — how far a thing present but not available is faded
 - `viewports` — which breakpoints the viewport has passed, one switch each, `off` registered and `on` set from its width
   upwards

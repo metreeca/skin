@@ -249,7 +249,9 @@ things wins, and `--skin--background-color-blanket` dims what a modal covers.
 
 Motion is stated the same way: `--skin--duration-*` says what kind of change a transition carries and
 `--skin--easing-*` how it accelerates, and every duration collapses to zero for a reader who asked for less motion, so
-a transition written through the tokens honours the preference with no rule of its own.
+a transition written through the tokens honours the preference with no rule of its own. `--skin--duration-spin` is
+the exception: a busy mark keeps turning at that period under the preference, since a mark that stopped would say the
+work was over while it is still under way, leaving the reader no sign that anything is pending.
 
 Where an author colours content, as a word set in red or a table cell filled in yellow, take the colour from the editor
 grid: `--skin--color-black`, `--skin--color-gray` and `--skin--color-white` for a neutral, and red, yellow, green, blue
@@ -283,7 +285,8 @@ is measured against the text rather than spaced from it, a glyph, a spinner, a s
 Radii come both ways: `--skin--border-radius` is a length, rounding a field, a panel or a button by the same amount
 whatever size it is given, while `--skin--border-radius-*` carries a share of the box, so a mark rounds with its own
 size and every share above a half draws the same roundel. `--skin--stroke-width` carries a bare number, in the user
-units of the vector viewport it applies to, so the weight of a glyph holds at any size.
+units of the vector viewport it applies to, so the weight of a glyph holds at any size. `--skin--stroke-width-strong`
+strokes a glyph set beside strong text, so the two read at the same weight, and follows the plain width.
 
 A breakpoint is not a width token, because CSS accepts no custom property in a media feature and
 `@media (min-width: var(--x))` never matches. The design system runs the four queries once and hands the answers on as

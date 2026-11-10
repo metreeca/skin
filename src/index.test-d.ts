@@ -104,6 +104,7 @@ describe("css", () => {
 
 		expectTypeOf(css({ colorStrong: "colorSubtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ backgroundColor: "backgroundColorEdit" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ backgroundColorHoverNeutral: "backgroundColorPressedNeutral" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ colorGray050: "colorHeat050" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ colorRed: "colorPurpleSubtle" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontSize: "fontSizeLarge" })).toEqualTypeOf<Style>();
@@ -115,6 +116,8 @@ describe("css", () => {
 		expectTypeOf(css({ opacityLoading: "opacityDisabled" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ zIndexModal: "zIndexToast" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ durationFast: "durationSlow" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ durationSpin: "durationSlow" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ strokeWidthStrong: "strokeWidth" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ easingEnter: "easingExit" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ boxShadowRaised: "boxShadowOverlay" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontFamily: "fontFamilyMono" })).toEqualTypeOf<Style>();
@@ -177,6 +180,9 @@ describe("css", () => {
 		// @ts-expect-error a fill where a scale step goes
 		css({ colorHeat050: "backgroundColorRaised" });
 
+		// @ts-expect-error a colour where a backdrop filter goes
+		css({ backdropFilterGlass: "colorStrong" });
+
 		// @ts-expect-error an editor colour where an ink goes
 		css({ colorStrong: "colorRedStrong" });
 
@@ -211,6 +217,7 @@ describe("css", () => {
 
 		expectTypeOf(css({ viewportMedium: "on" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ borderStyle: "dashed" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ backdropFilterGlass: "none" })).toEqualTypeOf<Style>();
 
 	});
 
@@ -220,6 +227,7 @@ describe("css", () => {
 		expectTypeOf(css({ spacing100: "calc(2 * 1rem)" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ fontSize: "var(--app--size)" })).toEqualTypeOf<Style>();
 		expectTypeOf(css({ easingEnter: "cubic-bezier(0.2, 0, 0, 1)" })).toEqualTypeOf<Style>();
+		expectTypeOf(css({ backdropFilterGlass: "blur(1px) saturate(1.2)" })).toEqualTypeOf<Style>();
 
 	});
 
@@ -244,6 +252,9 @@ describe("css", () => {
 
 		// @ts-expect-error a duration carries a unit
 		css({ durationFast: 150 });
+
+		// @ts-expect-error a length where a backdrop filter goes
+		css({ backdropFilterGlass: "1px" });
 
 		// @ts-expect-error a length other than zero carries a unit
 		css({ spacing100: 4 });

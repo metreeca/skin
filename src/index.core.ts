@@ -57,7 +57,8 @@ export type Alias<K extends Token> =
 														K extends Easing ? Easing :
 															K extends Shadow | Lifting ? Shadow :
 																K extends Family ? Family :
-																	never
+																	K extends Filter ? Filter :
+																		never
 
 /**
  * The CSS values a token takes written out, beside the tokens it may be named from.
@@ -85,7 +86,8 @@ export type Literal<K extends Token> =
 									K extends "borderStyle" ? Line :
 										K extends Breakpoint ? Switch :
 											K extends Family | Shadow | Lifting ? Open :
-												never
+												K extends Filter ? Blur :
+													never
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +140,7 @@ export type Radius = Exclude<Extract<Token, `borderRadius${string}`>, Rounding>
 /**
  * The tokens sizing a line.
  */
-export type Stroke = Extract<Token, "borderWidth" | "strokeWidth">
+export type Stroke = Extract<Token, "borderWidth" | `strokeWidth${string}`>
 
 /**
  * The tokens tracking a run of text.
@@ -174,6 +176,11 @@ export type Easing = Extract<Token, `easing${string}`>
  * The steps a shadow or an outline is drawn from, each stated as a whole shorthand.
  */
 export type Shadow = Exclude<Extract<Token, `boxShadow${string}` | `outline${string}`>, Lifting>
+
+/**
+ * The tokens softening what shows through a translucent surface.
+ */
+export type Filter = Extract<Token, `backdropFilter${string}`>
 
 /**
  * The tokens carrying a font stack.
@@ -259,6 +266,11 @@ type Curve = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | "step-
  * A line style.
  */
 type Line = "none" | "hidden" | "solid" | "dashed" | "dotted" | "double" | "groove" | "ridge" | "inset" | "outset"
+
+/**
+ * A filter applied to what shows through, as a chain of filter functions or as none at all.
+ */
+type Blur = "none" | Call
 
 /**
  * The answer a breakpoint switch carries.

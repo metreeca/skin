@@ -198,6 +198,25 @@ function contrast(foreground: Paint, background: Paint): number {
 
 }
 
+/**
+ * Lays a translucent colour over an opaque paint, as the page composites them: channel by channel in sRGB.
+ */
+function composite(expression: string, ground: Paint): Paint {
+
+	const component = parseComponentValue(tokenize({ css: expression }));
+	const parsed = component && color(component);
+	const alpha = parsed && parsed.alpha;
+	const opacity = typeof alpha === "number" && !Number.isNaN(alpha) ? alpha : 1;
+
+	const over = (top: number, bottom: number): number => opacity * top + (1 - opacity) * bottom;
+
+	const [ red, green, blue ] = paint(expression);
+	const [ groundRed, groundGreen, groundBlue ] = ground;
+
+	return [ over(red, groundRed), over(green, groundGreen), over(blue, groundBlue) ];
+
+}
+
 
 describe.each(schemes)("colours in the %s scheme", scheme => {
 
@@ -217,6 +236,13 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 		colors.backgroundColorSelected,
 		colors.backgroundColorPressed
 	];
+
+	const covers = [
+		colors.backgroundColorHoverNeutral,
+		colors.backgroundColorPressedNeutral
+	];
+
+	const grounds = [ page, stripe, edit, elevations.backgroundColorSunken ];
 
 	const tints = [
 		colors.backgroundColorNote,
@@ -274,6 +300,16 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 		shortfalls(foregrounds.flatMap(foreground => backgrounds.map(background =>
 			({ foreground, background, ratio: over(foreground, background) })
 		)), budget);
+
+	/**
+	 * The pairings of each foreground with each neutral state laid over each ground falling short of a budget.
+	 */
+	const laid = (foregrounds: ReadonlyArray<string>, budget: number) =>
+		shortfalls(foregrounds.flatMap(foreground => covers.flatMap(cover => grounds.map(ground => ({
+			foreground,
+			background: `${ cover } over ${ ground }`,
+			ratio: contrast(swatch(foreground), composite(evaluate(`var(${ cover })`, scheme), swatch(ground)))
+		})))), budget);
 
 
 	it("paints every colour inside the sRGB gamut", async () => {
@@ -349,6 +385,12 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 
 	});
 
+	it("holds the text, the label and the enabled controls to AA on the neutral states over the surfaces they reach", async () => {
+
+		expect(laid([ colors.color, colors.colorLabel, colors.colorEnabled ], TEXT)).toEqual([]);
+
+	});
+
 	it("holds the over colours to AA on the fills they are named for", async () => {
 
 		expect([
@@ -369,9 +411,12 @@ describe.each(schemes)("colours in the %s scheme", scheme => {
 
 	});
 
-	it("holds the focus ring to 3:1 on every surface and fill it is drawn against", async () => {
+	it("holds the focus ring to 3:1 on every surface, fill and neutral state it is drawn against", async () => {
 
-		expect(pairs([ colors.colorFocus ], [ ...surfaces, ...fills ], MARK)).toEqual([]);
+		expect([
+			...pairs([ colors.colorFocus ], [ ...surfaces, ...fills ], MARK),
+			...laid([ colors.colorFocus ], MARK)
+		]).toEqual([]);
 
 	});
 

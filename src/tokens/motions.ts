@@ -25,13 +25,17 @@
  * `durationNormal` for one that has to be followed, a panel opening or a row expanding; `durationSlow` for one
  * covering the viewport.
  *
+ * **Spinning** — `durationSpin` is the period of one turn of a busy mark, read with `linear` timing over an
+ * `infinite` count. It stands apart from the steps above: a busy mark that stops turning stops saying it is busy.
+ *
  * **Easings** — `easingEnter` decelerates, for a thing arriving, and `easingExit` accelerates, for a thing leaving,
  * so the two read as opposite halves of the same gesture. `easingStandard` does both, for a thing that stays and
  * merely moves.
  *
- * **Reduced motion** — every duration collapses to zero under `prefers-reduced-motion: reduce`, so a transition
- * stated through these tokens honours the preference with no rule of its own. An animation whose duration is written
- * as a literal opts out of that and owes its own media query, which is the reason to state it as a token.
+ * **Reduced motion** — every duration but `durationSpin` collapses to zero under `prefers-reduced-motion: reduce`, so
+ * a transition stated through these tokens honours the preference with no rule of its own. An animation whose
+ * duration is written as a literal opts out of that and owes its own media query, which is the reason to state it as
+ * a token. `durationSpin` keeps its period under the preference, so a busy mark keeps turning while work is pending.
  *
  * @module motions
  */
@@ -47,6 +51,7 @@ export const motions = {
 	durationFast: "--skin--duration-fast",
 	durationNormal: "--skin--duration-normal",
 	durationSlow: "--skin--duration-slow",
+	durationSpin: "--skin--duration-spin",
 
 	easingStandard: "--skin--easing-standard",
 	easingEnter: "--skin--easing-enter",
