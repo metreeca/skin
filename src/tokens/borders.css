@@ -117,21 +117,23 @@
 
     /*
      * A line and a disabled label both stand for a thing carrying no meaning of its own, so the two coincide by design
-     * and a contrast check passes over both, at 1.87:1 and 2.00:1 on the page in the light and the dark scheme. A line
-     * that identifies a control takes the field line below instead, since WCAG holds a control boundary to 3:1.
+     * and a contrast check passes over both. They sit halfway in lightness between the stripe and the field line, at
+     * 1.81:1 and 1.73:1 on the page in the light and the dark scheme, so a disabled field is told from an active one
+     * while its edge stays in sight. A line that identifies a control takes the field line below instead, since WCAG
+     * holds a control boundary to 3:1 and exempts only the boundary of a control that is disabled.
      */
 
     --skin--border-color: var(--skin--color-disabled);
 
     /*
      * A field is told from the page by its edge alone, the edit background sitting a hair off the page, so its line is
-     * held to the 3:1 a control boundary takes: 3.13:1 on the stripe, the tightest surface, in the light scheme and
-     * 3.08:1 in the dark one, the shares being the lightest that hold it there.
+     * held to the 3:1 a control boundary takes: 3.01:1 on the stripe, the tightest surface, in the light scheme and
+     * 3.03:1 in the dark one, the shares being the lightest that hold it there.
      */
 
     --skin--border-color-field: light-dark(
-        color-mix(in oklab, var(--skin--color) 36%, var(--skin--background-color)),
-        color-mix(in oklab, var(--skin--color) 43%, var(--skin--background-color))
+        color-mix(in oklab, var(--skin--color) 35%, var(--skin--background-color)),
+        color-mix(in oklab, var(--skin--color) 42.5%, var(--skin--background-color))
     );
 
     --skin--outline-focus: var(--skin--border-style) calc(2 * var(--skin--border-width)) var(--skin--color-focus);

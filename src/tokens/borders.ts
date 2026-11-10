@@ -26,7 +26,8 @@
  * a disabled label, carries no meaning of its own. The two share one value, so an app retuning the disabled colour
  * retunes every line along with it, and a contrast check passes over both of them. `borderColorField` draws the
  * edge of a field, the line that tells it apart from the page, so it holds the 3:1 a control boundary takes on the
- * page, the striped row and the edit background for the shipped page and text anchors.
+ * page, the striped row and the edit background for the shipped page and text anchors. A disabled field falls back
+ * to the enclosing line, which stays in sight on the page but reads lighter than the edge of a field taking input.
  *
  * **Radii** — `borderRadius025` to `borderRadius100` round a corner by a length, on the steps
  * {@link spacings the spacing ladder} carries and stated the same way, in `em`, so a box rounds by the same amount

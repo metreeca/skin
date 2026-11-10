@@ -90,8 +90,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `colorLinkHover` - lightened the dark link to within 1.23:1 of the body text, so the hover cue read as a fade;
   now steps the link away from the page by the same amount in either scheme and takes more chroma, as the light
   hover already did, which keeps it at 1.45:1 from the text and 14.3 ΔE from it rather than 9
-- `colorDisabled` - the dark share moves from 25% to 28%, the same eight-point dark offset `colorLabel` is pinned
-  by; it holds 1.94:1 on the edit background, and carries `borderColor` along with it, since the line reads it
+- `colorDisabled` - the shares move from 20% and 25% to 19% and 23.5%, halfway in lightness between the stripe and
+  the field edge, so a disabled field stays in sight but reads lighter than one taking input; it holds 1.81:1 and
+  1.73:1 on the page in the light and the dark scheme, and carries `borderColor` along, since the line reads it
 - `colorWarnStroke`, `colorHover`, `colorPressed`, `colorLinkHover`, `colorEnabled` - the derivations left the sRGB
   gamut, so each browser painted its own colour: Chrome and Firefox clipped the channels, which turned the light
   caution stroke into a brand orange at ΔE 5 from the strong accent and the dark pressed control into the caution

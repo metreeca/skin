@@ -353,8 +353,8 @@
     );
 
     --skin--color-disabled: light-dark(
-        color-mix(in oklab, var(--skin--color) 20%, var(--skin--background-color)),
-        color-mix(in oklab, var(--skin--color) 28%, var(--skin--background-color))
+        color-mix(in oklab, var(--skin--color) 19%, var(--skin--background-color)),
+        color-mix(in oklab, var(--skin--color) 23.5%, var(--skin--background-color))
     );
 
     /*
