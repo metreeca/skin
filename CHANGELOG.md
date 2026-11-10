@@ -138,6 +138,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `small` - set in the placeholder colour in place of the label colour, receding further from the prose around it
   while holding AA contrast on the page and the striped row in both schemes, though no longer over a control tint
+- Enlarged images - an image carrying `active` is set on an overlay card hugging the picture, outlined, rounded and
+  padded as a dialog is, rather than stretched over the viewport, so a picture with transparent areas stands on a
+  surface, and a picture smaller than the viewport keeps its own size rather than being scaled up to fill the screen
 - Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
   and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
 - Focus marks - links and `details` summaries are ringed with the corners a control is rounded with, and a

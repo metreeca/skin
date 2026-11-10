@@ -127,9 +127,10 @@ small {
 
 /*
  * An image carrying the `active` attribute is lifted out of the text over the blanket a modal dims the page with, and
- * scaled up or down without cropping to the viewport less a margin, so it uses all the screen it is given. Whoever
- * renders the page sets the attribute on a click and clears it on `Escape` or on a focus move, either of which returns
- * the image to its place in the surrounding text, so a reader can enlarge and dismiss an image from the keyboard alone.
+ * set on a card hugging the picture, scaled down without cropping to fit the viewport less a margin, so a picture
+ * with transparent areas stands on a surface rather than floating over the blanket. Whoever renders the page sets the
+ * attribute on a click and clears it on `Escape` or on a focus move, either of which returns the image to its place in
+ * the surrounding text, so a reader can enlarge and dismiss an image from the keyboard alone.
  */
 
 img:not(a img) {
@@ -139,29 +140,34 @@ img:not(a img) {
 img[active] {
 
     position: fixed;
-    inset: var(--skin--spacing-150);
+    inset: var(--skin--spacing-250);
     z-index: var(--skin--z-index-modal);
 
     /*
-     * The box takes the whole room inside the margin, the sizes the page set inline for the image in the text
-     * notwithstanding, and the picture is fitted within it keeping its proportions.
+     * The card hugs the picture and is centred in the room inside the margin, overriding the `width` and `height`
+     * attributes the page set for the image in the text, though not a `style` attribute: the picture keeps its own
+     * size, scaled down with its proportions kept wherever the card would otherwise overflow the room.
      */
 
-    width: calc(100% - 2 * var(--skin--spacing-150));
-    height: calc(100% - 2 * var(--skin--spacing-150));
-    max-width: none;
-    max-height: none;
-    object-fit: contain;
+    width: auto;
+    height: auto;
+    max-width: calc(100% - 2 * var(--skin--spacing-250));
+    max-height: calc(100% - 2 * var(--skin--spacing-250));
 
-    margin: 0;
+    margin: auto;
 
     /*
-     * The room the picture leaves inside the box is painted with the blanket, as is a spread past any viewport around
-     * it, so the picture alone stands out over a page dimmed evenly from edge to edge.
+     * The box is drawn as a dialog is, an overlay surface outlined, rounded and padded from the picture, while a
+     * spread past any viewport paints the blanket around it, so the card stands out over a page dimmed evenly from
+     * edge to edge; the spread follows the rounded corners, leaving no gap between the card and the blanket.
      */
 
-    background-color: var(--skin--background-color-blanket);
-    box-shadow: 0 0 0 100vmax var(--skin--background-color-blanket);
+    padding: var(--skin--spacing-150);
+    border-style: var(--skin--border-style);
+    border-radius: var(--skin--border-radius-075);
+
+    background-color: var(--skin--background-color-overlay);
+    box-shadow: var(--skin--box-shadow-overlay), 0 0 0 100vmax var(--skin--background-color-blanket);
 
     cursor: zoom-out;
 
