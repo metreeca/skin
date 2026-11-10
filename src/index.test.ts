@@ -183,7 +183,8 @@ describe("presets", () => {
 		readFileSync(new URL("../package.json", import.meta.url), "utf-8")
 	);
 
-	const names = readdirSync(new URL("./presets/", import.meta.url)).filter(name => name.endsWith(".css"));
+	const names = readdirSync(new URL("./presets/", import.meta.url), { recursive: true, encoding: "utf-8" })
+		.filter(name => name.endsWith(".css"));
 
 	const layered = /@layer\s+skin\s*\{(?:[^{}]*\{[^{}]*})*[^{}]*}/g;
 
@@ -199,7 +200,7 @@ describe("presets", () => {
 
 		it("builds on the design system entry", () => {
 
-			expect(text).toContain(`@import "../index.css";`);
+			expect(text).toContain(`@import "${ "../".repeat(name.split("/").length) }index.css";`);
 
 		});
 
