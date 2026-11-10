@@ -540,6 +540,12 @@ and neither name survives being read as an absolute.
 > a slate beside a saturated colour, and it holds the higher contrast of the two, 10.0:1 against 5.51:1 on white. A
 > "fix" darkening it or giving it the hue of its partner undoes both the reading and the text roles derived from it.
 
+The strong accent **contrasts in hue** with the subtle one, as the shipped orange does with the slate: the strong
+accent marks a thing out against an interface carrying the subtle one at rest, and a strong accent sharing the slate's
+hue tells the two apart by chroma alone. A brand supplying a single hue, such as a blue site with a navy logo, keeps
+it for the subtle slate and takes its strong accent from a contrasting brand colour, as the EC2U preset pairs a blue
+slate with the logo yellow.
+
 `--skin--color-fail` is an anchor rather than a derivation of an accent on purpose: deriving it carried the hue an
 app brands with into the role marking a failure, so a blue-branded interface rejected a value in blue.
 
