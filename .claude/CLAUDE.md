@@ -33,7 +33,9 @@ description: Development guidelines and conventions for the @metreeca/skin packa
 > [!CAUTION]
 >
 > - `css-developer` carries the conventions every stylesheet here is written to, and **MUST** be activated before one
->   is touched; this file carries only what is specific to the package
+>   is touched: `css-developer:tokens` for the token contract and lifecycle, `css-developer:meaning`,
+>   `css-developer:palettes` and `css-developer:viewports` for the vocabularies consumers are held to; this file
+>   carries only what is specific to the package: layout, suite, anchors, measured figures and the rationale behind them
 > - Revising a token means revising it in **every** place listed under [Token Contract](#token-contract)
 > - The suite checks token **names** for every family, and **values** for the colours alone: `colors.test.ts` paints
 >   every colour role in both schemes under the shipped brand and holds it to its contrast budget and to the gamut,
@@ -104,46 +106,11 @@ only place either side of the family is revised:
 - `viewports` — which breakpoints the viewport has passed, one switch each, `off` registered and `on` set from its width
   upwards
 
-A breakpoint cannot be a width token: CSS does not accept a custom property in a media feature, so
-`@media (min-width: var(--x))` never matches. `viewports` carries the *answer* instead of the question, and this is
-the one measure in the package an app cannot retune through a custom property.
-
-**Nothing outside `viewports.css` ever states a width**, in CSS or in TypeScript. The stylesheet runs the four queries
-once and hands the answers on as tokens, and a rule branches on one through a style query:
-
-```css
-@container style(--skin--viewport-medium: on) {
-    app-screen {
-        grid-template-columns: 1fr 2fr;
-    }
-}
-```
-
-The tokens are assigned on `:root` and inherit, so every element sits inside a container a style query matches and no
-rule declares one of its own. Each is registered with `off`, so the narrow case is a value a rule matches rather than
-the absence of one. What this buys is **reuse, not retuning**: the width still lives in `viewports.css`, and
-overriding a switch forces it without moving the threshold.
-
-The standard set, and the **only** widths a rule breaks at, here or in a component built on the design system:
-
-| Token            | From    | What it answers                                              |
-|------------------|---------|--------------------------------------------------------------|
-| `viewportSmall`  | `30rem` | a phone held upright, the one-column floor                   |
-| `viewportMedium` | `48rem` | a tablet or a split window, where a second column fits       |
-| `viewportLarge`  | `64rem` | a laptop, where navigation becomes a rail                    |
-| `viewportXlarge` | `90rem` | a desktop, where the measure is capped rather than stretched |
-
-Every width is a **floor**, so the narrow layout is what a rule states unconditionally and each breakpoint only adds
-to it, leaving the narrower switches on. A `max-width` query is **NEVER** mixed in: at the boundary two rules then both
-match, or neither does. A band is expressed by pairing the wider switch as `off` with the narrower one as `on`.
-
-Code needing the same answer reads the token through `getComputedStyle` as it reads any other, which is a
-point-in-time read; a component reacting to a threshold being crossed watches the element rather than polling. There
-is deliberately **no** TypeScript copy of the widths and **no** composed `matchMedia` string: one existed briefly and
+A breakpoint cannot be a width token, since CSS accepts no custom property in a media feature, so `viewports.css`
+carries the *answer* instead of the question: it is the **only** place in the package stating a width, in CSS or in
+TypeScript, and the one measure an app cannot retune through a custom property. How rules and code read the switches,
+and the four widths themselves, are in `css-developer:viewports`; a TypeScript copy of the widths existed briefly and
 earned nothing but a test policing its own duplicate.
-
-A widget changing shape because of the space it was **given** states a `@container` size query against its own inline
-size and takes no breakpoint at all. These four are for the page-level decisions a container query cannot answer.
 
 The `*.core.ts` modules hold what the design system surface stands on without offering it, so `typedoc.json` leaves
 them out of the reference.
@@ -223,8 +190,8 @@ so a preset restating a colour anchor rechecks its figures as an app supplying i
 
 # Layering
 
-The whole design system sits in one cascade layer, `skin`. Each module is imported into it, and the page defaults in
-`index.css` are wrapped in a block of their own:
+The whole design system sits in one cascade layer, `skin`, as `css-developer:tokens` §The Layer sets out. Each module
+is imported into it, and the page defaults in `index.css` are wrapped in a block of their own:
 
 ```css
 @import "./tokens/typography.css" layer(skin);
@@ -235,31 +202,9 @@ The whole design system sits in one cascade layer, `skin`. Each module is import
 }
 ```
 
-What this buys is a single guarantee: **an unlayered rule beats every layered one**, whatever the specificity and
-whatever order the stylesheets reach the document in. An app or a binding package therefore overrides the design
-system by writing an ordinary rule, with no `!important`, no specificity inflation and no control over load order. It
-is what lets an app state its brand in an inline `<style>` and still win over the bundle vite injects afterwards,
-whatever order the two reach the document in.
-
-Three rules follow, and they are the whole of the discipline:
-
-- a rule added to **any** module here **ALWAYS** goes inside the layer; one left outside would outrank the entire
-  design system and could never be overridden again
-- a component stylesheet in a binding package stays **unlayered**, which it does simply by not being imported through
-  `index.css`
-- an app with layers of its own orders them after `skin`
-
-Two things the arrangement deliberately does not do:
-
-- **It does not subdivide.** One layer, not `skin.tokens` / `skin.base` / `skin.composites`: inside a single layer,
-  source order and specificity decide exactly as they did before, so the module order in `index.css` still carries the
-  precedence a composite needs over its plain elements. Every extra layer name is a public commitment an app has to
-  order against, bought for nothing.
-- **It does not touch the font imports.** The `@fontsource-variable/*` imports in a preset stay unlayered, since they
-  carry only `@font-face`, which a layer has no effect on.
-
-`@property` registrations are global regardless of the layer they are declared in, so a token module behaves
-identically inside it.
+The guarantee bought is that **an unlayered rule beats every layered one**, so an app states its brand in an inline
+`<style>` and still wins over the bundle Vite injects afterwards. A rule added to **any** module here **ALWAYS** goes
+inside the layer; the `@fontsource-variable/*` imports of a preset stay outside, carrying only `@font-face`.
 
 > [!WARNING]
 >
@@ -275,31 +220,10 @@ A token lives in two places, both inside its family pair, revised together:
 - `src/tokens/<family>.ts` — the entry naming it, which is what components and apps address
 - `src/tokens/<family>.css` — its `@property` registration, and its `:root` assignment where it needs one
 
-**Its value is stated exactly once**, and which of the two carries it follows from what the value is:
-
-- a **literal** is the registration's `initial-value` and gets **no** `:root` assignment: a spacing step, a radius, a
-  weight, an anchor, a heat step, a series slot, an area class
-- a **derivation**, reading `var()`, `color-mix()` or `oklch()`, is a `:root` assignment and the registration carries
-  **no** `initial-value`, which it could not resolve anyway: a colour role, a derived scale step, the border colour,
-  the focus ring, the invalid outline
-- a **scheme-varying value** states both schemes in one value, as `light-dark(light, dark)`, registered
-  `syntax: "*"`: a literal pair is the registration's `initial-value`, a pair of derivations a `:root` assignment. It
-  is **NEVER** stated in a `prefers-color-scheme` query or a `[data-scheme]` rule
-
-**Neither scheme is the default of the other**, and **one value covers every case**. A `"*"` token holds the pair
-unresolved and inherits it as written, so it is picked where a rule paints with it, against the `color-scheme` in
-force there: `index.css` settles that from the platform on `:root` and from `data-scheme` on any element, so a
-pinned root and a pinned subtree each take their own side. An app overrides the token the same way, once on `:root`,
-and the override follows every scheme and every pinning with no selector restated.
-
-> [!CAUTION]
-> A scheme-varying token is **NEVER** registered with a real syntax such as `<color>`: a typed property resolves
-> `light-dark()` where it is declared, on the root, and hands every subtree the side the page happened to be on. The
-> same holds for a derivation reading one, which is why every colour role is registered `"*"`.
-
-Scheme rules would bring back what this avoids: an app overriding a token stated in four rules has to restate all
-four, since an unlayered `:root` rule under a media query beats the layered `[data-scheme]` rule on a pinned root, and
-a pinned subtree takes the layered attribute rule over what it inherits.
+**Its value is stated exactly once**, in the place `css-developer:tokens` §One Value, One Place assigns from its shape:
+a literal in the registration, a derivation on `:root`, a scheme-varying value as one `light-dark()` pair registered
+`syntax: "*"`. `index.css` settles the `color-scheme` from the platform on `:root` and from `data-scheme` on any
+element, so a pinned root and a pinned subtree each take their own side.
 
 Native controls, scrollbars and the caret answer to `color-scheme` as the tokens do, and `index.css` restates the page
 colours on any `[data-scheme]` element, which would otherwise inherit them as the root resolved them.
@@ -321,29 +245,11 @@ sound only because nothing leaves the gamut: the in-gamut check is what makes th
 browser paints. An app supplying its own brand rechecks its own figures: the suite holds no derivation to
 hypothetical brands. A figure in a token comment is documentation of what the test asserts, never the guard.
 
-An `@property` registration states the type a token takes and the default it falls back on, under the constraints
-`css-developer:rules` §Registrations sets out: only an absolute value takes a real type, and a derived token carries no
-default at all.
-
 # Token Lifecycle
 
-A published token name is a public commitment, so it is **NEVER** renamed in place: a consumer's stylesheet reads the
-custom property directly and no compiler catches the break.
-
-Retiring a name runs in two releases:
-
-1. **Deprecate.** Add the new token through the contract above. Keep the old one declared and registered, and redefine
-   it as a derivation reading the new one, so both resolve and nothing painted through either changes. Mark the entry
-   in the `.ts` side with `@deprecated`, naming the replacement, and record the pair in `CHANGELOG.md`.
-2. **Remove.** Drop the old entry, its registration and its assignment in the next **minor** line, never in a patch.
-
-A consumer migrates by rewriting the call sites, which takes two passes because a token appears in two shapes: the
-TypeScript entry (`skin.colorStrong`), which an IDE rename or a `jscodeshift` codemod rewrites safely, and the custom
-property (`--skin--color-strong`), which a plain search and replace over `.css` files settles since the name cannot
-occur as anything else.
-
-The suite is **NOT** a lifecycle check: a deprecated token passes exactly as any other, since it is still declared,
-registered and defined. Only the changelog records that it is on its way out.
+A published token name is retired in two releases, deprecated then removed in the next minor line, as
+`css-developer:tokens` §Lifecycle sets out. The suite is **NOT** a lifecycle check: only the changelog records a
+deprecation.
 
 > [!WARNING]
 >
@@ -354,13 +260,9 @@ registered and defined. Only the changelog records that it is on its way out.
 
 # Colours
 
-> [!CAUTION]
-> **WCAG is the budget, not a floor to clear by a margin.** A colour is held to the WCAG 2.2 minimum for what it
-> paints, 4.5:1 for text and 3:1 for a mark, a control boundary or a focus ring, on the surfaces it is actually
-> painted on, and to the sRGB gamut below. **Nothing else constrains it**: no matching of loudness across schemes, no
-> ΔE or colour vision deficiency separation between roles, no state a token does not name, no aesthetic veto on a
-> hue. A derivation landing well above its tightest surface spends chroma no reader needs, and a meaning colour
-> cannot carry on its own goes to the glyph and the wording, as WCAG 1.4.1 requires.
+Every colour is held to `css-developer:colours`: the WCAG 2.2 minimums on the surfaces it is actually painted on and
+the sRGB gamut, **nothing else**. The figures in the comments and the suite's checks are computed in Node from the
+same maths as the browsers, and describe what ships only because nothing leaves the gamut.
 
 Nine anchors carry literals in `colors.css`, each stating a value per colour scheme, as the `light-dark()` pair the
 contract above sets out:
@@ -377,128 +279,16 @@ the keyboard stands, which reads the same whatever an app brands with, so it is 
 is stated as a `light-dark()` pair alongside them and held to the ring budget of 3:1 against the page **and** against
 the stripe.
 
-> [!CAUTION]
-> **Every derivation stays inside the sRGB gamut** for the shipped brand. Browsers disagree on a colour outside it:
-> Chrome and Firefox clip the channels, which shifts the hue, and Safari reduces the chroma, which keeps it, so an
-> out-of-gamut derivation is a different colour in each. A mix of two paintable colours in OKLab stays paintable,
-> which is why the states and the strokes are `color-mix()` towards the text anchor; an `oklch(from …)` step that
-> raises chroma or pushes lightness towards an end caps it with `min()`. The figures in the comments and the suite's
-> contrast checks are computed in Node from the same maths, and they describe what ships only because nothing leaves
-> the gamut.
->
-> A second hazard the suite cannot see: Chrome marks the **hue** of a colour under about 0.02 chroma as powerless,
-> so a relative `oklch(from …)` reading `h` off a near-grey, such as a 12% tint, paints **red**. A derivation
-> raising the chroma of such a colour scales `a` and `b` in `oklab(from …)` instead, which carries no hue to lose.
-
 ## The meaning scale
 
-Every meaning a widget carries lands on these five steps, and **NO** widget invents a sixth colour: a meaning the
-scale does not carry is stated in words.
+The five steps, the `level`, `mode` and `status` attributes, the `look` axis and the rules a widget follows are in
+`css-developer:meaning`, which `note`, `pass`, `flag`, `warn` and `fail` anchor. What stays here is what the anchors
+were tuned against.
 
-| Step   | Says                       |
-|--------|----------------------------|
-| `note` | stated or provisional      |
-| `pass` | completed as intended      |
-| `flag` | singled out for attention  |
-| `warn` | completed with caveats     |
-| `fail` | failed to complete         |
-
-`note` is **NOT** a milder `pass`: it is the absence of a verdict, so the scale is one unjudged step ahead of a
-four-step ramp. `flag` is **NOT** a milder `warn`: it says a thing deserves attention, never that anything has gone
-wrong. Three kinds of meaning share it, chosen by what the widget **is**, so no widget carries two:
-`level` on content, `mode` on controls, `status` on reported things:
-
-| Attribute | `normal`            | `note`    | `pass`     | `flag`    | `warn`     | `fail`                |
-|-----------|---------------------|-----------|------------|-----------|------------|-----------------------|
-| `level`   | an ordinary passage | `neutral` | `positive` | `notable` | `negative` | `critical`            |
-| `mode`    | an ordinary control | `safe`    | `commit`   | `publish` | `alert`    | `danger`              |
-| `status`  | nothing to report   | `pending` | `success`  | `paused`  | `warning`  | `failure` or `defect` |
-
-Each attribute reads as one list: a `level` completes "a ___ note", `positive` and `negative` mirrored around
-`neutral`; a `mode` names what the control does, `publish` taking the result out where `commit` keeps it; a `status`
-names where an operation stands, `paused` stopped with nothing wrong where `pending` is still under way.
-
-**`normal` is the default of all three, and it is NOT a step**: it carries no colour coding at all, leaving the
-ordinary page colours. A widget that states nothing is `normal`, and a `level="normal"` passage is **NOT** a blue
-`note` admonition. Only the marked values reach the scale.
-
-Five steps is the ceiling, because colour carries no more: one absence of hue and four hues told apart at a glance.
-A meaning the scale does not carry is stated in **words**, never in a sixth colour.
-
-A widget maps its remaining values onto the steps and states that mapping where its consumers read it, or two widgets
-put the same meaning on different steps and the learned scale breaks:
-
-```
-note         level   neutral → note    positive → pass    notable → flag     negative → warn    critical → fail
-button       mode    safe → note       commit → pass      publish → flag     alert → warn       danger → fail
-toast        status  pending → note    success → pass     paused → flag      warning → warn     failure → fail    defect → fail
-alert        kind    note → note       tip → pass         important → flag   warning → warn     caution → fail
-```
-
-A `note` alert states useful information without a verdict, which is the `note` step; an `important` alert singles out what a
-reader must not miss, which is `flag`.
-
-### Which attribute a widget takes
-
-Decided by **tense**, which also places any new value:
-
-| Attribute | Answers                          | Tense    | Set by                    | Taken by        |
-|-----------|----------------------------------|----------|---------------------------|-----------------|
-| `level`   | how much attention this deserves | timeless | the author, ahead of time | content         |
-| `mode`    | what activating this will do     | future   | the designer              | controls        |
-| `status`  | what the system says happened    | past     | the system, at runtime    | reported things |
-
-Written into the page by a human: `level`. Appears because something ran: `status`. A consequence not yet incurred:
-`mode`. No tense at all: it is `look`, not a meaning.
-
-### `look`
-
-How loud a thing appears is a separate axis, carried by the `look` attribute and **NOT** colour-coded: it is told in
-layout, weight and border, so it never competes with the scale for the same channel and a widget carries one of each
-without the readings interfering.
-
-| Value    | Means                                                          |
-|----------|----------------------------------------------------------------|
-| `subtle` | recedes: ordinary weight, no border, less room                 |
-| `normal` | ordinary weight, ordinary room                                 |
-| `strong` | carries the moment: heavier weight, a border, more room, first |
-
-`subtle` and `strong` are the pair the colour anchors already use, so one vocabulary names this axis everywhere.
-
-> [!CAUTION]
-> Do **NOT** name this attribute `role`, which collides with ARIA, or `style`, which collides with the DOM attribute
-> and the JSX prop. `primary` is **NOT** a value: it names a position in a flow, one per dialog, which a control
-> cannot know about itself, where `strong` names a level the control does know.
-
-The design system carries the vocabulary and **NO** token for it. An area-wide `--skin--look` existed and was
-dropped: it reached every widget in the area alike, and no area wants its buttons, fields and badges quietened
-together. A binding package settling a default for an area does it per kind of widget, through a knob of its own.
-
-> [!CAUTION]
-> What a widget **means** is **NEVER** settled for an area. A meaning belongs to the one widget carrying it, so
-> `mode`, `level` and `status` are stated at the widget and inherited by nothing.
-
-### Tensions on the record
-
-- **The dark hover and pressed steps are half the light ones.** The states are the strong accent carried towards the
-  text anchor, and above a bright saturated orange there is little room: the steps are ΔE 5.5 each where the light
-  ones are 11. A control fills its box with the state tints as well, so the state never rests on the text colour.
-  Stepping the lightness instead bought nothing: it left the gamut, and the clipped result was a caution amber.
-- **A step is NEVER told in colour alone**, since `pass` and `fail` are the pair colour vision deficiency collapses
-  most readily; the icon and the wording carry the same meaning.
-- **`mode="commit"` and `look="strong"` co-occur on nearly every Save button.** They stay distinct, but the pairing
-  has to stay the exception or green-plus-prominence becomes the default and means nothing.
-- **`pending` and `neutral` share the `note` step.** A pending that must read as *moving* rather than merely unjudged
-  adds the loading opacity and the motion tokens on top of the hue, not instead of it.
-- **A failure can be told by either attribute.** A note takes `level="critical"` for a failure shown in place of
-  the content, and a toast takes `status="failure"` for one floated over the screen. Both land on `fail`. Only
-  `status` carries `pending`, since an authored admonition is never pending.
-- **`failure` and `defect` share the `fail` step.** A fault of the interface itself is a failure all the same to the
-  reader, so the two are told apart by glyph and wording, never by a sixth colour the scale cannot carry.
-- **`positive` is the thinnest cell.** A passage reporting that something *went* well is really reporting a
-  `status`, so it earns its place for advice and for a passage the reader is better off for having read.
-- **`paused` and `pending` both mean unfinished.** `pending` is still moving and takes no verdict; `paused` has stopped
-  and waits on the reader, which is what lifts it onto `flag`.
+**The dark hover and pressed steps are half the light ones.** The states are the strong accent carried towards the
+text anchor, and above a bright saturated orange there is little room: the steps are ΔE 5.5 each where the light ones
+are 11. A control fills its box with the state tints as well, so the state never rests on the text colour. Stepping
+the lightness instead bought nothing: it left the gamut, and the clipped result was a caution amber.
 
 > [!WARNING]
 >
@@ -511,12 +301,8 @@ together. A binding package settling a default for an area does it per kind of w
 > never set on its tint, where it falls to 4.16:1 there: any caution light enough to stay a gold rather than a brown
 > does. The dark gold holds on its tint, at 4.88:1, but the rule is the light one's, since a consumer writes one rule.
 
-Text painted in the colour of a step takes the step's **stroke role**, `--skin--color-note-stroke`,
-`--skin--color-pass-stroke`, `--skin--color-flag-stroke`, `--skin--color-warn-stroke` or `--skin--color-fail-stroke`. A stroke holds AA on the
-page, the stripe, the overlay and its own tint, and nothing past that: a label a widget sets over any other fill,
-such as a tint deepened under the pointer, is the widget's to hold to AA, falling back on `--skin--color` where the
-stroke falls short. In both schemes every stroke is its anchor, set at the most chroma the gamut holds where the
-tightest surface reaches 4.5:1: the tint on the light page, the overlay on the dark one, where it lifts to L 0.64:
+Every stroke role is its anchor, set at the most chroma the gamut holds where the tightest surface reaches 4.5:1: the
+tint on the light page, the overlay on the dark one, where it lifts to L 0.64:
 
 | Role   | Light page | Light stripe | Light tint | Dark page | Dark stripe | Dark tint | Dark overlay |
 |--------|------------|--------------|------------|-----------|-------------|-----------|--------------|
@@ -540,17 +326,8 @@ and neither name survives being read as an absolute.
 > a slate beside a saturated colour, and it holds the higher contrast of the two, 10.0:1 against 5.51:1 on white. A
 > "fix" darkening it or giving it the hue of its partner undoes both the reading and the text roles derived from it.
 
-The strong accent **contrasts in hue** with the subtle one, as the shipped orange does with the slate: the strong
-accent marks a thing out against an interface carrying the subtle one at rest, and a strong accent sharing the slate's
-hue tells the two apart by chroma alone. A brand supplying a single hue, such as a blue site with a navy logo, keeps
-it for the subtle slate and takes its strong accent from a contrasting brand colour, as the EC2U preset pairs a blue
-slate with the logo yellow.
-
 `--skin--color-fail` is an anchor rather than a derivation of an accent on purpose: deriving it carried the hue an
 app brands with into the role marking a failure, so a blue-branded interface rejected a value in blue.
-
-The striped table row is where the custom property cycle `css-developer:rules` warns of would bite: it paints
-`background-color` instead of retuning `--skin--background-color`, which every other colour here stands on.
 
 Text roles hold WCAG AA contrast, 4.5:1 against the background they sit on, in **both** schemes and over the stripe;
 the focus ring holds 3:1. The exceptions a contrast check is allowed to pass over, each **by design**:
@@ -565,10 +342,8 @@ The stroke roles are the text roles standing in for all five.
 
 # Palettes
 
-`palettes.css` carries the colours an author picks and a chart, a coding or a map reads: eighteen editor colours,
-four ten-step scales, nine series slots and four area classes. A colour, a step, a slot or a class is **NEVER** a
-substitute for a role token: a role says what a colour means in the interface, these say how an author coloured
-content, where a value sits or which thing it belongs to.
+These are content colours, never interface roles: how a consumer uses each family is in `css-developer:palettes`.
+What stays here is how each was sampled and measured.
 
 > [!NOTE]
 > The ΔE and colour vision deficiency gates below are **chart-readability guarantees** for these palettes alone, not
@@ -612,11 +387,6 @@ Every name takes the `--skin--color-` prefix.
 - **One `light-dark()` pair each.** The steps are measured from the page, so `strong` is dark on the light page and
   light on the dark one and `subtle` the reverse, `black` and `white` included
 
-> [!WARNING]
->
-> Red, green, yellow and blue sit near `fail`, `pass`, `warn` and `note`, so a reader may take red text for an error.
-> The editor colours carry **no** meaning and are **NEVER** used by a widget to say one: a meaning goes to its step.
-
 ## Scales
 
 Four ten-step scales address a colour by position rather than by role, the number being the share of the anchor a step
@@ -632,17 +402,10 @@ replacement for a role token: the text and background roles in `colors.css` do n
 the hue an app brands with stops reading as a temperature. It runs cool blue → green → yellow → red → violet, the
 violet standing for a measure past the top of the range.
 
-> [!WARNING]
->
-> The heat scale codes by **hue**, and its lightness is deliberately **NOT** monotone: it peaks mid-scale and falls at
-> both ends. A step therefore means a band a legend names, never a position on a continuous gradient, and a consumer
-> **ALWAYS** states the band in text beside the colour. Ranking its steps by lightness, or reading a gradient across
-> them, is a misuse the values cannot support; a continuous heat map needs a monotone scale of its own.
-
-Text over a heat step takes `--skin--color` up to `070` and `--skin--background-color` from `080` on, where the scale
-turns dark enough to carry it. Only the last two steps carry a `light-dark()` pair, since at their light values they
-sit at 2.05:1 and 2.76:1 against the dark page and lose the top of the range; the cool half holds in both schemes and
-is stated once.
+The heat scale codes by **hue**, and its lightness is deliberately **NOT** monotone: it peaks mid-scale and falls at
+both ends, which is why a step reads as a band and never as a point on a gradient. Only the last two steps carry a
+`light-dark()` pair, since at their light values they sit at 2.05:1 and 2.76:1 against the dark page and lose the top
+of the range; the cool half holds in both schemes and is stated once.
 
 ## Series
 
@@ -672,20 +435,12 @@ Validated against the package surfaces rather than against the defaults the `dat
 >
 > The **order** is the separation mechanism, not a preference: the figures above hold for adjacent pairs in the order
 > declared. Reordering the slots, resampling a hue or inserting a tenth forfeits the guarantee and means re-measuring
-> the candidate orderings. Nine hold only where neighbours are compared, on grouped bars, stacked
-> segments and lines; where every pair is compared, on a scatter, a bubble chart or a map, **only the first three
-> hold**.
-
-> [!WARNING]
->
-> Four of the nine fall short of 3:1 against the light page: the yellow at 1.61:1, the pink at 1.98:1, the teal at
-> 2.29:1 and the orange at 2.42:1.
-> A chart carrying them **ALWAYS** states its figures in text as well, through direct labels or a table view, and the
-> slots are the one family a contrast check passes over wholesale rather than slot by slot.
+> the candidate orderings. Four of the nine fall short of 3:1 against the light page: the yellow at 1.61:1, the pink
+> at 1.98:1, the teal at 2.29:1 and the orange at 2.42:1, so the slots are the one family a contrast check passes over
+> wholesale rather than slot by slot.
 
 A tenth slot has no room left: at this lightness every candidate that clears the gates repeats a hue already in the
-set, passing on adjacency alone while colliding wherever all pairs are compared. A tenth thing is therefore gathered
-under one residual slot rather than coloured.
+set, passing on adjacency alone while colliding wherever all pairs are compared.
 
 ## Areas
 
@@ -705,12 +460,8 @@ to the **all-pairs** measure rather than the adjacent one:
 - the pale classes hold 1.67:1 and 1.52:1 on the light page, the dark ones 4.77:1 and 3.38:1; on `#111` every class
   clears 3.9:1
 
-> [!WARNING]
->
-> **Four is the limit.** Paired stops being colourblind-safe past four classes, so a fifth class is a second map, an
-> inset or a facet, never a fifth colour. The normal-vision shortfall of 14.1 is accepted here **only** because a map
-> keeps its boundaries drawn and names its classes in the legend; a chart, which has neither, may not borrow these
-> four in place of the series slots.
+Paired stops being colourblind-safe past four classes, which is where the limit of four comes from. The normal-vision
+shortfall of 14.1 is accepted **only** because a map keeps its boundaries drawn and names its classes in the legend.
 
 # Literals
 
