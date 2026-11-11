@@ -111,11 +111,12 @@ dl {
  * indent for the subsections beneath it. A wider gap then sets each open group apart from its neighbours with no
  * separator. A top-level group may also fold behind its label as a disclosure. Its summary reads as the label it
  * stands for, aligned with the entries beneath, and its chevron sits quietly at the far end of the line. Folded
- * groups close up into a tight run of labels, and an opened one takes the gap of an unfolded group. An outline of
+ * groups close up into a run of labels, and an opened one takes the gap of an unfolded group. An outline of
  * top-level entries alone reads as a plain list. From the third level on, each level is indented beneath the one
  * above. The outline itself never hides an entry the markup lists, so each one stays reachable by every reader.
- * Links run in tight lines and answer the pointer as any link does. The link marked current by aria-current is
- * strong in the strong accent, so the reader sees where they stand by weight as well as by colour.
+ * Sibling entries sit further apart than the lines of one label, so a label wrapped onto several lines still reads
+ * as a single entry. Links answer the pointer as any link does. The link marked current by aria-current is strong in
+ * the strong accent, so the reader sees where they stand by weight as well as by colour.
  */
 
 nav {
@@ -133,19 +134,14 @@ nav {
 
         list-style-type: none;
 
-        & + li {
-            margin-top: 0;
-        }
-
         & > :is(a, a:visited, span) {
             display: block;
+            padding-block: var(--skin--spacing-010);
             font-weight: var(--skin--font-weight);
             color: var(--skin--color-label);
         }
 
         & > :is(a, a:visited) {
-
-            padding-block: var(--skin--spacing-010);
 
             &:hover {
                 color: var(--skin--color-link-hover);
