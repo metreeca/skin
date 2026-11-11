@@ -104,22 +104,25 @@ dl {
 
 /*
  * A list in a navigation landmark reads as a compact outline of the sections it links to, quiet beside the document.
- * Entries are set small, in the label colour and without markers. Each entry is a link, or a span naming a section
- * with no heading to link to. Where any top-level entry heads subsections, every top-level entry is set in strong
- * small capitals, so it stands out with no indent for the subsections beneath it. A wider gap then sets each open
- * group apart from its neighbours with no separator. A top-level group may also fold behind its label as a disclosure.
- * Its summary reads as the label it stands for, aligned with the entries beneath, and its chevron sits quietly at the
- * far end of the line. Folded groups close up into a tight run of labels, and an opened one takes the gap of an
- * unfolded group. An outline of top-level entries alone reads as a plain list. From the third level on, each level is
- * indented beneath the one above. The outline itself never hides an entry the markup lists, so each one stays
- * reachable by every reader. Links run in tight lines and answer the pointer as any link does. The link marked current
- * by aria-current is strong in the strong accent, so the reader sees where they stand by weight as well as by colour.
+ * Entries are set small, in the label colour and without markers. A label too long for the column, such as an
+ * identifier with no spaces, breaks where it meets the edge, so it never widens the column or spills into the
+ * content beside it. Each entry is a link, or a span naming a section with no heading to link to. Where any
+ * top-level entry heads subsections, every top-level entry is set in strong small capitals, so it stands out with no
+ * indent for the subsections beneath it. A wider gap then sets each open group apart from its neighbours with no
+ * separator. A top-level group may also fold behind its label as a disclosure. Its summary reads as the label it
+ * stands for, aligned with the entries beneath, and its chevron sits quietly at the far end of the line. Folded
+ * groups close up into a tight run of labels, and an opened one takes the gap of an unfolded group. An outline of
+ * top-level entries alone reads as a plain list. From the third level on, each level is indented beneath the one
+ * above. The outline itself never hides an entry the markup lists, so each one stays reachable by every reader.
+ * Links run in tight lines and answer the pointer as any link does. The link marked current by aria-current is
+ * strong in the strong accent, so the reader sees where they stand by weight as well as by colour.
  */
 
 nav {
 
     & > ul {
         font-size: var(--skin--font-size-small);
+        overflow-wrap: anywhere;
     }
 
     & ul {
