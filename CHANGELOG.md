@@ -136,6 +136,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Focus and failure marks - the part of a ring drawn outside a link, a preformatted block, a `details` summary, a
   checkbox or a radio was hidden under the background of the content following it; a ringed element is now lifted
   over that content, while a rule positioning the element itself still takes precedence over the lift
+- Checkbox and radio focus marks - the drawn ring squared off around the rounded corners the platform paints on the
+  box; a focused box now takes the platform ring in the focus colour, which follows those corners at a width the
+  browser settles, while a failed box keeps the drawn invalid ring at the width and offset the design system states
 
 ### Changed
 

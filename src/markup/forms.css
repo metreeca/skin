@@ -18,7 +18,8 @@
  * The focus is marked by a drawn outline. It follows whatever contour the control already carries, its rounded
  * corners included, and it survives a forced-colours pass, which a shadow does not: a page rendered in the system
  * palette keeps the mark. The reset takes the platform ring away, so a control reaching the keyboard owes the mark,
- * and one styled into a box of its own is marked around that box.
+ * and one styled into a box of its own is marked around that box. A checkbox or a radio, whose corners the platform
+ * draws and no radius reaches, takes the platform ring instead, which follows those corners in the focus colour.
  *
  * The offset is stated wherever a mark is, the outline shorthand not carrying it. A control standing free is marked
  * outside its edge, and a control already enclosed by a border is marked just inside it, so the two lines are read
@@ -222,6 +223,17 @@ input, textarea {
 
         &:is(:user-invalid, [aria-invalid="true"], :focus-visible) {
             outline-offset: var(--skin--border-width);
+        }
+
+        /*
+         * The platform draws a box with corners of its own and drops any radius stated for it, so a drawn focus mark
+         * would square off around a rounded box. The mark takes the platform style instead, tracing the contour of the
+         * box in the focus colour at a width the browser settles. The invalid mark keeps the drawn style, so a failed
+         * box is still ringed at the width the invalid outline token states, clear of the box by the line width.
+         */
+
+        &:focus-visible {
+            outline-style: auto;
         }
 
     }
