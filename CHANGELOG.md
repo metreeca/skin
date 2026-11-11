@@ -133,6 +133,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `table` - a header cell made sticky lost the rule under it, which stayed behind as the rows scrolled; cells now
   stand separate, so each carries its own rule, and a stylesheet relying on collapsed borders has to adapt: a border
   on a row or a row group no longer draws, and a `hidden` border no longer suppresses the rule of the cell beside it
+- Focus and failure marks - the part of a ring drawn outside a link, a preformatted block, a `details` summary, a
+  checkbox or a radio was hidden under the background of the content following it; a ringed element is now lifted
+  over that content, while a rule positioning the element itself still takes precedence over the lift
 
 ### Changed
 

@@ -210,6 +210,15 @@ summary {
 }
 
 /*
+ * A focused block is lifted over the content following it, whose background would otherwise paint over the part of
+ * the ring drawn outside the box. The lift weighs nothing, so any rule positioning a block keeps its own value.
+ */
+
+:where(pre:focus-visible, summary:focus-visible) {
+    position: relative;
+}
+
+/*
  * A dialog is an overlay surface, lifted off the page with the shadow that pairs with it, outlined and rounded as a
  * card is, and padded from its content. The reset takes the margin a modal dialog is centred by, so it is restored,
  * and the page behind a modal is dimmed with the blanket, as it is behind an image enlarged out of the text.

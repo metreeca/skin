@@ -46,6 +46,15 @@ a, a:visited {
 
 }
 
+/*
+ * A focused link is lifted over the content following it, whose background would otherwise paint over the part of
+ * the ring drawn outside the box. The lift weighs nothing, so any rule positioning a link keeps its own value.
+ */
+
+:where(a:focus-visible) {
+    position: relative;
+}
+
 /* Emphasis, a cited title, a term being defined and a variable are set in italics, the stress the text face carries. */
 
 em, i, cite, dfn, var {

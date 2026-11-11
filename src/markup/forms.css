@@ -227,6 +227,16 @@ input, textarea {
     }
 
     /*
+     * A box marked from without is lifted over the content following it, whose background would otherwise paint over
+     * the part of the ring drawn outside the box. The lift weighs only the element, so any rule positioning a box by
+     * an attribute or a class keeps its own value, as a hidden box given `data-offscreen` does.
+     */
+
+    &:where([type=checkbox], [type=radio]):where(:user-invalid, [aria-invalid="true"], :focus-visible) {
+        position: relative;
+    }
+
+    /*
      * The button clearing a search field is drawn as the lucide cross, in the colour of the value it clears, in place
      * of the tinted glyph the platform paints. It is cropped to its stroke and centred on the value, as the arrow of a
      * menu is, the stroke stated in the glyph since a mask cannot read a custom property.
