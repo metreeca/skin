@@ -5,10 +5,15 @@
 Essential design tokens and styles.
 
 **@metreeca/skin** is a foundational design system with clean, minimalist tokens for typography, spacing, colour,
-elevation and motion, and a base stylesheet that gives plain document markup a coherent look in light and dark schemes.
+elevation and motion, and a base stylesheet that gives plain document markup a coherent look in light and dark schemes:
 
-The default look sets the Metreeca colours in the platform faces and adapts to any brand book: a preset or an app
-restating the tokens for a brand's faces, colours and shapes restyles every interface without a component change.
+- **Accessible Colours**: every colour role held to the WCAG 2.2 contrast minimums in both schemes by the test suite
+- **Framework-Free**: plain CSS for plain document markup, with no components and no rendering framework
+- **Typed Token Contract**: every token named in TypeScript and registered in CSS, so a misspelt name fails the build
+- **Content Palettes**: colour-blind-safe series and area colours for charts and maps, plus scales and editor colours
+
+The default look sets a slate and orange palette in the platform faces and adapts to any brand book: a preset or an
+app restating the tokens for a brand's faces, colours and shapes restyles every interface without a component change.
 
 # Installation
 
