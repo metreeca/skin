@@ -114,9 +114,10 @@ dl {
  * groups close up into a run of labels, and an opened one takes the gap of an unfolded group. An outline of
  * top-level entries alone reads as a plain list. From the third level on, each level is indented beneath the one
  * above. The outline itself never hides an entry the markup lists, so each one stays reachable by every reader.
- * Sibling entries sit further apart than the lines of one label, so a label wrapped onto several lines still reads
- * as a single entry. Links answer the pointer as any link does. The link marked current by aria-current is strong in
- * the strong accent, so the reader sees where they stand by weight as well as by colour.
+ * Entries beneath a group close up tighter than top-level ones, yet siblings still sit further apart than the lines
+ * of one label, so a label wrapped onto several lines still reads as a single entry. Links answer the pointer as any
+ * link does. The link marked current by aria-current is strong in the strong accent, so the reader sees where they
+ * stand by weight as well as by colour, which holds for a reader who cannot tell the accent from the label colour.
  */
 
 nav {
@@ -191,8 +192,16 @@ nav {
 
     }
 
-    & ul ul ul {
-        padding-left: var(--skin--spacing-075);
+    & ul ul {
+
+        & > li + li {
+            margin-top: 0;
+        }
+
+        & ul {
+            padding-left: var(--skin--spacing-075);
+        }
+
     }
 
 }
