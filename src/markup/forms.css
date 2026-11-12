@@ -23,7 +23,8 @@
  *
  * The offset is stated wherever a mark is, the outline shorthand not carrying it. A control standing free is marked
  * outside its edge, and a control already enclosed by a border is marked just inside it, so the two lines are read
- * as one edge rather than as a doubled one.
+ * as one edge rather than as a doubled one. A component filling a control solid moves the mark outside its edge, by
+ * the line width, since the focus colour holds its contrast against the page and against no saturated fill.
  */
 
 /* A button and a menu are boxed as a field is, so the controls of a form line up as one row of equal edges. */
