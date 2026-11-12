@@ -12,10 +12,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `presets/roboto.css` - a preset setting the interface in the variable Roboto faces of the Metreeca brand, with
   Roboto Condensed for headings and Roboto Mono for code, bundled with the app in place of the platform faces
 - `presets/inter.css` - a preset setting the interface in the variable Inter face, headings in Inter Tight, with
-  Geist Mono for code at `90%` of the text around it, bundled with the app as the Roboto preset bundles its faces
-- `fontSizeMono` - the size code, keys and program output are set at relative to the text around them, `100%` by
-  default; the Roboto preset sets Roboto Mono at `86%`, where its glyphs cover the area Roboto's do, in place of the
-  former unmeasured `87.5%`, and an app setting a mono face states the share for its own pair
+  Geist Mono for code, bundled with the app as the Roboto preset bundles its faces
+- Matched mono faces - each preset scales its mono face to the lowercase of its text face, nudged down for the wider
+  advance, Roboto Mono to `93%` and Geist Mono to `96%`, so anything set in `fontFamilyMono` matches the text around
+  it, a label a component sets in the mono face as much as a code span, with no size restated beside the face
 - `borderColorField` - the edge of a field, held to the 3:1 a control boundary takes on the page, the striped row and
   the edit background, which `markup/forms.css` draws around inputs, text areas and selects
 - `colorStrongOver` - text colour for a fill painted in the strong accent, taking white or black, whichever contrasts
@@ -145,6 +145,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- `code`, `kbd`, `samp` - set at the size of the text around them rather than at the unmeasured `87.5%` of it, the
+  mono face of a preset being scaled on the face itself; with the platform faces they are no longer set smaller
 - `small` - set in the placeholder colour in place of the label colour, receding further from the prose around it
   while holding AA contrast on the page and the striped row in both schemes, though no longer over a control tint
 - Description lists - a `dt` term is set at the size of the text around it rather than at nine tenths of it, keeping

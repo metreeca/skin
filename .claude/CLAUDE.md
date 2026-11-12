@@ -129,19 +129,26 @@ them out of the reference.
   size axis was tried for headings and dropped, since at the heading sizes, 21px at most, it narrows them by under 3%
 - `roboto.css` — the variable Roboto, Roboto Condensed and Roboto Mono faces of the Metreeca brand
 
-A preset's `--skin--font-size-mono` is **measured**: it is the share at which the average mono glyph covers the same
-area as the average text glyph, where a glyph's area is the x-height times its advance, averaged over English letter
-frequencies with spaces, at weight 400, from the face files themselves. The share is the square root of the text
-area over the mono area, rounded to the nearest half percent:
+A preset's mono face is scaled through the `size-adjust` descriptor of its `@font-face` rules, never through a size
+token: a size only takes effect where a rule reads it, so a component setting the mono family alone would draw it at
+full size, while a face scaled on itself matches the text wherever it is set.
 
-| Pair                      | Width ratio | x-heights     | Share   |
-|---------------------------|-------------|---------------|---------|
-| Roboto with Roboto Mono   | 1.355       | 0.528 / 0.528 | `86%`   |
-| Inter with Geist Mono     | 1.266       | 0.546 / 0.530 | `90%`   |
+The share matches the **lowercase** of the two faces, then takes a **`0.93` nudge** offsetting the wider mono advance:
+the text x-height over the mono x-height, from the face files themselves, times `0.93`, rounded to the nearest whole
+percent:
 
-Equal area splits the difference between matching heights, which leaves code wider, and matching widths, which
-leaves it too small to read. A new preset measures its pair the same way, with `fontTools` reading the
-`*-latin-wght-normal.woff2` file of each face.
+| Pair                    | Width ratio | x-heights     | x-height match | Share |
+|-------------------------|-------------|---------------|----------------|-------|
+| Roboto with Roboto Mono | 1.355       | 0.528 / 0.528 | `100%`         | `93%` |
+| Inter with Geist Mono   | 1.266       | 0.546 / 0.530 | `103%`         | `96%` |
+
+> [!WARNING]
+>
+> The nudge was settled by eye, comparing shares side by side in running text with bold mono labels, **NOT** derived.
+> Matching x-heights alone left mono labels looking large, since the advance runs 27% to 36% wider. Matching glyph area
+> instead, the earlier rule at `86%` and `90%`, cut the x-height by 14% and left mono labels looking small. Retuning
+> the nudge rechecks both presets in the browser, and a new preset measures its x-heights with `fontTools` reading the
+> `*-latin-wght-normal.woff2` file of each face.
 
 # Presets
 
@@ -167,12 +174,14 @@ the way an app would, so it states values rather than defining tokens, and stays
 - it restates only tokens the design system declares, and **NEVER** registers one: a second `@property` for a name
   would replace the registration globally
 - it loads every face its font tokens name, from `@fontsource-variable/*` and never from a remote URL; the face
-  imports stay unlayered, since a layer has no effect on `@font-face`
+  imports and its own `@font-face` rules stay unlayered, since a layer has no effect on `@font-face`
 - it takes only faces published as a variable `@fontsource-variable/*` package under the SIL Open Font License 1.1 or
   a licence as permissive: the package stays Apache-2.0 and depends on the faces without redistributing them, and
   an app embedding them in its pages is what the OFL allows, provided no one sells the face files on their own
-- a preset setting a mono face **ALWAYS** states `--skin--font-size-mono` for its pair: the default is `100%`, since the
-  platform pair differs on every system, and how far a mono face is set below the text depends on its glyph width
+- a preset setting a mono face **ALWAYS** declares it itself, under a `Skin <Face>` family, restating every
+  `@font-face` rule its package's `index.css` publishes with the `url()` pointing at the package file and
+  `size-adjust` set to the share measured for the pair; it does **NOT** import that package, whose faces would load
+  unscaled under their own family, and the suite fails once the restated faces drift from those the package publishes
 - `package.json` exports it as `./presets/<name>.css`, with the `@metreeca/source` condition, one entry per preset and
   never a wildcard
 
@@ -467,6 +476,6 @@ shortfall of 14.1 is accepted **only** because a map keeps its boundaries drawn 
 
 The scale tokens are declared here, so a rule in this package reads them exactly as a consumer does, never as the
 number behind them. The optical nudges that stay literal are the `0.1em` between quoted paragraphs, the underline
-offset and code tint in `inlines.css`; each says in a comment why it sits below the scale. The mono face size, the
-small capitals tracking, the display leading and the prose measure are **NOT** among them: each is a token, the mono
-size because it depends on the face pair and the others because consumer components read the same values.
+offset and code tint in `inlines.css`; each says in a comment why it sits below the scale. The small capitals
+tracking, the display leading and the prose measure are **NOT** among them: each is a token, since consumer components
+read the same values. The mono face size is no literal either: a preset scales the face itself.

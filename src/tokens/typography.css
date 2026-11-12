@@ -74,17 +74,6 @@
 }
 
 /*
- * A mono face runs wider than the text face it is paired with, by a share that depends on the pair. The platform
- * pair differs on every system, so the default sets no reduction, and a preset naming its faces states its own.
- */
-
-@property --skin--font-size-mono {
-    syntax: "*";
-    inherits: true;
-    initial-value: 100%;
-}
-
-/*
  * Tracking ships neutral, so the brand face decides it. It is stated as a token all the same, since an app supplying
  * a condensed or a wide face has no other way to correct a heading without restating the rule.
  */

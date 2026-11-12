@@ -188,6 +188,26 @@ describe("presets", () => {
 
 	const layered = /@layer\s+skin\s*\{(?:[^{}]*\{[^{}]*})*[^{}]*}/g;
 
+	/*
+	 * The faces a stylesheet declares, each reduced to the descriptors a restated face is compared on.
+	 */
+
+	const parse = (text: string) => Array.from(text.matchAll(/@font-face\s*\{([^}]*)}/g), ([ , body ]) => {
+
+		const descriptor = (name: string): string => body.match(new RegExp(`(?:^|;)\\s*${ name }\\s*:([^;]*)`))?.[1]?.trim() ?? "";
+
+		return {
+			family: descriptor("font-family").replace(/^["']|["']$/g, ""),
+			style: descriptor("font-style"),
+			weight: descriptor("font-weight"),
+			src: descriptor("src").match(/url\(["']?([^"')]+)/)?.[1] ?? "",
+			range: descriptor("unicode-range").replaceAll(/\s+/g, ""),
+			display: descriptor("font-display"),
+			adjust: descriptor("size-adjust")
+		};
+
+	});
+
 	describe.each(names)("%s", name => {
 
 		const text = readFileSync(new URL(`./presets/${ name }`, import.meta.url), "utf-8").replace(/\/\*[\s\S]*?\*\//g, "");
@@ -197,6 +217,10 @@ describe("presets", () => {
 		const assignments = blocks.flatMap(block => Array.from(block.matchAll(/(--skin--[\w-]+)\s*:([^;]*);/g),
 			([ , token, value ]) => [ token, value ] as const
 		));
+
+		const faces = parse(text);
+
+		const own = new Map(faces.map(({ family }) => [ family, faces.filter(face => face.family === family) ]));
 
 		it("builds on the design system entry", () => {
 
@@ -228,14 +252,6 @@ describe("presets", () => {
 
 		});
 
-		it("sizes the mono face it sets", () => {
-
-			const tokens = assignments.map(([ token ]) => token);
-
-			expect(!tokens.includes("--skin--font-family-mono") || tokens.includes("--skin--font-size-mono")).toBe(true);
-
-		});
-
 		it("registers no token", () => {
 
 			expect(text).not.toMatch(/@property/);
@@ -244,13 +260,57 @@ describe("presets", () => {
 
 		it("loads every face its font stacks lead with", () => {
 
-			const packages = assignments
+			const imported = assignments
 				.filter(([ token ]) => token.startsWith("--skin--font-family"))
 				.flatMap(([ , value ]) => Array.from(value.matchAll(/^\s*"([^"]+) Variable"/g),
 					([ , face ]) => `@fontsource-variable/${ face.toLowerCase().replaceAll(" ", "-") }`
 				));
 
-			expect(packages.filter(pkg => !text.includes(`@import "${ pkg }";`))).toEqual([]);
+			const leading = assignments
+				.filter(([ token ]) => token.startsWith("--skin--font-family"))
+				.flatMap(([ , value ]) => Array.from(value.matchAll(/^\s*"([^"]+)"/g), ([ , family ]) => family));
+
+			expect(leading.filter(family => !/ Variable$/.test(family) && !own.has(family))).toEqual([]);
+			expect(imported.filter(pkg => !text.includes(`@import "${ pkg }";`))).toEqual([]);
+
+		});
+
+		/*
+		 * A mono face runs wider than the text face it is paired with, so a preset adjusts it on the face itself: code
+		 * then matches the text wherever the mono family is set, not only where a rule restates a size.
+		 */
+
+		it("adjusts the size of the mono face it sets", () => {
+
+			const mono = assignments
+				.filter(([ token ]) => token === "--skin--font-family-mono")
+				.flatMap(([ , value ]) => Array.from(value.matchAll(/^\s*"([^"]+)"/g), ([ , family ]) => family));
+
+			expect(mono.map(family => own.get(family)?.every(face => /^\d+(\.\d+)?%$/.test(face.adjust)))).toEqual(
+				mono.map(() => true)
+			);
+
+		});
+
+		/*
+		 * A face declared here restates the faces its package publishes, so a package splitting or merging its subsets
+		 * fails the suite rather than leaving characters to fall back to the platform face.
+		 */
+
+		it("declares its own faces as their package publishes them", () => {
+
+			const restated = Array.from(own.values(), faces => faces.map(({ family, adjust, ...face }) => face));
+
+			const published = Array.from(own.values(), faces => {
+
+				const pkg = faces[0]?.src.match(/^@fontsource-variable\/[^/]+/)?.[0] ?? "";
+
+				return parse(readFileSync(new URL(`../node_modules/${ pkg }/index.css`, import.meta.url), "utf-8"))
+					.map(({ family, adjust, ...face }) => ({ ...face, src: `${ pkg }/${ face.src.replace(/^\.\//, "") }` }));
+
+			});
+
+			expect(restated).toEqual(published);
 
 		});
 

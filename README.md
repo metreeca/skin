@@ -149,8 +149,10 @@ in the same stylesheet restating the tokens that name it, so the two never drift
 A variable face covers every weight the weight tokens may be retuned to, where a face loaded in fixed weights leaves
 the browser synthesising the rest, and a generic fallback after it keeps text readable until it loads.
 
-`--skin--font-size-mono` sizes code, keys and program output relative to the text around them. It defaults to `100%`,
-since the platform faces differ on every system; a preset or an app setting a mono face states the share for its pair.
+A mono face runs wider than the text face it is paired with. Each preset scales its mono face to match its text face,
+so anything set in `--skin--font-family-mono` matches the text around it with no size of its own. An app supplying a
+mono face scales it the same way, through the `size-adjust` descriptor of its `@font-face` rules, so it stays matched
+wherever a component sets it. The platform faces vary by system and are left unscaled.
 
 `--skin--font-size`, `--skin--font-size-heading`, `--skin--font-weight` and `--skin--line-height` retune the type
 scale, and `--skin--letter-spacing-heading` corrects the heading tracking for a condensed or a wide face.

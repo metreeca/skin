@@ -69,7 +69,6 @@ strong, b {
 
 code, kbd, samp {
     font-family: var(--skin--font-family-mono);
-    font-size: var(--skin--font-size-mono);
 }
 
 code {

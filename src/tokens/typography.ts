@@ -27,9 +27,10 @@
  * sets all three in faces it bundles, as `presets/roboto.css` does with the Roboto faces of the Metreeca brand. An app
  * supplying a face of its own loads it and restates a generic stack after it, which covers the text until it loads.
  *
- * `fontSizeMono` sizes code, keys and program output relative to the text around them, so a mono face running wider
- * than its text face does not stand out. The share depends on the pair, so it defaults to no reduction, and a preset
- * or an app setting a mono face states the share measured for its own pair, as every preset shipped here does.
+ * A mono face runs wider than the text face it is paired with. Every preset shipped here scales its mono face to match
+ * its text face, so anything set in `fontFamilyMono` matches the text around it with no size of its own. An app
+ * supplying a mono face scales it the same way, through the `size-adjust` descriptor of its `@font-face` rules, so it
+ * stays matched wherever a component sets it. The platform faces vary by system and are left unscaled.
  *
  * **Sizes** — `fontSize` follows the reader's setting and grows slightly on a desktop-sized window, while
  * `fontSizeSmall` and `fontSizeLarge` follow whatever they sit in, keeping their ratio inside a subtree sized apart.
@@ -79,7 +80,6 @@ export const typography = {
 	fontSizeSmall: "--skin--font-size-small",
 	fontSizeLarge: "--skin--font-size-large",
 	fontSizeHeading: "--skin--font-size-heading",
-	fontSizeMono: "--skin--font-size-mono",
 
 	lineHeight: "--skin--line-height",
 	lineHeightDisplay: "--skin--line-height-display",
