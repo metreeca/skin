@@ -49,8 +49,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   a `span` naming a section with no heading, a top-level group folding behind its label as a `details` disclosure
   with a quiet chevron at the end of the line, and the `aria-current` link strong in the strong accent; a label too
   long for the column, such as an identifier with no spaces, breaks at its edge rather than widening the column;
-  entries beneath a group close up tighter than top-level ones, yet siblings still sit further apart than the lines
-  of one label, so a wrapped label still reads as a single entry however many lines it takes
+  entries in a flat outline close up as those beneath a group do, so both share one rhythm, yet siblings still sit
+  further apart than the lines of one label, so a wrapped label still reads as one entry however many lines it takes
 - `lineHeightDisplay`, `letterSpacingCaps`, `inlineSizeProse` - the tight leading of display type, the tracking of
   small capitals and the reading measure of prose, so a component titling, labelling or leading a section reads
   them in place of literals and an app retuning one reaches every title, label and lead across the interface

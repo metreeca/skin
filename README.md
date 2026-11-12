@@ -403,9 +403,10 @@ A list nested inside a `nav` reads as a compact table of contents, one level of 
 Entries are set small in the label colour. A label too long for the column, such as an identifier with no spaces, breaks
 at the column edge rather than widening it. Sibling entries sit further apart than the lines of one label, so a wrapped
 label still reads as a single entry. Where any top-level entry heads subsections, every top-level entry is set in strong
-small capitals with its subsections unindented beneath it; an outline of top-level entries alone reads as a plain list.
-Each level from the third on is indented, and a link answers the pointer as any link does. How deep an outline runs is
-left to its markup: the outline never hides an entry it lists, so every reader can reach it.
+small capitals with its subsections unindented beneath it; an outline of top-level entries alone reads as a plain list,
+spaced as the entries of a group are, so a flat outline and a nested one share one rhythm. Each level from the third on
+is indented, and a link answers the pointer as any link does. How deep an outline runs is left to its markup: the
+outline never hides an entry it lists, so every entry stays reachable by keyboard, pointer and screen reader alike.
 
 A top-level group may fold behind its label: wrap its label and its list in a `details` element, the label as the
 `summary`. The summary reads as the label it stands for, with a chevron at the far end of the line, and folded groups
