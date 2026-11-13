@@ -148,19 +148,20 @@ img:not(a img) {
 img[active] {
 
     position: fixed;
-    inset: var(--skin--spacing-250);
+    inset: var(--skin--spacing-075);
     z-index: var(--skin--z-index-modal);
 
     /*
-     * The card hugs the picture and is centred in the room inside the margin, overriding the `width` and `height`
-     * attributes the page set for the image in the text, though not a `style` attribute: the picture keeps its own
-     * size, scaled down with its proportions kept wherever the card would otherwise overflow the room.
+     * The margin is narrow and the same at every size and in either orientation, leaving the picture as much of the
+     * screen as it can take. The card hugs the picture and is centred in the room inside the margin, overriding the
+     * `width` and `height` attributes the page set in the text, though not a `style` attribute: the picture keeps its
+     * own size, scaled down with its proportions kept wherever the card would otherwise overflow the room.
      */
 
     width: auto;
     height: auto;
-    max-width: calc(100% - 2 * var(--skin--spacing-250));
-    max-height: calc(100% - 2 * var(--skin--spacing-250));
+    max-width: calc(100% - 2 * var(--skin--spacing-075));
+    max-height: calc(100% - 2 * var(--skin--spacing-075));
 
     margin: auto;
 

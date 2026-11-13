@@ -43,7 +43,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and colour, a `details` summary offers the pointer and the focus mark and trades the platform triangle for a chevron
   in the quiet stroke of a field border at the end of its first line, pointing down while closed and up once open in
   either writing direction, a `dialog` is an overlay surface centred over the blanket, and a table `caption` titles
-  its table from above, set at the start in the strong weight as a header cell is
+  its table from above, set at the start in the strong weight as a header cell is; an image floated by its `align`
+  attribute stops floating on a narrow screen and stretches across the column instead, keeping its proportions
 - Navigation markup - nested lists in a `nav` read as a compact table of contents: small entries in the label colour
   without markers, top-level entries over subsections in strong small capitals, each level from the third on indented,
   a `span` naming a section with no heading, a top-level group folding behind its label as a `details` disclosure
@@ -153,7 +154,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the strong weight and the label colour that tell it apart from the description beneath
 - Enlarged images - an image carrying `active` is set on an overlay card hugging the picture, outlined, rounded and
   padded as a dialog is, rather than stretched over the viewport, so a picture with transparent areas stands on a
-  surface, and a picture smaller than the viewport keeps its own size rather than being scaled up to fill the screen
+  surface, and a picture smaller than the viewport keeps its own size rather than being scaled up to fill the screen;
+  the card stands within a narrow margin, the same at every size and in either orientation, so a phone held upright
+  or sideways leaves the picture as much of the screen as it can take rather than framing it in a wide border
 - Quotations and preformatted blocks - wider room to either side, so the text stands clear of the edge of the stripe,
   and a preformatted block made focusable to scroll it by keyboard shows the focus mark the controls carry
 - Focus marks - links and `details` summaries are ringed with the corners a control is rounded with, and a

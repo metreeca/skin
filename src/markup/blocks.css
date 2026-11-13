@@ -100,6 +100,20 @@ img, video, iframe {
     height: auto;
 }
 
+/*
+ * A picture floated beside the text by its `align` attribute stops floating on a narrow screen, where the column leaves
+ * too little room for text to run around it, and stretches across the column instead, keeping its proportions.
+ */
+
+img:is([align="left" i], [align="right" i]) {
+    @container style(--skin--viewport-small: off) {
+        float: none;
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+
 /* A figure is set apart from the text as a block, its caption below it in the quieter size and colour of a label. */
 
 figure {
