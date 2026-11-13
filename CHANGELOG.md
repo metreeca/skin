@@ -208,6 +208,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Faces - `index.css` no longer bundles the Roboto faces and the font tokens default to the platform faces, so an app
   setting faces of its own ships no Roboto files; an app keeping the Metreeca brand faces imports the new
   `presets/roboto.css` preset in place of `index.css`, and its bundle carries the three Roboto faces as it did before
+- `backgroundColorGlass` - a shallow step below the page and close to opaque, so on the light page the surfaces it
+  gathers sit on a pale tray rather than a mid-grey slab; the dark ground stays close to black, and in either scheme
+  what the glass covers shows through only faintly, where it competed with the gathered surfaces before
 
 ### Removed
 

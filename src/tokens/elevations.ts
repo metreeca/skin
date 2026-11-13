@@ -18,7 +18,8 @@
  * Elevation tokens.
  *
  * Names what a thing lifted off the page is painted on: the surface it carries its own background in, the shadow
- * setting it apart from what it covers, and the blanket dimming the page behind a thing demanding an answer.
+ * setting it apart from what it covers, the blanket dimming the page behind a thing demanding an answer, and the glass
+ * gathering surfaces that float over the page into one group without a shadow of their own.
  *
  * @remarks
  *
@@ -41,11 +42,12 @@
  * **Blankets** — `backgroundColorBlanket` is a translucent value, so it dims whatever it covers rather than replacing
  * it. It pairs with the {@link layers `zIndexBlanket`} slot, which decides what it covers.
  *
- * **Glass** — `backgroundColorGlass` is a translucent ground a step darker than the page, gathering surfaces that float
- * over the page into one group without a shadow to set them apart, such as a stack of transient notices. It carries no
- * text of its own: the surfaces set on it do, painted with `backgroundColorOverlay`, which stands out from it in either
- * scheme, so their text keeps its contrast whatever the glass lets through. The glass takes `backdropFilterGlass` as
- * its backdrop filter, a faint blur that keeps what shows through from competing with the surfaces gathered on it.
+ * **Glass** — `backgroundColorGlass` is a ground a shallow step darker than the page, gathering surfaces that float
+ * over the page into one group without a shadow to set them apart, such as a stack of transient notices. It is close
+ * to opaque, so what it covers shows through only faintly. It carries no text of its own: the surfaces set on it do,
+ * painted with `backgroundColorOverlay`, which stands out from it in either scheme, so their text keeps its contrast
+ * whatever the glass lets through. The glass takes `backdropFilterGlass` as its backdrop filter, a faint blur that
+ * keeps what shows through from competing with the surfaces gathered on the glass.
  *
  * @module elevations
  */

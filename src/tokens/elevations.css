@@ -95,14 +95,14 @@
     --skin--background-color-blanket: color-mix(in oklab, var(--skin--color) 50%, transparent);
 
     /*
-     * A translucent ground a step darker than the page, so it reads against a light page that is already white as
-     * much as against a dark one, while what it covers still shows through. It carries no text of its own: the
+     * A translucent ground a step darker than the page, gathering the surfaces set on it into one group, so it reads
+     * against a light page that is already white as much as against a dark one. It carries no text of its own: the
      * surfaces set on it do, and stand out from it in either scheme, being lighter than the page where it is darker.
-     * On a dark page the step runs past the floor and clamps to black, which is the ground such a page wants: any
-     * lightness the formula could keep there renders the same once laid over the page at this opacity.
+     * The step is shallow and the ground close to opaque. On the light page the group sits on a pale tray rather than
+     * a grey slab, on the dark one on a ground close to black, and what the glass covers only faintly shows through.
      */
 
-    --skin--background-color-glass: oklch(from var(--skin--background-color) calc(l - 0.3) c h / 0.75);
+    --skin--background-color-glass: oklch(from var(--skin--background-color) calc(l - 0.1) c h / 0.85);
 
     --skin--box-shadow-raised: 0 1px 2px color-mix(in oklab, var(--skin--color) 20%, transparent);
     --skin--box-shadow-overlay: 0 4px 12px color-mix(in oklab, var(--skin--color) 25%, transparent);
